@@ -1,6 +1,7 @@
 from django.shortcuts import render
-
+import random
 # Create your views here.
 
 def home(request):
-    return render(request, 'main/home.html')
+    random_number = random.randint(1, 2000)
+    return render(request, 'main/home.html', {'random_number': random_number})

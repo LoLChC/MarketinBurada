@@ -1,0 +1,19 @@
+--text-primary: #2B2A28        (ana yazı: başlık + body)
+--text-secondary: #6B645C      (açıklama, placeholder, pasif metin)
+--text-accent: #E07A5F         (önemli kelime, fiyat, uyarı vurgusu)
+
+--border: rgb(240, 230, 140)              (normal kart / input border)
+--border-accent: rgb(210, 180, 60)     (hover, aktif alan border)
+
+--bg-main: #FAF7F2             (sayfa ana arka plan)
+
+--bg-soft-1: rgb(255, 180, 30)   (glass kart, modal)
+--bg-soft-2: rgba(250,247,242,0.85)  (overlay, dropdown, hover layer)
+
+--success: #7A8450             (başarılı işlem, onay)
+--warning: #E9A66C             (dikkat, orta risk)
+--info: #4C78A8                (bilgilendirme)
+--danger: #D95C5C              (hata, kritik uyarı)
+
+--font-primary: "Inter"         (tüm normal metinler, UI, body)
+--font-display: "Fraunces"      (önemli başlıklar, marka hissi, dikkat çeken yerler)

@@ -1,0 +1,306 @@
+/* ==========================================================================
+   1. TÜM SAYFALARDA ORTAK KODLAR (GLOBAL STYLES & LAYOUT)
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.theme-marketin-burada {
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.theme-marketin-burada h1, 
+.theme-marketin-burada h2, 
+.theme-marketin-burada h3 {
+    font-family: "Fraunces", serif;
+    color: #2B2A28;
+}
+
+.theme-marketin-burada a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Genel Kapsayıcı Yapı */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex: 1;
+}
+
+/* Ortak Buton Temelleri */
+.btn-primary {
+    background-color: #E07A5F;
+    color: white !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+
+/* ==========================================================================
+   2. HEADER & NAVBAR KODLARI ( Doğrudan nav Seçicisi )
+   ========================================================================== */
+nav.navbar {
+    background-color: rgba(250, 247, 242, 0.95);
+    border-bottom: 1px solid rgb(240, 230, 140);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+nav.navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    background-color: #FAF7F2;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-area img {
+    height: 45px;
+    width: auto;
+}
+
+.logo-area span {
+    font-family: "Fraunces", serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-links > a {
+    font-weight: 500;
+    color: #6B645C;
+    transition: color 0.2s;
+}
+
+.nav-links > a:hover { color: #E07A5F; }
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 5px;
+}
+
+.btn-login {
+    font-weight: 600;
+    color: #2B2A28 !important;
+    transition: color 0.2s;
+}
+
+.btn-login:hover { color: #E07A5F !important; }
+
+
+/* ==========================================================================
+   3. MAIN / ANA İÇERİK KODLARI (BU SAYFAYA ÖZGÜ REYONLAR)
+   ========================================================================== */
+
+/* --- 3.1 Hero Bölümü (Büyük Ekran: GRID) --- */
+.hero-section {
+    padding: 60px 0;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-text h1 span { color: #E07A5F; }
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: #6B645C;
+    margin-bottom: 30px;
+}
+
+.hero-action-area { margin-top: 25px; }
+
+.btn-hero-action {
+    display: inline-block;
+    background-color: #E07A5F;
+    color: white !important;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: transform 0.2s, opacity 0.2s;
+    box-shadow: 0 4px 12px rgba(224, 122, 95, 0.2);
+}
+
+.btn-hero-action:hover {
+    opacity: 0.95;
+    transform: translateY(-2px);
+}
+
+.hero-image {
+    display: flex;
+    justify-content: center;
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+/* --- 3.2 Özellikler Bölümü (Büyük Ekran: GRID) --- */
+.section-title {
+    text-align: center;
+    font-size: 2.2rem;
+    margin: 80px 0 40px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.feature-card {
+    background-color: rgba(255, 180, 30, 0.15);
+    border: 1px solid rgb(240, 230, 140);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgb(210, 180, 60);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.feature-card h3 { margin-bottom: 12px; font-size: 1.4rem; }
+.feature-card p { color: #6B645C; font-size: 0.95rem; }
+
+/* --- 3.3 Market Listeleme Bölümü (Büyük Ekran: GRID) --- */
+.markets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.market-card {
+    background: white;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.market-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-color: rgb(210, 180, 60);
+}
+
+.market-cover {
+    height: 150px;
+    background-color: rgb(240, 230, 140);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Fraunces", serif;
+    color: #6B645C;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Statik Market Kapak Tasarımları */
+.style-market-1 { background: linear-gradient(135deg, rgb(240, 230, 140), #e9d77b); }
+.style-market-2 { background: linear-gradient(135deg, #ebd882, #E9A66C); }
+.style-market-3 { background: linear-gradient(135deg, rgb(240, 230, 140), #E07A5F); }
+
+.market-info { padding: 20px; }
+
+.market-badge {
+    display: inline-block;
+    color: white;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.status-open { background-color: #7A8450; }
+.status-busy { background-color: #E9A66C; }
+
+.market-info h3 { font-size: 1.3rem; margin-bottom: 5px; }
+.market-address { color: #6B645C; font-size: 0.9rem; }
+
+.market-details {
+    display: flex;
+    justify-content: space-between;
+    color: #6B645C;
+    font-size: 0.85rem;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #FAF7F2;
+}
+.market-details span strong { color: #E07A5F; }
+
+
+/* ==========================================================================
+   4. FOOTER KODLARI (TÜM SAYFALARDA ORTAK)
+   ========================================================================== */
+footer {
+    background-color: #2B2A28;
+    color: #FAF7F2;
+    text-align: center;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+footer p {
+    padding: 25px;
+    color: #FAF7F2;
+    opacity: 0.8;
+}

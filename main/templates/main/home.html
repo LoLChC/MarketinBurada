@@ -1,11 +1,146 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Marketin Burada | Güvenilir Yerel Erişim</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static "images/Logo_Circle_NoText.png" %}" type="png">k
+    <link rel="stylesheet" href="{% static 'css/home.css' %}?v={{random_number}}">
 </head>
-<body>
-    Nice
+<body class="theme-marketin-burada">
+
+    <header class="header" id="mainHeader">
+        <div class="header-container">
+            <a href="/" class="logo-area">
+                <img src="{% static 'images/Logo_Circle_NoText.png' %}" alt="Marketin Burada Logo">
+                <span>Marketin Burada</span>
+            </a>
+            <div class="header-links">
+                <a href="/markets/">Marketler</a>
+                <a href="/about/">Hakkımızda</a>
+                
+                <div class="auth-links">
+                    <a href="/login/" class="btn-login">Giriş Yap</a>
+                    <a href="/register/" class="btn-primary">Kayıt Ol</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <section class="hero-section">
+            <div class="hero-grid">
+                <div class="hero-text">
+                    <h1>Şehrinizin Marketleri Artık <span>Burada</span>.</h1>
+                    <p>En sevdiğiniz yerel marketlerden dijital siparişinizi verin, marketin kendi kuryesi kapınıza kadar güvenle getirsin.</p>
+                    
+                    <div class="hero-action-area">
+                        <a href="/markets/" class="btn-hero-action">Hemen Marketleri İncele</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="{% static 'images/Logo_Square.png' %}" alt="Marketin Burada Tanıtım">
+                </div>
+            </div>
+        </section>
+
+        <h2 class="section-title">Güvenilir Yerel Erişim</h2>
+        <section class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🏪</span>
+                <h3>Sanal Mağaza</h3>
+                <p>Yerel marketler kendi dijital reyonlarını oluşturur, tüm ürünler güncel fiyatlarıyla listelenir.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📱</span>
+                <h3>Kolay E-Sipariş</h3>
+                <p>Evinizden çıkmadan, mahallenizin esnafından dilediğiniz ürünü saniyeler içinde sipariş edin.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🚴</span>
+                <h3>Tanıdık Kurye</h3>
+                <p>Siparişinizi başka kuryeler değil, marketin kendi personeli güler yüzle kapınıza ulaştırır.</p>
+            </div>
+        </section>
+
+        <h2 id="marketler" class="section-title">Marketlerimiz</h2>
+        <section class="markets-grid">
+            
+            <div class="market-card">
+                <div class="market-cover style-market-1">
+                    Bizim Merkez Market
+                </div>
+                <div class="market-info">
+                    <span class="market-badge status-open">Açık</span>
+                    <h3>Bizim Merkez Market</h3>
+                    <p class="market-address">Kadıköy, İstanbul</p>
+                    <div class="market-details">
+                        <span>Min. Tutar: <strong>150 TL</strong></span>
+                        <span>Kurye: <strong>Market Kuryesi</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="market-card">
+                <div class="market-cover style-market-2">
+                    Huzur Şarküteri
+                </div>
+                <div class="market-info">
+                    <span class="market-badge status-open">Açık</span>
+                    <h3>Huzur Manav & Şarküteri</h3>
+                    <p class="market-address">Çankaya, Ankara</p>
+                    <div class="market-details">
+                        <span>Min. Tutar: <strong>200 TL</strong></span>
+                        <span>Kurye: <strong>Market Kuryesi</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="market-card">
+                <div class="market-cover style-market-3">
+                    Güven Gıda
+                </div>
+                <div class="market-info">
+                    <span class="market-badge status-busy">Yoğun</span>
+                    <h3>Güven Süpermarket</h3>
+                    <p class="market-address">Beşiktaş, İstanbul</p>
+                    <div class="market-details">
+                        <span>Min. Tutar: <strong>100 TL</strong></span>
+                        <span>Kurye: <strong>Market Kuryesi</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            {% for market in markets %}
+            <div class="market-card">
+                <div class="market-cover">
+                    {{ market.name }}
+                </div>
+                <div class="market-info">
+                    <span class="market-badge status-open">Aktif</span>
+                    <h3>{{ market.name }}</h3>
+                    <p class="market-address">{{ market.address }}</p>
+                    <div class="market-details">
+                        <span>Min. Tutar: <strong>{{ market.min_delivery_amount }} TL</strong></span>
+                        <span>Kurye: <strong>Market Kuryesi</strong></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2026 Marketin Burada - Güvenilir Yerel Erişim. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script src="{% static 'js/home.js' %}"></script>
 </body>
 </html>
