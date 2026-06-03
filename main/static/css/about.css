@@ -1,0 +1,216 @@
+/* ==========================================================================
+   ABOUT (HAKKIMIZDA) SAYFASI ÖZEL STİLLERİ
+   ========================================================================== */
+
+/* --- 1. About Hero Bölümü --- */
+.about-hero {
+    padding: 80px 0 40px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-hero .sub-title {
+    display: inline-block;
+    color: #E07A5F;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.about-hero h1 {
+    font-size: 3.2rem;
+    line-height: 1.2;
+    margin-bottom: 25px;
+}
+
+.about-hero h1 span {
+    color: #E07A5F;
+}
+
+.about-hero p {
+    font-size: 1.2rem;
+    color: #6B645C;
+    line-height: 1.7;
+}
+
+/* --- 2. İstatistik Sayacı Bölümü --- */
+.stats-section {
+    margin: 40px 0 80px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.stat-card {
+    background-color: rgba(255, 180, 30, 0.08);
+    border: 1px solid rgb(240, 230, 140);
+    padding: 40px 20px;
+    border-radius: 24px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgb(210, 180, 60);
+}
+
+.stat-card h2 {
+    font-size: 3.5rem;
+    color: #E07A5F;
+    font-family: "Fraunces", serif;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    color: #2B2A28;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+/* --- 3. Hikayemiz Bölümü --- */
+.story-section {
+    margin: 100px 0;
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 60px;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.story-image {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    border-radius: 24px;
+    border: 1px solid rgb(240, 230, 140);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.story-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 24px;
+}
+
+.story-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+}
+
+.story-text p {
+    color: #6B645C;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+/* --- 3.4 Temel Değerlerimiz Alanı (Dikey Kartlar) --- */
+.values-container {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(240, 230, 140, 0.4);
+}
+
+.values-title {
+    text-align: center;
+    font-family: "Fraunces", serif;
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: #2B2A28;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.value-card {
+    background-color: white;
+    padding: 35px 25px;
+    border-radius: 16px;
+    border: 1px solid rgb(240, 230, 140);
+    border-bottom: 4px solid #E07A5F;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(224, 122, 95, 0.08);
+}
+
+.value-icon {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.value-card h4 {
+    font-family: "Fraunces", serif;
+    font-size: 1.3rem;
+    color: #2B2A28;
+    margin-bottom: 12px;
+}
+
+.value-card p {
+    color: #6B645C;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* --- 4. Alt Eyleme Çağrı Bölümü (CTA) --- */
+.about-cta {
+    background-color: #2B2A28;
+    color: #FAF7F2;
+    padding: 60px 40px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+.about-cta h2 {
+    color: #FAF7F2;
+    font-size: 2.3rem;
+    margin-bottom: 15px;
+}
+
+.about-cta p {
+    color: #FAF7F2;
+    opacity: 0.8;
+    font-size: 1.1rem;
+    margin-bottom: 35px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-secondary {
+    display: inline-block;
+    background-color: transparent;
+    color: #FAF7F2 !important;
+    border: 2px solid #FAF7F2;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #FAF7F2;
+    color: #2B2A28 !important;
+}

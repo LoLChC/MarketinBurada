@@ -3,16 +3,88 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    {% block title %}Marketin Burada | Hakkımızda{% endblock %}
+    {% block title %}Hakkımızda | Marketin Burada{% endblock %}
     {% block extra_css %}
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/about.css' %}?v={{random_number}}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/about.css' %}?v={{random_number}}">
     {% endblock %}
 </head>
 <body>
     {% block content %}
-        
+        <div class="container">
+            
+            <section class="about-hero">
+                <div class="about-hero-text">
+                    <span class="sub-title">Biz Kimiz?</span>
+                    <h1>Yerel Esnafımızın <span>Dijital Gücü</span> Olmak İçin Yoldayız.</h1>
+                    <p>Marketin Burada, mahallenizin tanıdık yüzlerini, yıllardır güvendiğiniz yerel marketleri ve manavları dijital dünya ile buluşturan yenilikçi bir köprüdür.</p>
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h2>81</h2>
+                        <p>Desteklenen İl</p>
+                    </div>
+                    <div class="stat-card">
+                        <h2>500+</h2>
+                        <p>Aktif Yerel Market</p>
+                    </div>
+                    <div class="stat-card">
+                        <h2>10k+</h2>
+                        <p>Mutlu Müşteri</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Hikayemiz ve Amacımız Bölümü -->
+            <section class="story-section">
+                <div class="story-grid">
+                    <div class="story-image">
+                        <img src="{% static 'images/Logo_Square.png' %}" alt="Marketin Burada Hikayesi">
+                    </div>
+                    <div class="story-text">
+                        <h2>Hikayemiz ve Amacımız</h2>
+                        <p>Büyük zincir marketlerin gölgesinde kalan yerel esnafımızın mahalle kültüründeki yerini çok iyi biliyoruz. Veresiye defterini tutan, anahtarınızı emanet ettiğiniz o sıcak esnaf ilişkisini kaybetmeden, çağa ayak uydurmalarını sağlıyoruz.</p>
+                        <p>Müşterilerimize komşusundan alışveriş yapmanın güvenini sunarken, esnafımıza da ek bir komisyon yükü bindirmeden kendi kuryeleriyle dijital sipariş altyapısı sağlıyoruz. Çünkü biliyoruz ki, <strong>güvenilir yerel erişim</strong> geleceğin ta kendisidir.</p>
+                    </div>
+                </div>
+
+                <!-- Değerlerimiz Sağ Taraftan Ayrıldı: Altta Dikey Kartlar Olarak Listeleniyor -->
+                <div class="values-container">
+                    <h3 class="values-title">Temel Değerlerimiz</h3>
+                    <div class="values-grid">
+                        <div class="value-card">
+                            <span class="value-icon">🌱</span>
+                            <h4>Adil Ticaret</h4>
+                            <p>Esnaf odaklı, sürdürülebilir ve adil komisyon modelleriyle yerel ekonomiyi destekliyoruz.</p>
+                        </div>
+                        <div class="value-card">
+                            <span class="value-icon">🤝</span>
+                            <h4>Güçlü Bağlar</h4>
+                            <p>Siparişinizi yabancı kuryeler değil, mahallenizin bildiğiniz ve güvendiğiniz esnaf personeli getirir.</p>
+                        </div>
+                        <div class="value-card">
+                            <span class="value-icon">⚡</span>
+                            <h4>Kolaylık</h4>
+                            <p>Hem esnafın ürünlerini kolayca yönetmesi hem de müşterinin saniyeler içinde sipariş vermesi için en sade arayüz.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about-cta">
+                <h2>Siz de Bu Dayanışmanın Bir Parçası Olun</h2>
+                <p>Hemen mahallenizdeki marketleri keşfedin ya da kendi marketinizi platformumuza taşıyın.</p>
+                <div class="cta-buttons">
+                    <a href="/markets/" class="btn-secondary">Marketleri İncele</a>
+                    <a href="/register/" class="btn-secondary">Marketini Kaydet</a>
+                </div>
+            </section>
+
+        </div>
     {% endblock %}
 </body>
 </html>
