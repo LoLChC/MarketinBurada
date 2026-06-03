@@ -1,0 +1,105 @@
+{% load static %}
+<style>
+    header.header {
+    background-color: rgba(250, 247, 242, 0.95);
+    border-bottom: 1px solid rgb(240, 230, 140);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+header.header.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    background-color: #FAF7F2;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-area img {
+    height: 45px;
+    width: auto;
+}
+
+.logo-area span {
+    font-family: "Fraunces", serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.header-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.header-links > a {
+    font-weight: 500;
+    color: #6B645C;
+    transition: color 0.2s;
+}
+
+.header-links > a:hover { color: #E07A5F; }
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 5px;
+}
+
+.btn-login {
+    font-weight: 600;
+    color: #2B2A28 !important;
+    transition: color 0.2s;
+}
+
+.btn-login:hover { color: #E07A5F !important; }
+</style>
+<header class="header" id="mainHeader">
+    <div class="header-container">
+        <a href="/" class="logo-area">
+            <img src="{% static 'images/Logo_Circle_NoText.png' %}" alt="Marketin Burada Logo">
+            <span>Marketin Burada</span>
+        </a>
+        <div class="header-links">
+            <a href="/markets/">Marketler</a>
+            <a href="/about/">Hakkımızda</a>
+                
+            <div class="auth-links">
+                <a href="/login/" class="btn-login">Giriş Yap</a>
+                <a href="/register/" class="btn-primary">Kayıt Ol</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    function initHeaderDynamics() {
+    const header = document.getElementById('mainHeader');
+    
+    if (!header) return;
+
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+}
+</script>

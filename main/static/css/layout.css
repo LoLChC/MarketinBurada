@@ -1,0 +1,51 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+body.theme-marketin-burada {
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.theme-marketin-burada h1, 
+.theme-marketin-burada h2, 
+.theme-marketin-burada h3 {
+    font-family: "Fraunces", serif;
+    color: #2B2A28;
+}
+
+.theme-marketin-burada a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Genel Kapsayıcı Yapı */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex: 1;
+}
+
+/* Ortak Buton Temelleri */
+.btn-primary {
+    background-color: #E07A5F;
+    color: white !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+.btn-primary:hover { opacity: 0.9; }

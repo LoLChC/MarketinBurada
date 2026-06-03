@@ -1,37 +1,17 @@
+{% extends "layout.html" %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    {% block title %}Marketin Burada | Güvenilir Yerel Erişim{% endblock %},
+    {% block extra_css %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketin Burada | Güvenilir Yerel Erişim</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="{% static "images/Logo_Circle_NoText.png" %}" type="png">k
     <link rel="stylesheet" href="{% static 'css/home.css' %}?v={{random_number}}">
+    {% endblock %}
 </head>
-<body class="theme-marketin-burada">
-
-    <header class="header" id="mainHeader">
-        <div class="header-container">
-            <a href="/" class="logo-area">
-                <img src="{% static 'images/Logo_Circle_NoText.png' %}" alt="Marketin Burada Logo">
-                <span>Marketin Burada</span>
-            </a>
-            <div class="header-links">
-                <a href="/markets/">Marketler</a>
-                <a href="/about/">Hakkımızda</a>
-                
-                <div class="auth-links">
-                    <a href="/login/" class="btn-login">Giriş Yap</a>
-                    <a href="/register/" class="btn-primary">Kayıt Ol</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
+<body>
+    {% block content %}
     <div class="container">
         
         <section class="hero-section">
@@ -136,11 +116,6 @@
 
         </section>
     </div>
-
-    <footer>
-        <p>© 2026 Marketin Burada - Güvenilir Yerel Erişim. Tüm hakları saklıdır.</p>
-    </footer>
-
-    <script src="{% static 'js/home.js' %}"></script>
+    {% endblock %}
 </body>
 </html>
