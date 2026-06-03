@@ -5,3 +5,7 @@ import random
 def home(request):
     random_number = random.randint(1, 2000)
     return render(request, 'main/home.html', {'random_number': random_number})
+
+def about(request):
+    random_number = random.randint(1, 2000)
+    return render(request, 'main/about.html', {'random_number': random_number})

@@ -53,7 +53,7 @@
 }
 
 .hero-image img {
-    
+    border: 1px solid rgb(240, 230, 140);
     max-width: 100%;
     height: auto;
     border-radius: 20px;
@@ -161,4 +161,6 @@
     padding-top: 15px;
     border-top: 1px solid #FAF7F2;
 }
-.market-details span strong { color: #E07A5F; }
+.market-details span strong {
+    color: #E07A5F; 
+}

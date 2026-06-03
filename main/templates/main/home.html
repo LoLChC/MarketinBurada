@@ -3,119 +3,119 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    {% block title %}Marketin Burada | Güvenilir Yerel Erişim{% endblock %},
+    {% block title %}Marketin Burada | Güvenilir Yerel Erişim{% endblock %}
     {% block extra_css %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}?v={{random_number}}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/home.css' %}?v={{random_number}}">
     {% endblock %}
 </head>
 <body>
     {% block content %}
-    <div class="container">
-        
-        <section class="hero-section">
-            <div class="hero-grid">
-                <div class="hero-text">
-                    <h1>Şehrinizin Marketleri Artık <span>Burada</span>.</h1>
-                    <p>En sevdiğiniz yerel marketlerden dijital siparişinizi verin, marketin kendi kuryesi kapınıza kadar güvenle getirsin.</p>
-                    
-                    <div class="hero-action-area">
-                        <a href="/markets/" class="btn-hero-action">Hemen Marketleri İncele</a>
-                    </div>
-                </div>
-                <div class="hero-image">
-                    <img src="{% static 'images/Logo_Square.png' %}" alt="Marketin Burada Tanıtım">
-                </div>
-            </div>
-        </section>
-
-        <h2 class="section-title">Güvenilir Yerel Erişim</h2>
-        <section class="features-grid">
-            <div class="feature-card">
-                <span class="feature-icon">🏪</span>
-                <h3>Sanal Mağaza</h3>
-                <p>Yerel marketler kendi dijital reyonlarını oluşturur, tüm ürünler güncel fiyatlarıyla listelenir.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">📱</span>
-                <h3>Kolay E-Sipariş</h3>
-                <p>Evinizden çıkmadan, mahallenizin esnafından dilediğiniz ürünü saniyeler içinde sipariş edin.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🚴</span>
-                <h3>Tanıdık Kurye</h3>
-                <p>Siparişinizi başka kuryeler değil, marketin kendi personeli güler yüzle kapınıza ulaştırır.</p>
-            </div>
-        </section>
-
-        <h2 id="marketler" class="section-title">Marketlerimiz</h2>
-        <section class="markets-grid">
+        <div class="container">
             
-            <div class="market-card">
-                <div class="market-cover style-market-1">
-                    Bizim Merkez Market
-                </div>
-                <div class="market-info">
-                    <span class="market-badge status-open">Açık</span>
-                    <h3>Bizim Merkez Market</h3>
-                    <p class="market-address">Kadıköy, İstanbul</p>
-                    <div class="market-details">
-                        <span>Min. Tutar: <strong>150 TL</strong></span>
-                        <span>Kurye: <strong>Market Kuryesi</strong></span>
+            <section class="hero-section">
+                <div class="hero-grid">
+                    <div class="hero-text">
+                        <h1>Şehrinizin Marketleri Artık <span>Burada</span>.</h1>
+                        <p>En sevdiğiniz yerel marketlerden dijital siparişinizi verin, marketin kendi kuryesi kapınıza kadar güvenle getirsin.</p>
+                        
+                        <div class="hero-action-area">
+                            <a href="/markets/" class="btn-hero-action">Hemen Marketleri İncele</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <img src="{% static 'images/Logo_Square.png' %}" alt="Marketin Burada Tanıtım">
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="market-card">
-                <div class="market-cover style-market-2">
-                    Huzur Şarküteri
+            <h2 class="section-title">Güvenilir Yerel Erişim</h2>
+            <section class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🏪</span>
+                    <h3>Sanal Mağaza</h3>
+                    <p>Yerel marketler kendi dijital reyonlarını oluşturur, tüm ürünler güncel fiyatlarıyla listelenir.</p>
                 </div>
-                <div class="market-info">
-                    <span class="market-badge status-open">Açık</span>
-                    <h3>Huzur Manav & Şarküteri</h3>
-                    <p class="market-address">Çankaya, Ankara</p>
-                    <div class="market-details">
-                        <span>Min. Tutar: <strong>200 TL</strong></span>
-                        <span>Kurye: <strong>Market Kuryesi</strong></span>
-                    </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3>Kolay E-Sipariş</h3>
+                    <p>Evinizden çıkmadan, mahallenizin esnafından dilediğiniz ürünü saniyeler içinde sipariş edin.</p>
                 </div>
-            </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🚴</span>
+                    <h3>Tanıdık Kurye</h3>
+                    <p>Siparişinizi başka kuryeler değil, marketin kendi personeli güler yüzle kapınıza ulaştırır.</p>
+                </div>
+            </section>
 
-            <div class="market-card">
-                <div class="market-cover style-market-3">
-                    Güven Gıda
-                </div>
-                <div class="market-info">
-                    <span class="market-badge status-busy">Yoğun</span>
-                    <h3>Güven Süpermarket</h3>
-                    <p class="market-address">Beşiktaş, İstanbul</p>
-                    <div class="market-details">
-                        <span>Min. Tutar: <strong>100 TL</strong></span>
-                        <span>Kurye: <strong>Market Kuryesi</strong></span>
+            <h2 id="marketler" class="section-title">Marketlerimiz</h2>
+            <section class="markets-grid">
+                
+                <div class="market-card">
+                    <div class="market-cover style-market-1">
+                        Bizim Merkez Market
+                    </div>
+                    <div class="market-info">
+                        <span class="market-badge status-open">Açık</span>
+                        <h3>Bizim Merkez Market</h3>
+                        <p class="market-address">Kadıköy, İstanbul</p>
+                        <div class="market-details">
+                            <span>Min. Tutar: <strong>150 TL</strong></span>
+                            <span>Kurye: <strong>Market Kuryesi</strong></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            {% for market in markets %}
-            <div class="market-card">
-                <div class="market-cover">
-                    {{ market.name }}
-                </div>
-                <div class="market-info">
-                    <span class="market-badge status-open">Aktif</span>
-                    <h3>{{ market.name }}</h3>
-                    <p class="market-address">{{ market.address }}</p>
-                    <div class="market-details">
-                        <span>Min. Tutar: <strong>{{ market.min_delivery_amount }} TL</strong></span>
-                        <span>Kurye: <strong>Market Kuryesi</strong></span>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
 
-        </section>
-    </div>
+                <div class="market-card">
+                    <div class="market-cover style-market-2">
+                        Huzur Şarküteri
+                    </div>
+                    <div class="market-info">
+                        <span class="market-badge status-open">Açık</span>
+                        <h3>Huzur Manav & Şarküteri</h3>
+                        <p class="market-address">Çankaya, Ankara</p>
+                        <div class="market-details">
+                            <span>Min. Tutar: <strong>200 TL</strong></span>
+                            <span>Kurye: <strong>Market Kuryesi</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="market-card">
+                    <div class="market-cover style-market-3">
+                        Güven Gıda
+                    </div>
+                    <div class="market-info">
+                        <span class="market-badge status-busy">Yoğun</span>
+                        <h3>Güven Süpermarket</h3>
+                        <p class="market-address">Beşiktaş, İstanbul</p>
+                        <div class="market-details">
+                            <span>Min. Tutar: <strong>100 TL</strong></span>
+                            <span>Kurye: <strong>Market Kuryesi</strong></span>
+                        </div>
+                    </div>
+                </div>
+                
+                {% for market in markets %}
+                <div class="market-card">
+                    <div class="market-cover">
+                        {{ market.name }}
+                    </div>
+                    <div class="market-info">
+                        <span class="market-badge status-open">Aktif</span>
+                        <h3>{{ market.name }}</h3>
+                        <p class="market-address">{{ market.address }}</p>
+                        <div class="market-details">
+                            <span>Min. Tutar: <strong>{{ market.min_delivery_amount }} TL</strong></span>
+                            <span>Kurye: <strong>Market Kuryesi</strong></span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </section>
+        </div>
     {% endblock %}
 </body>
 </html>
