@@ -1,0 +1,388 @@
+/**
+ * ==========================================================================
+ * MARKETİN BURADA - GİRİŞ YAP (LOGIN) SAYFASI TÜM STİLLERİ
+ * ==========================================================================
+ */
+
+/* --- 1. GENEL SAYFA VE KART DÜZENİ --- */
+
+.container-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px); /* Header ve Footer payı hesaplanarak esnek bırakıldı */
+    padding: 4% 2%;
+    box-sizing: border-box;
+}
+
+.login-card {
+    background: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s, border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.login-card:hover {
+    border-color: rgb(210, 180, 60);
+}
+
+/* Giriş Animasyonu (Giriş sayfasındaki yumuşak yükselme efekti) */
+.animate-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: loginCardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes loginCardFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- 2. BAŞLIK VE METİN ALANLARI --- */
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    font-family: "Fraunces", serif;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #2B2A28;
+}
+
+.login-header h2 span {
+    color: #E07A5F; /* Proje ana turuncusu */
+}
+
+.login-header p {
+    color: #6B645C;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* --- 3. FORM VE İNPUT ELEMENTLERİ --- */
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2B2A28;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot-password {
+    
+    font-size: 0.85rem;
+    color: #E07A5F !important;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.forgot-password:hover {
+    opacity: 0.8;
+}
+
+/* İkonlu Giriş Alanı Yapısı */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    color: #6B645C;
+    font-size: 1rem;
+    opacity: 0.7;
+    z-index: 2;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    box-sizing: border-box;
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    z-index: 1;
+}
+
+/* Şifre alanının sağ tarafına göz butonu yerleşeceği için ekstra padding veriyoruz */
+.input-wrapper input[type="password"],
+.input-wrapper input[type="text"]#password {
+    padding-right: 42px;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #E07A5F;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
+}
+
+/* --- 4. GÖZ (ŞİFRE GİZLE/GÖSTER) BUTONU --- */
+
+.toggle-password-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    color: #6B645C;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, color 0.2s;
+    z-index: 3; /* Input'un üstünde tıklanabilir kalması için */
+}
+
+.toggle-password-btn:hover {
+    opacity: 1;
+    color: #E07A5F; /* Proje turuncusu */
+}
+
+/* --- 5. ÖZELLEŞTİRİLMİŞ CHECKBOX (BENİ HATIRLA) --- */
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #6B645C;
+    user-select: none;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #FAF7F2;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 4px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    border-color: #E07A5F;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #E07A5F;
+    border-color: #E07A5F;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* --- 6. SUBMIT BUTONU VE KART ALTI BAĞLANTILARI --- */
+
+.btn-login-submit {
+    background-color: #E07A5F;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(224, 122, 95, 0.15);
+    margin-top: 10px;
+}
+
+.btn-login-submit:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(224, 122, 95, 0.25);
+}
+
+.btn-login-submit:active {
+    transform: translateY(0);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #FAF7F2;
+    font-size: 0.9rem;
+    color: #6B645C;
+}
+
+.login-footer a {
+    color: #E07A5F !important;
+    font-weight: 600;
+}
+
+/* --- 7. JS DİNAMİK KART İÇİ FLASH MESAJ --- */
+
+#login-flash-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.inline-flash {
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Inter", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.4;
+    box-sizing: border-box;
+    transition: opacity 0.2s, transform 0.2s;
+    animation: flashSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hata Durumu (Açık soft turuncu tonu) */
+.inline-flash.error {
+    background-color: #FDF2F0;
+    color: #E07A5F;
+    border: 1px solid rgba(224, 122, 95, 0.25);
+}
+
+/* Başarı Durumu (Açık soft yeşil tonu) */
+.inline-flash.success {
+    background-color: #F5F6F0;
+    color: #7A8450;
+    border: 1px solid rgba(122, 132, 80, 0.25);
+}
+
+/* Kapatma Butonu (&times;) */
+.inline-flash .flash-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.4rem;
+    cursor: pointer;
+    opacity: 0.5;
+    line-height: 1;
+    padding-left: 10px;
+    transition: opacity 0.2s;
+}
+
+.inline-flash .flash-close:hover {
+    opacity: 1;
+}
+
+@keyframes flashSlideDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 8. GLOBAL BEKLEME EKRANI (LOADER OVERLAY) --- */
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(250, 247, 242, 0.85); /* #FAF7F2 tonunun saydam hali */
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease;
+}
+
+.loader-box {
+    text-align: center;
+    font-family: "Inter", sans-serif;
+}
+
+.spinner {
+    width: 46px;
+    height: 46px;
+    border: 4px solid rgba(224, 122, 95, 0.15);
+    border-top: 4px solid #E07A5F;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: loaderSpin 0.8s linear infinite;
+}
+
+.loader-box p {
+    color: #2B2A28;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+@keyframes loaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

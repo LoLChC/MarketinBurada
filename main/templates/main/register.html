@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% block title %}Kayıt Ol | Marketin Burada{% endblock %}
+    {% block extra_css %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/register.css' %}?v={{ random_number }}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <div class="container container-register">
+            <div class="register-card animate-card">
+                <div class="register-header">
+                    <h2>Aramıza <span>Katılın</span></h2>
+                </div>
+
+                <div id="register-flash-container"></div>
+
+                <form method="POST" class="register-form" id="registerForm">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="username">Kullanıcı Adı</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-user input-icon"></i>
+                            <input type="text" id="username" name="username" placeholder="Kullanıcı Adı" required autocomplete="username">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-posta Adresi</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-envelope input-icon"></i>
+                            <input type="email" id="email" name="email" placeholder="ornek@eposta.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Şifre</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                            <button type="button" class="toggle-password-btn" data-target="password" aria-label="Şifreyi Göster">
+                                <i class="fa-regular fa-eye toggle-icon"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="password-strength-wrapper">
+                            <div class="strength-bar-container">
+                                <div id="strength-bar" class="strength-bar"></div>
+                            </div>
+                            <span id="strength-text" class="strength-text"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_confirm">Şifre Tekrar</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-shield-halved input-icon"></i>
+                            <input type="password" id="password_confirm" name="password_confirm" placeholder="••••••••" required autocomplete="new-password">
+                            <button type="button" class="toggle-password-btn" data-target="password_confirm" aria-label="Şifreyi Göster">
+                                <i class="fa-regular fa-eye toggle-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="terms_agreement" required>
+                            <span class="checkmark"></span>
+                            <a href="/terms/" target="_blank" class="terms-link">Kullanım Şartları</a> ve <a href="/kvkk/" target="_blank" class="terms-link">KVKK Politikası</a>'nı okudum, kabul ediyorum.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-register-submit">Kayıt Ol</button>
+                </form>
+
+                <div class="register-footer">
+                    <p>Zaten hesabınız var mı? <a href="/login/">Giriş Yapın</a></p>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+</body>
+{% block js_code %}
+    <script src="{% static 'js/register.js' %}?v={{ random_number }}"></script>
+{% endblock %}
+</html>

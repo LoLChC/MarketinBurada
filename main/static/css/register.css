@@ -1,0 +1,319 @@
+/**
+ * ==========================================================================
+ * MARKETİN BURADA - KAYIT OL (REGISTER) SAYFASI TÜM STİLLERİ
+ * ==========================================================================
+ */
+
+/* --- 1. GENEL SAYFA VE KART DÜZENİ --- */
+
+.container-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px);
+    padding: 3% 2%;
+    box-sizing: border-box;
+}
+
+.register-card {
+    background: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 16px;
+    padding: 35px 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s, border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.register-card:hover {
+    border-color: rgb(210, 180, 60);
+}
+
+.animate-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: registerCardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes registerCardFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- 2. BAŞLIK VE METİN ALANLARI --- */
+
+.register-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.register-header h2 {
+    font-family: "Fraunces", serif;
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: #2B2A28;
+}
+
+.register-header h2 span {
+    color: #E07A5F;
+}
+
+.register-header p {
+    color: #6B645C;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* --- 3. FORM VE İNPUT ELEMENTLERİ --- */
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #2B2A28;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    color: #6B645C;
+    font-size: 1rem;
+    opacity: 0.7;
+    z-index: 2;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 42px 12px 42px; /* Sağ tarafa da göz butonu için pay bırakıldı */
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    box-sizing: border-box;
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    z-index: 1;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #E07A5F;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
+}
+
+/* --- 4. GÖZ (ŞİFRE GİZLE/GÖSTER) BUTONU --- */
+
+.toggle-password-btn {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: #6B645C;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, color 0.2s;
+    z-index: 3; /* Input'un üstünde tıklanabilir kalması için */
+}
+
+.toggle-password-btn:hover {
+    opacity: 1;
+    color: #E07A5F; /* Proje turuncusu */
+}
+
+/* --- 5. ÖZELLEŞTİRİLMİŞ CHECKBOX (SÖZLEŞME ONAYI) --- */
+
+.form-options {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #6B645C;
+    user-select: none;
+    line-height: 1.4;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    height: 18px;
+    width: 18px;
+    background-color: #FAF7F2;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 4px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    border-color: #E07A5F;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #E07A5F;
+    border-color: #E07A5F;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.terms-link {
+    color: #E07A5F !important;
+    font-weight: 600;
+    text-decoration: underline !important;
+}
+
+/* --- 6. SUBMIT BUTONU VE KART ALTI BAĞLANTILARI --- */
+
+.btn-register-submit {
+    background-color: #E07A5F;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(224, 122, 95, 0.15);
+    margin-top: 10px;
+}
+
+.btn-register-submit:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(224, 122, 95, 0.25);
+}
+
+.btn-register-submit:active {
+    transform: translateY(0);
+}
+
+.register-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #FAF7F2;
+    font-size: 0.9rem;
+    color: #6B645C;
+}
+
+.register-footer a {
+    color: #E07A5F !important;
+    font-weight: 600;
+}
+
+/* --- 7. ŞİFRE GÜCÜ GÖSTERGESİ STİLLERİ --- */
+
+.password-strength-wrapper {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.strength-bar-container {
+    background-color: #FAF7F2;
+    border: 1px solid rgba(240, 230, 140, 0.5);
+    height: 6px;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    background-color: transparent;
+    transition: width 0.3s ease-in-out, background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+.strength-text {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: right;
+    height: 14px;
+    transition: color 0.3s ease;
+}
+
+.strength-bar.very-weak { background-color: #E63946; }
+.strength-text.very-weak { color: #E63946; }
+
+.strength-bar.weak { background-color: #F4A261; }
+.strength-text.weak { color: #F4A261; }
+
+.strength-bar.medium { background-color: #E9C46A; }
+.strength-text.medium { color: #D6A838; }
+
+.strength-bar.strong { background-color: #A7C957; }
+.strength-text.strong { color: #6A994E; }
+
+.strength-bar.very-strong { background-color: #38A3A5; }
+.strength-text.very-strong { color: #22577A; }
+
+#register-flash-container {
+    width: 100%;
+    margin-bottom: 15px;
+}
