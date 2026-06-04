@@ -17,3 +17,7 @@ def login(request):
 def register(request):
     random_number = random.randint(1, 2000)
     return render(request, 'main/register.html', {'random_number': random_number})
+
+def work_with_us(request):
+    random_number = random.randint(1, 2000)
+    return render(request, 'main/work-with-us.html', {'random_number': random_number})

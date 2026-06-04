@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% block title %}Bizimle Çalışın - Marketin Burada{% endblock %}
+    {% block extra_css %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/work-with-us.css' %}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <div class="theme-marketin-burada">
+            <section class="work-section">
+                
+                <!-- Üst Başlık Alanı -->
+                <div class="work-hero">
+                    <h1>Bizimle Çalışın</h1>
+                    <p>Marketin Burada çatısı altında yerel işletmeleri dijital dünyaya taşıyoruz. Platformumuzda mağaza açmak, kurumsal iş birlikleri geliştirmek veya ekibimize dahil olmak için süreçlerimizi inceleyin.</p>
+                </div>
+
+                <!-- ÜST KISIM: Sistem Kartları -->
+                <div class="system-cards-container">
+                    
+                    <!-- Kart 1 -->
+                    <div class="step-full-card">
+                        <div class="step-image-area">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <div class="step-info-area">
+                            <div class="step-badge">01</div>
+                            <div class="step-text">
+                                <h3>Başvuru Talebi</h3>
+                                <p>Sayfanın en altında bulunan kurumsal iletişim kanallarımız (WhatsApp destek hattı veya e-posta) üzerinden işletme detaylarınızı ve lokasyonunuzu bize ileterek ilk adımı atarsınız.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kart 2 -->
+                    <div class="step-full-card card-reverse">
+                        <div class="step-image-area">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                        <div class="step-info-area">
+                            <div class="step-badge">02</div>
+                            <div class="step-text">
+                                <h3>Ön Değerlendirme</h3>
+                                <p>Bölge saha sorumlularımız, yerel pazar ağımızı ve başvuru yapan mağaza profilinizi titizlikle inceleyerek platform standartlarına uygunluk doğrultusunda sizinle hızlı bir dönüş sağlar.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kart 3 -->
+                    <div class="step-full-card">
+                        <div class="step-image-area">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <div class="step-info-area">
+                            <div class="step-badge">03</div>
+                            <div class="step-text">
+                                <h3>Entegrasyon ve Kurulum</h3>
+                                <p>Onay sürecini başarıyla tamamlayan işletmeniz için sistem üzerinde size özel sanal vitrin, dijital ürün yönetim paneli ve mağaza profili teknik ekibimizce hızlıca aktif edilir.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kart 4 -->
+                    <div class="step-full-card card-reverse">
+                        <div class="step-image-area">
+                            <i class="fa-solid fa-rocket"></i>
+                        </div>
+                        <div class="step-info-area">
+                            <div class="step-badge">04</div>
+                            <div class="step-text">
+                                <h3>Dijital Satışa Başlama</h3>
+                                <p>Mağazanız platform genelinde yayına girdiği andan itibaren, bölgenizdeki tüm potansiyel müşteriler yerel ağ üzerinden doğrudan dijital sipariş altyapınıza erişebilir hale gelir.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- EN ALT KISIM: Büyük İletişim Alanı -->
+                <div class="bottom-contact-area">
+                    <h2>Hemen Başvurun</h2>
+                    <p>Sistem işleyişi hakkında detaylı bilgi almak veya dijital mağazanızı hemen açmak için aşağıdaki kanallardan bize ulaşabilirsiniz.</p>
+                    
+                    <div class="contact-buttons-wrapper">
+                        
+                        <!-- Tıklayınca Kopyalayan E-Posta Kutusu -->
+                        <div class="email-copy-box" id="emailCopyBtn">
+                            <div class="copy-tooltip" id="copyTooltip">Kopyalandı!</div>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span id="targetEmail">isbirligi@marketinburada.com</span>
+                            <i class="fa-regular fa-copy"></i>
+                        </div>
+                        
+                        <!-- WhatsApp Butonu -->
+                        <a href="https://wa.me/905000000000?text=Merhaba,%20Marketin%20Burada%20platformuna%20mağaza%20olarak%20katılmak%20istiyorum.%20Detaylı%20bilgi%20alabilir%20miyim?" target="_blank" rel="noopener noreferrer" class="btn-primary btn-whatsapp">
+                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Destek Hattı
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Sosyal Medya Alanı -->
+                <div class="social-section">
+                    <h4>Sosyal Medyada Biz</h4>
+                    <div class="social-links">
+                        <a href="https://instagram.com/marketinburada" target="_blank" rel="noopener noreferrer" class="social-icon instagram" title="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/marketinburada" target="_blank" rel="noopener noreferrer" class="social-icon linkedin" title="LinkedIn">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                        <a href="https://twitter.com/marketinburada" target="_blank" rel="noopener noreferrer" class="social-icon twitter" title="X / Twitter">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    {% endblock %}
+</body>
+{% block js_code %}
+    <script src="{% static 'js/work-with-us.js' %}"></script>
+{% endblock %}
+</html>
+
+
+
+
