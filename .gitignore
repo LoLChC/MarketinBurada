@@ -1,5 +1,7 @@
 .env
+.gitignore
 venv/
 db.sqlite3
 What will do me.txt
 layout template.txt
+brand card.txt
