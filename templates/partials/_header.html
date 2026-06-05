@@ -1,17 +1,17 @@
 {% load static %}
 <header class="header" id="mainHeader">
     <div class="header-container">
-        <a href="/" class="logo-area">
+        <a href="{% url "main:home" %}" class="logo-area">
             <img src="{% static 'images/Logo_Circle_NoText.png' %}" alt="Marketin Burada Logo">
             <span>Marketin Burada</span>
         </a>
         <div class="header-links">
             <a href="/markets/">Marketler</a>
-            <a href="/about/">Hakkımızda</a>
+            <a href="{% url "main:about" %}">Hakkımızda</a>
                 
             <div class="auth-links">
-                <a href="/login/" class="btn-login">Giriş Yap</a>
-                <a href="/register/" class="btn-primary">Kayıt Ol</a>
+                <a href="{% url "account:login" %}" class="btn-login">Giriş Yap</a>
+                <a href="{% url "account:register" %}" class="btn-primary">Kayıt Ol</a>
             </div>
         </div>
     </div>

@@ -72,7 +72,7 @@
                         <label class="checkbox-container">
                             <input type="checkbox" name="terms_agreement" required>
                             <span class="checkmark"></span>
-                            <a href="/terms/" target="_blank" class="terms-link">Kullanım Şartları</a> ve <a href="/kvkk/" target="_blank" class="terms-link">KVKK Politikası</a>'nı okudum, kabul ediyorum.
+                            <a href="{% url "account:terms" %}" target="_blank" class="terms-link">Kullanım Şartları</a> ve <a href="{% url "account:kvkk" %}" target="_blank" class="terms-link">KVKK Politikası</a>'nı okudum, kabul ediyorum.
                         </label>
                     </div>
 
@@ -80,7 +80,7 @@
                 </form>
 
                 <div class="register-footer">
-                    <p>Zaten hesabınız var mı? <a href="/login/">Giriş Yapın</a></p>
+                    <p>Zaten hesabınız var mı? <a href="{% url "account:login" %}">Giriş Yapın</a></p>
                 </div>
             </div>
         </div>

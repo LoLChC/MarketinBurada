@@ -50,14 +50,14 @@
                             <span class="checkmark"></span>
                             Beni Hatırla
                         </label>
-                        <a href="/password-reset/" class="forgot-password">Şifremi Unuttum</a>
+                        <a href="{% url "account:forgot-password" %}" class="forgot-password">Şifremi Unuttum</a>
                     </div>
 
                     <button type="submit" class="btn-login-submit">Giriş Yap</button>
                 </form>
 
                 <div class="login-footer">
-                    <p>Hesabınız yok mu? <a href="/register/">Hemen Kayıt Olun</a></p>
+                    <p>Hesabınız yok mu? <a href="{% url "account:register" %}">Hemen Kayıt Olun</a></p>
                 </div>
             </div>
         </div>

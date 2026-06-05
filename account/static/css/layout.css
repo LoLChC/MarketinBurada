@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+body.theme-marketin-burada {
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.theme-marketin-burada h1, 
+.theme-marketin-burada h2, 
+.theme-marketin-burada h3 {
+    font-family: "Fraunces", serif;
+    color: #2B2A28;
+}
+
+.theme-marketin-burada a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Genel Kapsayıcı Yapı (Dokunulmadı) */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex: 1;
+}
+
+/* Ortak Buton Temelleri (Dokunulmadı) */
+.btn-primary {
+    background-color: #E07A5F;
+    color: white !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+/** HEADER (Tüm px'ler yüzdelik ve esnek birimlere çevrildi) **/
+
+header.header {
+    background-color: rgba(250, 247, 242, 0.95);
+    border-bottom: 0.06rem solid rgb(240, 230, 140); /* 1px zorunlu alt çizgi esnek birimi */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+header.header.scrolled {
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.04); /* Gölge derinliği için rem kullanıldı */
+    background-color: #FAF7F2;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2% 2%; /* Tamamen yüzdelik iç boşluk */
+    max-width: 96%;   /* 1200px yerine esnek yüzdelik genişlik */
+    margin: 0 auto;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;     /* 12px yerine fonta duyarlı oran */
+}
+
+.logo-area img {
+    height: 2.8rem;   /* 45px yerine font büyüklüğüne göre ölçeklenen yükseklik */
+    width: auto;
+}
+
+.logo-area span {
+    font-family: "Fraunces", serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.header-links {
+    display: flex;
+    gap: 1.5rem;      /* 25px yerine fonta duyarlı oran */
+    align-items: center;
+}
+
+.header-links > a {
+    font-weight: 500;
+    color: #6B645C;
+    transition: color 0.2s;
+}
+
+.header-links > a:hover { color: #E07A5F; }
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 0.3rem;
+}
+
+.btn-login {
+    font-weight: 600;
+    color: #2B2A28 !important;
+    transition: color 0.2s;
+}
+
+.btn-login:hover { color: #E07A5F !important; }
+
+/** FOOTER (Tüm px'ler yüzdelik yapıldı) **/
+
+footer {    
+    background-color: #2B2A28;
+    color: #FAF7F2;
+    text-align: center;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+footer p {
+    padding: 1.8% 2%; /* 25px olan sabit iç boşluk tamamen yüzdelik (%1.8 dikey, %2 yatay) yapıldı */
+    color: #FAF7F2;
+    opacity: 0.8;
+}
