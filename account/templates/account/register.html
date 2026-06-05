@@ -88,5 +88,10 @@
 </body>
 {% block js_code %}
     <script src="{% static 'js/register.js' %}?v={{ random_number }}"></script>
+    {% if error %}
+        <script>
+            showRegisterFlash("{{error}}")
+        </script>
+    {% endif %}
 {% endblock %}
 </html>

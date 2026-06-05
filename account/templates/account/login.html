@@ -46,7 +46,7 @@
 
                     <div class="form-options">
                         <label class="checkbox-container">
-                            <input type="checkbox" name="remember_me">
+                            <input type="checkbox" name="remember">
                             <span class="checkmark"></span>
                             Beni Hatırla
                         </label>
@@ -72,5 +72,15 @@
 </body>
 {% block js_code %}
     <script src="{% static 'js/login.js' %}?v={{random_number}}"></script>
+    {% if error %}
+        <script>
+            showFlash("{{error}}")
+        </script>
+    {% endif %}
+    {% if ok %}
+        <script>
+            location.reload();
+        </script>
+    {% endif %}
 {% endblock %}
 </html>

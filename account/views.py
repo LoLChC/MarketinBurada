@@ -10,6 +10,7 @@ from django.db.models import Q
 @required_logout
 def login(request):
     random_number = random.randint(1, 2000)
+    
 
     if request.method == "POST":
         username_or_email = request.POST.get("username-or-email")
@@ -40,6 +41,8 @@ def register(request):
 
         if User.objects.filter(email=email).exists():
             return render(request, 'account/register.html', {'error': 'Bu email zaten kayıtlı.', 'random_number': random_number})
+        if User.objects.filter(name=name).exists():
+            return render(request, 'account/register.html', {'error': 'Bu kullanıcı adı zaten kayıtlı.', 'random_number': random_number})
 
         user = User(name=name, email=email)
         user.password = make_password(password)

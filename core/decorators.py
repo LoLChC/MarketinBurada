@@ -15,7 +15,7 @@ def required_login(view_func):
         if not user:
             user = User.objects.filter(id=user_id).first()
             if user:
-                cache.set(f"user-{user_id}", user, timeout=3600)
+                cache.set(f"user-{user_id}", user, timeout=300)
 
         request.user_obj = user
 
