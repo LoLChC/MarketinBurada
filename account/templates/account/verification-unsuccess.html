@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Doğrulama Başarısız | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/verification-unsuccessful.css' %}?v={{ random_number }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container container-verify">
+        <div class="verify-card animate-card unsuccessful-card">
+            
+            <div class="verify-state">
+                <div class="verify-icon-wrapper unsuccessful-icon-animate">
+                    <i class="fa-regular fa-circle-xmark verify-main-icon unsuccessful-color"></i>
+                </div>
+                
+                <div class="verify-header">
+                    <h2>Doğrulama <span>Başarısız!</span></h2>
+                    <p>E-posta doğrulama bağlantısı geçersiz veya süresi dolmuş olabilir.</p>
+                </div>
+            </div>
+
+            <div id="verify-flash-container"></div>
+            
+            <div class="verify-action-area">
+                <a href="{% url "account:user-account" %}" class="btn-verify-submit btn-unsuccessful-submit">
+                    Hesabım Sayfasına Git
+                </a>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_code %}
+    <script src="{% static 'js/verification-unsuccessful.js' %}?v={{ random_number }}"></script>
+{% endblock %}

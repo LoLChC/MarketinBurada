@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Doğrulama Başarılı | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/verification-success.css' %}?v={{ random_number }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container container-verify">
+        <div class="verify-card animate-card success-card">
+            
+            <div class="verify-state">
+                <div class="verify-icon-wrapper success-icon-animate">
+                    <i class="fa-regular fa-circle-check verify-main-icon success-color"></i>
+                </div>
+                
+                <div class="verify-header">
+                    <h2>Hesabınız <span>Onaylandı!</span></h2>
+                    <p>E-posta adresiniz başarıyla doğrulandı. Sayfa 5 saniye içinde otomatik olarak kapatılacak.</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_code %}
+    <script src="{% static 'js/verification-success.js' %}?v={{ random_number }}"></script>
+{% endblock %}  

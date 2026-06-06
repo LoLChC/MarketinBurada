@@ -1,0 +1,114 @@
+/**
+ * ==========================================================================
+ * MARKETİN BURADA - E-POSTA DOĞRULAMA SAYFASI STİLLERİ
+ * ==========================================================================
+ */
+
+.container-verify {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 75px - 60px);
+    padding: 3% 2%;
+    box-sizing: border-box;
+}
+
+.verify-card {
+    background: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 16px;
+    padding: 40px 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.verify-card:hover {
+    border-color: rgb(210, 180, 60);
+}
+
+/* --- İkon Animasyonları ve Alanı --- */
+.verify-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background-color: #FAF7F2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    border: 1px solid rgba(240, 230, 140, 0.6);
+}
+
+.verify-main-icon {
+    font-size: 2.2rem;
+    color: #E07A5F;
+}
+
+.animate-bounce {
+    animation: verifyBounce 2s infinite ease-in-out;
+}
+
+@keyframes verifyBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* --- Metin Blokları --- */
+.verify-header h2 {
+    font-family: "Fraunces", serif;
+    font-size: 2rem;
+    margin-bottom: 12px;
+    color: #2B2A28;
+}
+
+.verify-header h2 span {
+    color: #E07A5F;
+}
+
+.verify-header p {
+    color: #2B2A28;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.verify-info-box {
+    background-color: #FAF7F2;
+    border-radius: 8px;
+    padding: 15px 20px;
+    border-left: 4px solid #E07A5F;
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.verify-info-box p {
+    color: #6B645C;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Alt Bilgi ve Yeniden Gönderim Linki --- */
+.verify-footer {
+    padding-top: 15px;
+    border-top: 1px solid #FAF7F2;
+    font-size: 0.9rem;
+    color: #6B645C;
+}
+
+.verify-footer a {
+    color: #E07A5F !important;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- Dinamik Flash Mesaj Alanı --- */
+#verify-flash-container {
+    width: 100%;
+    margin-top: 15px;
+}

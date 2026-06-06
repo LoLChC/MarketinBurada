@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}E-posta Doğrulama | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/email-verification.css' %}?v={{ random_number }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container container-verify">
+        <div class="verify-card animate-card">
+            
+            <div id="verify-initial-state" class="verify-state">
+                <div class="verify-icon-wrapper animate-bounce">
+                    <i class="fa-regular fa-envelope-open verify-main-icon"></i>
+                </div>
+                
+                <div class="verify-header">
+                    <h2>E-postanızı <span>Doğrulayın</span></h2>
+                    <p>Sipariş oluşturabilmek için e-posta adresinize bir doğrulama linki gönderdik.</p>
+                </div>
+
+                <div class="verify-info-box">
+                    <p>Lütfen gelen kutunuzu (ve gereksiz/spam klasörünü) kontrol ederek size iletilen bağlantıya tıklayın.</p>
+                </div>
+                
+                <div class="verify-footer">
+                    <p>E-posta ulaşmadı mı? <a href="#" id="resend-verification-btn">Tekrar Gönder</a></p>
+                </div>
+            </div>
+
+            <div id="verify-flash-container"></div>
+            
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_code %}
+    <script src="{% static 'js/email-verification.js' %}?v={{ random_number }}"></script>
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                // Backend'den direkt mesaj gelirse göstermek için
+                showVerifyFlash("{{ message }}", "{{ message.tags }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

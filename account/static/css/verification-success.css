@@ -1,0 +1,110 @@
+/**
+ * ==========================================================================
+ * MARKETİN BURADA - DOĞRULAMA BAŞARILI SAYFASI STİLLERİ
+ * ==========================================================================
+ */
+
+.container-verify {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3% 2%;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.verify-card {
+    background: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 16px;
+    padding: 40px 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.verify-card:hover {
+    border-color: rgb(210, 180, 60);
+}
+
+/* İkon Kutusu Tasarımı ve Renkleri */
+.success-icon-animate {
+    width: 80px;
+    height: 80px;
+    background-color: #F5F6F0; /* Yumuşak yeşil arka plan */
+    border: 1px solid rgba(122, 132, 80, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.verify-main-icon.success-color {
+    font-size: 2.2rem;
+    color: #7A8450; /* Marka diline uygun zeytin yeşili */
+}
+
+/* Başlık ve Yazı Alanları */
+.verify-header h2 {
+    font-family: "Fraunces", serif;
+    font-size: 2rem;
+    margin-bottom: 12px;
+    color: #2B2A28;
+}
+
+.verify-header h2 span {
+    color: #E07A5F;
+}
+
+.verify-header p {
+    color: #2B2A28;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Yönlendirme Butonu */
+.verify-action-area {
+    margin-top: 25px;
+}
+
+.btn-verify-submit {
+    display: block;
+    width: 100%;
+    background-color: #E07A5F;
+    color: white !important;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(224, 122, 95, 0.15);
+}
+
+.btn-verify-submit:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(224, 122, 95, 0.25);
+}
+
+.btn-verify-submit:active {
+    transform: translateY(0);
+}
+
+/* Alttaki Beyaz Boşluğu Engelleyen Düzenleme */
+main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+}
