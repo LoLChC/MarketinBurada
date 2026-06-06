@@ -15,6 +15,7 @@ def login(request):
     if request.method == "POST":
         username_or_email = request.POST.get("username-or-email")
         password = request.POST.get("password")
+        remember = request.POST.get("remember")
 
         value = username_or_email.strip()
         user = User.objects.filter(Q(email=value.lower()) | Q(name=value)).first()
@@ -26,6 +27,10 @@ def login(request):
             return render(request, 'account/login.html', {'error': 'Hatalı şifre.','random_number': random_number})
         
         request.session["user-id"] = user.id
+        
+        if not remember:
+            request.session.set_expiry(0)
+            
         return redirect("account:user-account")
 
     return render(request, 'account/login.html', {'random_number': random_number})
