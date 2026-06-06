@@ -1,3 +1,8 @@
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
     const togglePasswordButtons = document.querySelectorAll('.toggle-password-btn');
