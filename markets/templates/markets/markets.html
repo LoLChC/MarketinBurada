@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% block title %}Marketler | Marketin Burada{% endblock %}
+    {% block extra_css %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/markets.css' %}?v={{random_number}}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+{% block js_code %}
+    <script src="{% static 'js/markets.js' %}?v={{random_number}}"></script>
+{% endblock %}
+</html>

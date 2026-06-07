@@ -88,6 +88,6 @@
     {% endblock %}
 </body>
 {% block js_code %}
-    <script src="{% static 'js/about.js' %}"></script>
+    <script src="{% static 'js/about.js' %}?v={{random_number}}"></script>
 {% endblock %}
 </html>
