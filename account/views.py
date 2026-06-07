@@ -42,7 +42,6 @@ def email_verification(request):
     request.session["token"] = token
 
     url = "http://" + domain + "/core/read-verify-email?token=" + token
-    print(url)
     url = str(url)
 
     user_id = request.session.get("user-id")
@@ -72,6 +71,7 @@ def email_verification(request):
     return render(request, 'account/email-verification.html', {'random_number': random_number})
 
 def verification_success(request):
+    del request.session['token']
     random_number = random.randint(1, 2000)
     return render(request, 'account/verification-success.html', {'random_number': random_number})
 
@@ -83,7 +83,6 @@ def verification_unsuccess(request):
 def login(request):
     random_number = random.randint(1, 2000)
     
-
     if request.method == "POST":
         username_or_email = request.POST.get("username-or-email")
         password = request.POST.get("password")
@@ -107,9 +106,62 @@ def login(request):
 
     return render(request, 'account/login.html', {'random_number': random_number})
 
+@required_logout
 def forgot_password(request):
     random_number = random.randint(1, 2000)
+    if request.method == "POST":
+        email = request.POST.get("email")
+        email = email.strip().lower()
+        user = User.objects.filter(email=email).first()
+
+        if user is None:
+            return render(request, 'account/forgot-password.html', {'error': 'Bu email kayıtlı değil.', 'random_number': random_number})
+
+        domain = request.get_host() 
+        code = tokens.generate_forgot_password_token()
+        request.session["code"] = code
+        request.session["user-code-email"] = email
+
+        url = "http://" + domain + "/core/read-forgot-password?code=" + code 
+        url = str(url)
+        utils.send_mail_text("Şifre Sıfırlama", url, email)
+        
+        return render(request, 'account/forgot-password.html', {'success': True, 'random_number': random_number})
+
     return render(request, 'account/forgot-password.html', {'random_number': random_number})
+
+@required_logout
+def forgot_password_change(request):
+    if request.session.get("password-reset-verified"):
+        random_number = random.randint(1, 2000)
+        if request.method == "POST":
+            password = request.POST.get("password")
+            user_code_email = request.session.get("user-code-email")
+            user = User.objects.filter(email=user_code_email).first()
+            if user is not None:
+                print("user var")
+                user.password = make_password(password)
+                user.save()
+                print("user kaydedildi")
+            else:
+                return redirect("account:forgot-password")
+            request.session["user-id"] = user.id
+            print("login alındı")
+            print("user_code_email:", user_code_email)
+            print("bulunan user id:", user.id)
+            print(request.session.get("user-id"))
+            del request.session["user-code-email"]
+            del request.session["password-reset-verified"]
+            return redirect("account:user-account")
+
+        return render(request, 'account/forgot-password-change.html', {'random_number': random_number})
+    return redirect("account:forgot-password")
+
+@required_logout
+def forgot_password_unchange(request):
+    random_number = random.randint(1, 2000)
+    request.session.flush()
+    return render(request, 'account/forgot-password-unchange.html', {'random_number': random_number})
 
 @required_login
 def logout(request):

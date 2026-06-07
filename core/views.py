@@ -4,6 +4,7 @@ from django.urls import reverse
 from . import tokens
 from . import utils
 from account.models import User
+from .decorators import required_login, required_logout
 
 # Create your views here.
 
@@ -30,3 +31,15 @@ def verify_email_looking(request):
         ok = False
 
     return JsonResponse({"verify": ok})
+
+@required_logout
+def read_forgot_password(request):
+    real_code = request.session.get("code")
+    user_code = request.GET.get("code")
+
+    if real_code and real_code == user_code:
+        request.session['password-reset-verified'] = True
+        del request.session["code"]
+        return redirect("account:forgot-password-change")
+    else:
+        return redirect("account:forgot-password-unchange")

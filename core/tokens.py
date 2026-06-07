@@ -12,3 +12,6 @@ def generate_slug():
     slug = hashlib.sha256(raw).hexdigest()[:24]
 
     return slug
+
+def generate_forgot_password_token():
+    return secrets.token_urlsafe(32)
