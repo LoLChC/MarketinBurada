@@ -1,10 +1,8 @@
 from django.shortcuts import redirect
-from django.http import HttpResponse, JsonResponse
-from django.urls import reverse
-from . import tokens
-from . import utils
+from django.http import JsonResponse
+from django.shortcuts import render
 from account.models import User
-from .decorators import required_login, required_logout
+from .decorators import required_logout
 
 # Create your views here.
 
@@ -43,3 +41,6 @@ def read_forgot_password(request):
         return redirect("account:forgot-password-change")
     else:
         return redirect("account:forgot-password-unchange")
+    
+def trys(request):
+    return render(request, 'core/try.html')

@@ -1,0 +1,201 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}{{ markets.name }} | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/market-details.css' %}?v={{random_number}}">
+{% endblock %}
+
+{% block content %}
+<div class="market-detail-container">
+    
+    <section class="market-hero-banner" {% if markets.banner %}style="background-image: url('{{ markets.banner.url }}');"{% endif %}>
+        <div class="banner-overlay"></div>
+        <div class="banner-content container">
+            <div class="market-brand-wrapper">
+                <div class="market-detail-logo">
+                    {% if markets.logo %}
+                        <img src="{{ markets.logo.url }}" alt="{{ markets.name }} Logo">
+                    {% else %}
+                        <i class="fa-solid fa-shop default-shop-icon"></i>
+                    {% endif %}
+                </div>
+                <div class="market-title-meta">
+                    <div class="status-wrapper">
+    <!-- Sol taraftaki renkli Açık/Kapalı badge'i -->
+    <span class="detail-status-badge status-{{ markets.current_status_info.status }}">
+        {% if markets.current_status_info.status == "open" %}Açık{% else %}Kapalı{% endif %}
+    </span>
+    
+    <!-- Sağ taraftaki saat/bilgi alanı (Açık değilse detaylı açılış vaktini gösterir) -->
+    {% if markets.current_status_info.status != "open" %}
+        <span class="opening-time-info">
+            <i class="fa-regular fa-clock"></i> 
+            {{ markets.current_status_info.message }}
+        </span>
+    {% endif %}
+</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container market-main-layout">
+        
+        <aside class="market-sidebar">
+            
+            <div class="sidebar-card categories-card">
+                <h3><i class="fa-solid fa-layer-group"></i> Reyonlar</h3>
+                <hr class="card-divider">
+                <ul class="category-list">
+                    <li><button type="button" class="category-item active" data-category="all"><i class="fa-solid fa-chevron-right"></i> Tüm Ürünler</button></li>
+                    <li><button type="button" class="category-item" data-category="meyve-sebze"><i class="fa-solid fa-chevron-right"></i> Meyve & Sebze</button></li>
+                    <li><button type="button" class="category-item" data-category="sut-kahvalti"><i class="fa-solid fa-chevron-right"></i> Süt & Kahvaltılık</button></li>
+                    <li><button type="button" class="category-item" data-category="temel-gida"><i class="fa-solid fa-chevron-right"></i> Temel Gıda</button></li>
+                    <li><button type="button" class="category-item" data-category="atistirmalik"><i class="fa-solid fa-chevron-right"></i> Atıştırmalık</button></li>
+                    <li><button type="button" class="category-item" data-category="icecekler"><i class="fa-solid fa-chevron-right"></i> İçecekler</button></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card cart-card modern-cart" data-min-price="{{ markets.min_price|default:0 }}">
+                <div class="cart-card-header">
+                    <h3><i class="fa-solid fa-basket-shopping"></i> Sepetim</h3>
+                    <span class="cart-badge-count" id="cartBadgeCount">0</span>
+                </div>
+                <hr class="card-divider">
+                
+                <div class="cart-progress-container" id="cartProgressContainer">
+                    <div class="progress-text-wrapper">
+                        <span id="progressStatusText">Minimum sipariş tutarına ulaşın!</span>
+                        <span class="progress-target"><strong>{{ markets.min_price }} TL</strong></span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="empty-cart-state" id="emptyCartState">
+                    <div class="empty-cart-icon-wrap">
+                        <i class="fa-solid fa-shopping-bag"></i>
+                    </div>
+                    <p>Sepetiniz şu an boş</p>
+                    <small>Lezzetli ürünleri keşfetmeye başlayın!</small>
+                </div>
+
+                <div class="cart-items-wrapper" id="cartItemsWrapper" style="display: none;">
+                    </div>
+
+                <div class="cart-summary" id="cartSummary" style="display: none;">
+                    <hr class="card-divider">
+                    <div class="summary-details">
+                        <div class="summary-row total-row">
+                            <span>Toplam Tutar</span>
+                            <span id="cartTotalPrice">0.00 TL</span>
+                        </div>
+                    </div>
+                    <button type="button" class="checkout-submit-btn" id="checkoutBtn" disabled>
+                        <span>Alışverişi Tamamla</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+
+        <main class="market-content-area">
+            
+            <div class="product-filter-bar">
+                <div class="search-box-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="productSearch" placeholder="Market içinde ürün ara..." class="product-search-input">
+                </div>
+                <div class="sort-box-wrapper">
+                    <label for="productSort"><i class="fa-solid fa-arrow-down-short-wide"></i> Sırala:</label>
+                    <select id="productSort" class="product-sort-select">
+                        <option value="default">Önerilen</option>
+                        <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+                        <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="productsGrid">
+                {% for product in products %}
+                    <div class="product-card" 
+                         data-category="{{ product.category.slug|default:'diger' }}" 
+                         data-price="{{ product.price }}" 
+                         data-name="{{ product.name }}">
+                        <div class="product-img-slot">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="actual-product-image">
+                            {% else %}
+                                <i class="fa-solid fa-box product-placeholder-img"></i>
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <span class="product-category-badge">{{ product.category.name|default:"Genel" }}</span>
+                            <h4 class="product-title">{{ product.name }}</h4>
+                            <div class="product-footer">
+                                <span class="product-price">{{ product.price }} TL</span>
+                                <button type="button" class="add-to-cart-btn" 
+                                        data-id="{{ product.id }}" 
+                                        data-name="{{ product.name }}" 
+                                        data-price="{{ product.price }}"
+                                        data-image="{% if product.image %}{{ product.image.url }}{% endif %}">
+                                    <i class="fa-solid fa-plus"></i> Ekle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="product-card" data-category="meyve-sebze" data-price="45.00" data-name="Amasya Elması Kg">
+                        <div class="product-img-slot"><i class="fa-solid fa-apple-whole product-placeholder-img"></i></div>
+                        <div class="product-info">
+                            <span class="product-category-badge">Meyve & Sebze</span>
+                            <h4 class="product-title">Amasya Elması Kg</h4>
+                            <div class="product-footer">
+                                <span class="product-price">45.00 TL</span>
+                                <button type="button" class="add-to-cart-btn" data-id="mock-1" data-name="Amasya Elması Kg" data-price="45.00"><i class="fa-solid fa-plus"></i> Ekle</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" data-category="sut-kahvalti" data-price="120.00" data-name="Tam Yağlı Beyaz Peynir 500g">
+                        <div class="product-img-slot"><i class="fa-solid fa-cheese product-placeholder-img"></i></div>
+                        <div class="product-info">
+                            <span class="product-category-badge">Süt & Kahvaltılık</span>
+                            <h4 class="product-title">Tam Yağlı Beyaz Peynir 500g</h4>
+                            <div class="product-footer">
+                                <span class="product-price">120.00 TL</span>
+                                <button type="button" class="add-to-cart-btn" data-id="mock-2" data-name="Tam Yağlı Beyaz Peynir 500g" data-price="120.00"><i class="fa-solid fa-plus"></i> Ekle</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" data-category="temel-gida" data-price="32.50" data-name="Pilavlık Pirinç 1kg">
+                        <div class="product-img-slot"><i class="fa-solid fa-bowl-rice product-placeholder-img"></i></div>
+                        <div class="product-info">
+                            <span class="product-category-badge">Temel Gıda</span>
+                            <h4 class="product-title">Pilavlık Pirinç 1kg</h4>
+                            <div class="product-footer">
+                                <span class="product-price">32.50 TL</span>
+                                <button type="button" class="add-to-cart-btn" data-id="mock-3" data-name="Pilavlık Pirinç 1kg" data-price="32.50"><i class="fa-solid fa-plus"></i> Ekle</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="empty-products-placeholder" id="noProductsMatch" style="display: none;">
+                <i class="fa-solid fa-magnifying-glass placeholder-icon"></i>
+                <h3>Aradığınız Ürün Bulunamadı</h3>
+                <p>Farklı bir kelime aramayı veya başka bir reyonu kontrol etmeyi deneyebilirsiniz.</p>
+            </div>
+            
+        </main>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+    <script src="{% static 'js/market-details.js' %}"></script>
+{% endblock %}

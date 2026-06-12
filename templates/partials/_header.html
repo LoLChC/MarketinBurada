@@ -1,34 +1,30 @@
 {% load static %}
 <header class="header" id="mainHeader">
     <div class="header-container">
-        <a href="{% url "main:home" %}" class="logo-area">
+        <a href="/" class="logo-area">
             <img src="{% static 'images/Logo_Circle_NoText.png' %}" alt="Marketin Burada Logo">
             <span>Marketin Burada</span>
         </a>
         <div class="header-links">
             <a href="/markets/">Marketler</a>
-            <a href="{% url "main:about" %}">Hakkımızda</a>
+            <a href="/about/">Hakkımızda</a>
                 
             <div class="auth-links">
-                <a href="{% url "account:login" %}" class="btn-login">Giriş Yap</a>
-                <a href="{% url "account:register" %}" class="btn-primary">Kayıt Ol</a>
+                {% if auth_state %}
+                    <!-- Kullanıcı Giriş Yapmışsa Gözükecek Alan -->
+                    <a href="{% url "account:user-account" %}" class="header-icon-link">
+                        <i class="fa-regular fa-user"></i>
+                    </a>
+                    
+                    <a href="{% url "account:cart" %}" class="header-icon-link">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                    </a>
+                {% else %}
+                    <!-- Kullanıcı Giriş Yapmamışsa Gözükecek Alan -->
+                    <a href="{% url "account:login" %}" class="btn-login">Giriş Yap</a>
+                    <a href="{% url "account:register" %}" class="btn-primary">Kayıt Ol</a>
+                {% endif %}
             </div>
         </div>
     </div>
 </header>
-
-<script>
-    function initHeaderDynamics() {
-    const header = document.getElementById('mainHeader');
-    
-    if (!header) return;
-
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-}
-</script>

@@ -52,66 +52,33 @@
             <h2 id="marketler" class="section-title">Marketlerimiz</h2>
             <section class="markets-grid">
                 
-                <div class="market-card">
-                    <div class="market-cover style-market-1">
-                        Bizim Merkez Market
-                    </div>
-                    <div class="market-info">
-                        <span class="market-badge status-open">Açık</span>
-                        <h3>Bizim Merkez Market</h3>
-                        <p class="market-address">Kadıköy, İstanbul</p>
-                        <div class="market-details">
-                            <span>Min. Tutar: <strong>150 TL</strong></span>
-                            <span>Kurye: <strong>Market Kuryesi</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="market-card">
-                    <div class="market-cover style-market-2">
-                        Huzur Şarküteri
-                    </div>
-                    <div class="market-info">
-                        <span class="market-badge status-open">Açık</span>
-                        <h3>Huzur Manav & Şarküteri</h3>
-                        <p class="market-address">Çankaya, Ankara</p>
-                        <div class="market-details">
-                            <span>Min. Tutar: <strong>200 TL</strong></span>
-                            <span>Kurye: <strong>Market Kuryesi</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="market-card">
-                    <div class="market-cover style-market-3">
-                        Güven Gıda
-                    </div>
-                    <div class="market-info">
-                        <span class="market-badge status-busy">Yoğun</span>
-                        <h3>Güven Süpermarket</h3>
-                        <p class="market-address">Beşiktaş, İstanbul</p>
-                        <div class="market-details">
-                            <span>Min. Tutar: <strong>100 TL</strong></span>
-                            <span>Kurye: <strong>Market Kuryesi</strong></span>
-                        </div>
-                    </div>
-                </div>
-                
                 {% for market in markets %}
-                <div class="market-card">
-                    <div class="market-cover">
-                        {{ market.name }}
-                    </div>
-                    <div class="market-info">
-                        <span class="market-badge status-open">Aktif</span>
-                        <h3>{{ market.name }}</h3>
-                        <p class="market-address">{{ market.address }}</p>
-                        <div class="market-details">
-                            <span>Min. Tutar: <strong>{{ market.min_delivery_amount }} TL</strong></span>
-                            <span>Kurye: <strong>Market Kuryesi</strong></span>
+                    <a href="/markets/{{ market.slug }}/" class="market-card">
+                        
+                        <div class="market-cover" {% if market.banner %}style="background-image: url('{{ market.banner.url }}'); background-size: cover; background-position: center;"{% endif %}>
+                            {% if not market.banner %}
+                                {{ market.name }}
+                            {% endif %}
                         </div>
-                    </div>
-                </div>
+                        
+                        <div class="market-info">
+                            <span class="market-badge status-{{ market.current_status_info.status }}">
+                                {{ market.current_status_info.message }}
+                            </span>
+                            
+                            <h3>{{ market.name }}</h3>
+                            
+                            <p class="market-address">
+                                <i class="fa-solid fa-location-dot"></i> 
+                                {% if market.location %}{{ market.location }}{% else %}Konum Belirtilmedi{% endif %}
+                            </p>
+                            
+                            <div class="market-details">
+                                <span>Minimum Sipariş Tutarı: <strong>{{ market.min_price }} TL</strong></span>
+                            </div>
+                        </div>
+
+                    </a>
                 {% endfor %}
 
             </section>

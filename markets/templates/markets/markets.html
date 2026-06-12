@@ -5,16 +5,77 @@
 <head>
     {% block title %}Marketler | Marketin Burada{% endblock %}
     {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'css/markets.css' %}?v={{random_number}}">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/markets.css' %}?v={{random_number}}">
     {% endblock %}
 </head>
 <body>
     {% block content %}
+        <div class="container">
+            
+            <section class="markets-header-section">
+                <h1 class="page-title">Tüm Yerel Marketler</h1>
+                <p class="page-subtitle">Mahallenizdeki güvenilir esnafları keşfedin, siparişinizi oluşturun.</p>
+                
+                <div class="filter-search-wrapper">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="marketSearch" placeholder="Market veya bölge adı ara...">
+                    </div>
+                    
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">Tümü</button>
+                        <button class="filter-btn" data-filter="open">Açık</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="markets-page-grid" id="marketsGrid">
+                
+                {% for market in markets %}
+                    <div class="market-page-card" data-status="{{ market.current_status_info.status }}" data-name="{{ market.name|lower }} {% if market.location %}{{ market.location|lower }}{% endif %}">
+                        
+                        <a href="/markets/{{ market.slug }}/" class="market-page-cover-link">
+                            <div class="market-page-cover" {% if market.banner %}style="background-image: url('{{ market.banner.url }}'); background-size: cover; background-position: center;"{% endif %}>
+                                {% if not market.banner %}
+                                    {{ market.name }}
+                                {% endif %}
+                            </div>
+                        </a>
+                        
+                        <div class="market-page-info">
+                            <span class="market-page-badge status-{{ market.current_status_info.status }}">
+                                {{ market.current_status_info.message }}
+                            </span>
+                            
+                            <h3>{{ market.name }}</h3>
+                            
+                            <p class="market-page-address">
+                                <i class="fa-solid fa-location-dot"></i> 
+                                {% if market.location %}{{ market.location }}{% else %}Konum Belirtilmedi{% endif %}
+                            </p>
+                            
+                            <div class="market-page-details">
+                                <span>Minimum Sipariş Tutarı: <strong>{{ market.min_price }} TL</strong></span>
+                            </div>
+                            
+                            <a href="/markets/{{ market.slug }}/" class="btn-go-market">Markete Göz At <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+            </section>
+
+            <div id="noResults" class="no-results-message" style="display: none;">
+                <i class="fa-regular fa-face-frown empty-icon"></i>
+                <p>Aradığınız kriterlere uygun market bulunamadı.</p>
+            </div>
+        </div>
     {% endblock %}
 </body>
 {% block js_code %}
-    <script src="{% static 'js/markets.js' %}?v={{random_number}}"></script>
+    <script src="{% static 'js/markets.js' %}"></script>
 {% endblock %}
 </html>

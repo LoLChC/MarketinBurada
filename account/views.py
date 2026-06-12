@@ -173,6 +173,10 @@ def user_account(request):
     random_number = random.randint(1, 2000)
     return render(request, 'account/user-account.html', {'random_number': random_number})
 
+def cart(request):
+    random_number = random.randint(1, 2000)
+    return render(request, 'account/cart.html', {'random_number': random_number})
+
 @required_login
 def market_account(request):
     random_number = random.randint(1, 2000)

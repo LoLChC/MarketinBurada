@@ -108,16 +108,20 @@
     border: 1px solid rgb(240, 230, 140);
     border-radius: 12px;
     overflow: hidden;
-    transition: box-shadow 0.3s, border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
 }
 
 .market-card:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
     border-color: rgb(210, 180, 60);
 }
 
 .market-cover {
-    height: 150px;
+    height: 140px;
     background-color: rgb(240, 230, 140);
     display: flex;
     align-items: center;
@@ -126,41 +130,58 @@
     color: #6B645C;
     font-weight: bold;
     font-size: 1.2rem;
-    padding: 10px;
+    padding: 15px;
     text-align: center;
 }
 
-/* Statik Market Kapak Renkleri */
-.style-market-1 { background: linear-gradient(135deg, rgb(240, 230, 140), #e9d77b); }
-.style-market-2 { background: linear-gradient(135deg, #ebd882, #E9A66C); }
-.style-market-3 { background: linear-gradient(135deg, rgb(240, 230, 140), #E07A5F); }
-
-.market-info { padding: 20px; }
+.market-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
 
 .market-badge {
-    display: inline-block;
+    align-self: flex-start;
     color: white;
     font-size: 0.75rem;
     padding: 3px 8px;
     border-radius: 4px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
+
 .status-open { background-color: #7A8450; }
 .status-busy { background-color: #E9A66C; }
 
-.market-info h3 { font-size: 1.3rem; margin-bottom: 5px; }
-.market-address { color: #6B645C; font-size: 0.9rem; }
+.market-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+    font-family: "Fraunces", serif;
+}
+
+.market-address {
+    color: #6B645C;
+    font-size: 0.88rem;
+    margin-bottom: 15px;
+}
+
+.market-address i {
+    color: #E07A5F;
+    margin-right: 4px;
+}
 
 .market-details {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     color: #6B645C;
-    font-size: 0.85rem;
-    margin-top: 15px;
-    padding-top: 15px;
+    font-size: 0.88rem;
+    margin-top: auto;
+    padding: 12px 0;
     border-top: 1px solid #FAF7F2;
+    border-bottom: 1px solid #FAF7F2;
 }
-.market-details span strong {
-    color: #E07A5F; 
+
+.market-details strong {
+    color: #E07A5F;
 }

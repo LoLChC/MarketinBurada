@@ -15,12 +15,12 @@ function initMainAnimations() {
             }
         });
     }, {
-        threshold: 0.05
+        threshold: 0.02
     });
 
     marketCards.forEach(card => {
         card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
+        card.style.transform = 'translateY(25px)';
         card.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
         cardObserver.observe(card);
     });

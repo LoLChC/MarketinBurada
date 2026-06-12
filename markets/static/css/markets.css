@@ -1,0 +1,238 @@
+/* ==========================================================================
+   MARKETS PAGE (MARKETLER SAYFASI ÖZGÜ STILLERI)
+   ========================================================================== */
+
+.markets-header-section {
+    padding: 40px 0 20px;
+    text-align: center;
+}
+
+.page-title {
+    font-family: "Fraunces", serif;
+    font-size: 2.5rem;
+    color: #2B2A28;
+    margin-bottom: 10px;
+}
+
+.page-subtitle {
+    color: #6B645C;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* Arama ve Filtreleme Alanı */
+.filter-search-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .filter-search-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 45px;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 30px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+    background-color: white;
+    color: #2B2A28;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-box input:focus {
+    border-color: #E07A5F;
+    box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6B645C;
+    font-size: 1rem;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-btn {
+    background-color: white;
+    border: 1px solid rgb(240, 230, 140);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #6B645C;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    border-color: #E07A5F;
+    color: #E07A5F;
+}
+
+.filter-btn.active {
+    background-color: #E07A5F;
+    border-color: #E07A5F;
+    color: white;
+}
+
+/* Market Kart Izgarası */
+.markets-page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.market-page-card {
+    background: white;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.market-page-card:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    border-color: rgb(210, 180, 60);
+}
+
+.market-page-cover {
+    height: 140px;
+    background-color: rgb(240, 230, 140);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Fraunces", serif;
+    color: #6B645C;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Renk Geçişleri */
+.style-m-1 { background: linear-gradient(135deg, rgb(240, 230, 140), #e9d77b); }
+.style-m-2 { background: linear-gradient(135deg, #ebd882, #E9A66C); }
+.style-m-3 { background: linear-gradient(135deg, rgb(240, 230, 140), #E07A5F); }
+
+.market-page-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.market-page-badge {
+    align-self: flex-start;
+    color: white;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.status-open { background-color: #7A8450; }
+.status-busy { background-color: #E9A66C; }
+
+.market-page-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+    font-family: "Fraunces", serif;
+}
+
+.market-page-address {
+    color: #6B645C;
+    font-size: 0.88rem;
+    margin-bottom: 15px;
+}
+
+.market-page-address i {
+    color: #E07A5F;
+    margin-right: 4px;
+}
+
+.market-page-details {
+    display: flex;
+    justify-content: center; /* Tek bilgi kaldığı için ortalandı */
+    color: #6B645C;
+    font-size: 0.88rem;
+    margin-top: auto;
+    padding: 12px 0;
+    border-top: 1px solid #FAF7F2;
+    border-bottom: 1px solid #FAF7F2;
+}
+
+.market-page-details strong {
+    color: #E07A5F;
+}
+
+/* Detay Butonu */
+.btn-go-market {
+    display: block;
+    text-align: center;
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(224, 122, 95, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-go-market i {
+    font-size: 0.8rem;
+    margin-left: 5px;
+    transition: transform 0.2s;
+}
+
+.btn-go-market:hover {
+    background-color: #E07A5F;
+    color: white !important;
+    border-color: #E07A5F;
+}
+
+.btn-go-market:hover i {
+    transform: translateX(3px);
+}
+
+/* Sonuç Bulunamadı Alanı */
+.no-results-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6B645C;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    color: rgb(240, 230, 140);
+    margin-bottom: 15px;
+}

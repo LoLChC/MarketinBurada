@@ -4,7 +4,7 @@
     padding: 0;
 }
 
-a{
+a {
     text-decoration: none;
     color: inherit;
 }
@@ -50,11 +50,11 @@ body.theme-marketin-burada {
 }
 .btn-primary:hover { opacity: 0.9; }
 
-/** HEADER (Tüm px'ler yüzdelik ve esnek birimlere çevrildi) **/
+/** HEADER **/
 
 header.header {
     background-color: rgba(250, 247, 242, 0.95);
-    border-bottom: 0.06rem solid rgb(240, 230, 140); /* 1px zorunlu alt çizgi esnek birimi */
+    border-bottom: 0.06rem solid rgba(43, 42, 40, 0.06); 
     position: sticky;
     top: 0;
     z-index: 100;
@@ -63,7 +63,7 @@ header.header {
 }
 
 header.header.scrolled {
-    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.04); /* Gölge derinliği için rem kullanıldı */
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.03);
     background-color: #FAF7F2;
 }
 
@@ -71,19 +71,19 @@ header.header.scrolled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.2% 2%; /* Tamamen yüzdelik iç boşluk */
-    max-width: 96%;   /* 1200px yerine esnek yüzdelik genişlik */
+    padding: 1.2% 2%;
+    max-width: 96%;
     margin: 0 auto;
 }
 
 .logo-area {
     display: flex;
     align-items: center;
-    gap: 0.75rem;     /* 12px yerine fonta duyarlı oran */
+    gap: 0.75rem;
 }
 
 .logo-area img {
-    height: 2.8rem;   /* 45px yerine font büyüklüğüne göre ölçeklenen yükseklik */
+    height: 2.8rem;
     width: auto;
 }
 
@@ -95,7 +95,7 @@ header.header.scrolled {
 
 .header-links {
     display: flex;
-    gap: 1.5rem;      /* 25px yerine fonta duyarlı oran */
+    gap: 1.5rem;
     align-items: center;
 }
 
@@ -110,7 +110,7 @@ header.header.scrolled {
 .auth-links {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem; /* İkonlar sadece daire olduğu için aralarındaki boşluğu tatlı bir seviyeye çektik */
     margin-left: 0.3rem;
 }
 
@@ -123,7 +123,49 @@ header.header.scrolled {
 .btn-login:hover { color: #E07A5F !important; }
 
 
-/** Loader Ekarnı **/
+/* ================================================================= */
+/* NEW VIBE: SADECE İKONLAR İÇİN ULTRA PREMIUM DAİRESEL BUTONLAR      */
+/* ================================================================= */
+
+.header-icon-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;  /* Tam kare alan */
+    height: 40px; /* Tam kare alan */
+    border-radius: 50%; /* Kusursuz pürüzsüz yuvarlaklık */
+    font-size: 1.15rem; /* İkonun kutu içerisindeki premium büyüklüğü */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hesabım İkon Butonu: Transparan, gömülü asil bir gri-bej cam tonu */
+.header-icon-link:first-of-type {
+    background-color: rgba(43, 42, 40, 0.05);
+    color: #2B2A28 !important;
+}
+
+.header-icon-link:first-of-type:hover {
+    background-color: rgba(43, 42, 40, 0.1);
+    transform: translateY(-2px); /* Çok hafif yukarı zıplama efekti */
+}
+
+/* Sepetim İkon Butonu: Sitenin can damarı olan somon rengi, altında şık bir derinlik gölgesiyle */
+.header-icon-link:last-of-type {
+    background-color: #E07A5F;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(224, 122, 95, 0.2);
+}
+
+.header-icon-link:last-of-type:hover {
+    background-color: #d46b50;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(224, 122, 95, 0.35); /* Hoverda gölge patlaması */
+}
+
+/* ================================================================= */
+
+
+/** Loader Ekranı **/
 
 .loader-overlay {
     position: fixed;
@@ -131,7 +173,7 @@ header.header.scrolled {
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(250, 247, 242, 0.85); /* #FAF7F2 tonunun saydam hali */
+    background-color: rgba(250, 247, 242, 0.85);
     backdrop-filter: blur(5px);
     z-index: 9999;
     display: flex;
@@ -169,7 +211,7 @@ header.header.scrolled {
 }
 
 
-/** FOOTER (Tüm px'ler yüzdelik yapıldı) **/
+/** FOOTER **/
 
 footer {    
     background-color: #2B2A28;
@@ -180,7 +222,7 @@ footer {
 }
 
 footer p {
-    padding: 1.8% 2%; /* 25px olan sabit iç boşluk tamamen yüzdelik (%1.8 dikey, %2 yatay) yapıldı */
+    padding: 1.8% 2%;
     color: #FAF7F2;
     opacity: 0.8;
 }

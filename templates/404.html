@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Sayfa Bulunamadı | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-wrapper {
+        min-height: 65vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .error-card {
+        background: white;
+        border: 1px solid rgb(240, 230, 140);
+        padding: 50px 40px;
+        border-radius: 20px;
+        max-width: 550px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    }
+    .error-code {
+        font-family: "Fraunces", serif;
+        font-size: 6rem;
+        font-weight: 900;
+        color: #E07A5F;
+        line-height: 1;
+        margin-bottom: 10px;
+    }
+    .error-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        display: block;
+    }
+    .error-card h1 {
+        font-family: "Fraunces", serif;
+        font-size: 2rem;
+        color: #2B2A28;
+        margin-bottom: 15px;
+    }
+    .error-card p {
+        color: #6B645C;
+        font-size: 1.05rem;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+    .btn-error-back {
+        display: inline-block;
+        box-shadow: 0 4px 12px rgba(224, 122, 95, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="error-wrapper">
+        <div class="error-card">
+            <span class="error-icon">🕵️‍♂️</span>
+            <div class="error-code">404</div>
+            <h1>Aradığınız Reyon Bulunamadı!</h1>
+            <p>Aradığınız sayfa kaldırılmış, adı değiştirilmiş veya geçici olarak kullanım dışı kalmış olabilir. Mahallenizin marketlerine dönmeye ne dersiniz?</p>
+            <a href="/" class="btn-primary btn-error-back">Ana Sayfaya Dön</a>
+        </div>
+    }
+</div>
+{% endblock %}
