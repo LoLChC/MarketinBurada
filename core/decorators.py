@@ -24,7 +24,6 @@ def required_login(view_func):
 
     return wrapper
 
-
 def required_logout(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):

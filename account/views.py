@@ -197,12 +197,8 @@ def user_account(request):
 
         # DELETE ACCOUNT (SOFT DELETE)
         if action == "delete_account":
-            user.delete_time()  # deleted_at set ediyor
-
-            # cache temizle
+            user.delete()
             cache.delete(f"user-{user.id}")
-
-            # session kapat
             request.session.flush()
 
             return redirect("account:login")

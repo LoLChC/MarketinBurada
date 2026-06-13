@@ -1,6 +1,4 @@
 from django.db import models
-from django.utils import timezone
-from datetime import timedelta
 from django.contrib.auth.hashers import make_password, check_password
 
 class User(models.Model):
@@ -13,7 +11,6 @@ class User(models.Model):
     birthday = models.DateField(null=True, blank=True)
     register_date = models.DateTimeField(auto_now_add=True)
     login_dates = models.JSONField(default=list, blank=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     def password_hash(self, raw_password):
         self.password = make_password(raw_password)
@@ -22,14 +19,6 @@ class User(models.Model):
     def password_check(self, raw_password):
         return check_password(raw_password, self.password)
     
-    def delete_time(self):
-        self.deleted_at = timezone.now()
-        self.save()
-
-    def delete_time_correct(self):
-        if self.deleted_at:
-            return timezone.now() >= self.deleted_at + timedelta(days=30)
-        return False
 
 class Card(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cards")

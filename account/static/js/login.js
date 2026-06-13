@@ -1,8 +1,30 @@
-window.addEventListener("pageshow", function (event) {
-    if (event.persisted) {
-        window.location.reload();
-    }
-});
+function showFlash(message, type = 'error') {
+    const container = document.getElementById('login-flash-container');
+    if (!container) return;
+
+    // Eski mesajı temizle ve yığılmayı önle
+    container.innerHTML = '';
+
+    // Yeni mesaj elementi oluştur
+    const flashCard = document.createElement('div');
+    flashCard.className = `inline-flash ${type}`;
+    
+    flashCard.innerHTML = `
+        <span class="flash-text">${message}</span>
+        <button type="button" class="flash-close" aria-label="Kapat">&times;</button>
+    `;
+
+    // Kapatma butonu aksiyonu
+    flashCard.querySelector('.flash-close').addEventListener('click', () => {
+        flashCard.style.opacity = '0';
+        flashCard.style.transform = 'translateY(-10px)';
+        setTimeout(() => flashCard.remove(), 200);
+    });
+
+    // Kapsayıcıya ekle
+    container.appendChild(flashCard);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
     const togglePasswordButtons = document.querySelectorAll('.toggle-password-btn');
