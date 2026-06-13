@@ -41,6 +41,7 @@ class Market(models.Model):
     
     # Genel aktiflik durumu (True: Aktif/Açık sistem, False: Sistemde pasif)
     status = models.BooleanField(default=True, verbose_name="Sistemde Aktif mi?")
+    home = models.BooleanField(default=False, verbose_name="Home pagede gözüküyormu")
     
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Kayıt Tarihi")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Güncellenme Tarihi")

@@ -2,7 +2,11 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.shortcuts import render
 from account.models import User
-from .decorators import required_logout
+from .decorators import required_logout, required_login
+from django.core.cache import cache
+from django.shortcuts import get_object_or_404, redirect
+from account.models import Address
+
 
 # Create your views here.
 
@@ -42,5 +46,17 @@ def read_forgot_password(request):
     else:
         return redirect("account:forgot-password-unchange")
     
+def clear_cache(request):
+    cache.clear()
+    return redirect("account:login")
+
+@required_login
+def address_delete(request, pk):
+    if request.method == "POST":
+        address = get_object_or_404(Address, id=pk, user=request.user_obj)
+        address.delete()
+
+    return redirect("account:user-account")
+
 def trys(request):
     return render(request, 'core/try.html')

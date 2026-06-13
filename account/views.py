@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 import random
-from .models import User
-from django.contrib.auth.hashers import check_password, make_password
+from .models import User, Card, Address
+from django.contrib.auth.hashers import make_password
 from core.decorators import required_login, required_logout
 from django.db.models import Q
 from core import utils
 from core import tokens
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -171,6 +171,75 @@ def logout(request):
 @required_login
 def user_account(request):
     random_number = random.randint(1, 2000)
+    user_obj = request.user_obj
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        user = User.objects.filter(id=user_obj.id).first()
+
+        if not user:
+            return redirect("account:login")
+
+        # PROFILE UPDATE
+        if action == "update_profile":
+            birthday = request.POST.get("birthday")
+            phone_number = request.POST.get("phone_number")
+
+            user.phone_number = phone_number
+            user.birthday = birthday
+            user.save()
+
+            cache.set(f"user-{user.id}", user, timeout=300)
+            request.user_obj = user
+
+            return redirect("account:user-account")
+
+        # DELETE ACCOUNT (SOFT DELETE)
+        if action == "delete_account":
+            user.delete_time()  # deleted_at set ediyor
+
+            # cache temizle
+            cache.delete(f"user-{user.id}")
+
+            # session kapat
+            request.session.flush()
+
+            return redirect("account:login")
+        
+        if action == "add_address":
+            address_title = request.POST.get("address-title")
+            city = request.POST.get("city")
+            district = request.POST.get("district")
+            address_detail = request.POST.get("address-detail")
+
+            Address.objects.create(user=user, title=address_title, city=city, district=district, address_detail=address_detail)
+
+        if action == "add_card":
+            card_holder = request.POST.get("card-holder")
+            card_number = request.POST.get("card-number")
+            card_expiry = request.POST.get("card-expiry")  # "AA/YY"
+            card_cvv = request.POST.get("card-cvv")
+
+            if not (card_holder and card_number and card_expiry and card_cvv):
+                return redirect("account:user-account")
+
+            try:
+                expiry_month, expiry_year = card_expiry.split("/")
+                expiry_month = int(expiry_month)
+                expiry_year = int("20" + expiry_year)  # 29 -> 2029 gibi
+
+            except:
+                return redirect("account:user-account")
+
+            # kart numarasını temizle (boşlukları kaldır)
+            card_number = card_number.replace(" ", "")
+
+            Card.objects.create(user=user, card_holder=card_holder, card_number=card_number, expiry_month=expiry_month, expiry_year=expiry_year, card_cvv=card_cvv)
+
+            return redirect("account:user-account")
+
+
     return render(request, 'account/user-account.html', {'random_number': random_number})
 
 def cart(request):

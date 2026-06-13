@@ -1,0 +1,267 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Hesabım | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/user-account.css' %}?v={{ random_number }}">
+{% endblock %}
+
+{% block content %}
+<div class="container account-main-container">
+    <div class="account-layout">
+        
+        <aside class="account-sidebar">
+            <div class="user-brief">
+                <div class="avatar-circle">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="user-info-text">
+                    <span class="welcome-text">Merhaba,</span>
+                    <h3 class="user-fullname">{{ request.user_obj.name }}</h3>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <button class="menu-item active" data-target="orders">
+                    <i class="fa-solid fa-box-open"></i> Siparişlerim
+                </button>
+                <button class="menu-item" data-target="profile">
+                    <i class="fa-regular fa-id-card"></i> Hesap Bilgilerim
+                </button>
+                <button class="menu-item" data-target="addresses">
+                    <i class="fa-solid fa-map-location-dot"></i> Adreslerim
+                </button>
+                <button class="menu-item" data-target="payments">
+                    <i class="fa-regular fa-credit-card"></i> Ödeme Yöntemlerim
+                </button>
+                <a href="{% url 'account:logout' %}" class="menu-item logout-link">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış Yap
+                </a>
+            </nav>
+
+            <div class="sidebar-footer-menu">
+                <button class="menu-item secondary-item" data-target="support">
+                    <i class="fa-solid fa-headset"></i> Müşteri Hizmetleri
+                </button>
+                <button class="menu-item secondary-item" data-target="faq">
+                    <i class="fa-regular fa-circle-question"></i> SSS (Sıkça Sorulanlar)
+                </button>
+            </div>
+        </aside>
+
+        <main class="account-content">
+            
+            <section id="orders" class="content-panel active">
+                <h2>Siparişlerim</h2>
+                <p class="panel-subtitle">Geçmiş ve aktif tüm siparişlerinizin durumu.</p>
+                
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-date">12 Haziran 2026</span>
+                            <span class="order-id">#MB-98745</span>
+                        </div>
+                        <span class="market-badge status-open">Teslim Edildi</span>
+                    </div>
+                    <div class="order-body">
+                        <h4>Bizim Mahalle Market</h4>
+                        <p>3 Ürün • Toplam: <strong>345.50 TL</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profile" class="content-panel">
+                <h2>Hesap Bilgilerim</h2>
+                <p class="panel-subtitle">Kişisel bilgilerinizi buradan güncelleyebilirsiniz.</p>
+                
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+                {% if success %}
+                    <div class="alert alert-success">Bilgileriniz başarıyla güncellendi.</div>
+                {% endif %}
+
+                <form class="account-form" method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acc-name">Ad Soyad</label>
+                            <input type="text" id="acc-name" name="name" value="{{ request.user_obj.name }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="acc-phone">Telefon Numarası</label>
+                            <input type="tel" id="acc-phone" name="phone_number" value="{{ request.user_obj.phone_number|default_if_none:'' }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acc-email">E-posta Adresi</label>
+                            <input type="email" id="acc-email" name="email" value="{{ request.user_obj.email }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="acc-birthday">Doğum Tarihi</label>
+                            <input type="date" id="acc-birthday" name="birthday" value="{{ request.user_obj.birthday|date:'Y-m-d' }}">
+                        </div>
+                    </div>
+                    <button type="submit" name="action" value="update_profile" class="btn-account-save">Değişiklikleri Kaydet</button>
+                </form>
+
+                <div class="danger-zone">
+                    <h3>Hesabı Kapat</h3>
+                    <p class="panel-subtitle">Hesabınızı kapattığınızda verileriniz 30 gün boyunca saklanır, ardından kalıcı olarak silinir.</p>
+                    <form method="POST" id="delete-account-form">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="delete_account" class="btn-delete-account">
+                            <i class="fa-solid fa-user-slash"></i> Hesabımı Kapat
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="addresses" class="content-panel">
+                <h2>Adreslerim</h2>
+                <p class="panel-subtitle">Siparişlerinizin teslim edileceği kayıtlı konumlar.</p>
+                <div class="address-grid">
+                    {% for address in request.user_obj.addresses.all %}
+                        <div class="address-card">
+                            <div class="address-title">
+                                <h3>
+                                    <i class="fa-solid fa-house"></i>{{ address.title }}
+                                </h3>
+
+                                <form method="POST" action="{% url 'core:address-delete' address.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-address-delete">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <p>{{ address.address_detail }}, {{ address.district }} / {{ address.city }}</p>
+                        </div>
+                    {% endfor %}
+                    <button type="button" class="add-new-card" id="btn-open-address-modal">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Yeni Adres Ekle</span>
+                    </button>
+                </div>
+            </section>
+
+            <section id="payments" class="content-panel">
+                <h2>Ödeme Yöntemlerim</h2>
+                <p class="panel-subtitle">Kayıtlı kartlarınız ve güvenli ödeme seçenekleri.</p>
+                <div class="address-grid">
+                    {% for cards in request.user_obj.cards.all %}
+                        <div class="payment-card">
+                            <div class="payment-card-logo">
+                                <i class="fa-brands fa-cc-visa"></i>
+                            </div>
+                            <div class="payment-card-info">
+                                <p class="card-number">•••• •••• •••• {{ cards.card_number|slice:"-4:" }}</p>
+                                <p class="card-expiry">Son Kullanma: {{cards.expiry_month}} / {{cards.expiry_year}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <button type="button" class="add-new-card" id="btn-open-payment-modal">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Yeni Kart Ekle</span>
+                    </button>
+                </div>
+            </section>
+
+            <section id="support" class="content-panel">
+                <h2>Müşteri Hizmetleri</h2>
+                <p class="panel-subtitle">Bizimle dilediğiniz an iletişime geçebilirsiniz.</p>
+                <div class="support-box">
+                    <p>Sorularınız veya destek talepleriniz için yerel çağrı merkezimize ulaşın:</p>
+                    <a href="tel:08500000000" class="support-phone"><i class="fa-solid fa-phone"></i> 0850 000 00 00</a>
+                    <p class="support-hours">Çalışma Saatleri: Her gün 09:00 - 22:00</p>
+                </div>
+            </section>
+
+            <section id="faq" class="content-panel">
+                <h2>Sikça Sorulan Sorular</h2>
+                <p class="panel-subtitle">Merkezimize en çok yöneltilen soruların yanıtları.</p>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <h4>Siparişimi kim teslim getiriyor?</h4>
+                        <p>Siparişlerinizi sistem dışı kuryeler değil, alışveriş yaptığınız yerel marketin kendi personeli kapınıza kadar ulaştırır.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Minimum sipariş tutarı nedir?</h4>
+                        <p>Her marketin minimum sipariş tutarı kendi belirlediği kriterlere göre değişiklik gösterir ve market kartlarında açıkça yazılıdır.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<div id="address-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-map-location-dot"></i> Yeni Adres Ekle</h3>
+            <button class="modal-close" data-close="address-modal">&times;</button>
+        </div>
+        <form method="POST" class="account-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="modal-address-title">Adres Başliği</label>
+                <input type="text" id="modal-address-title" name="address-title" placeholder="Örn: Evim, İş Yerim" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="modal-address-city">Şehir</label>
+                    <input type="text" id="modal-address-city" name="city" placeholder="Örn: Ankara" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-address-district">İlçe</label>
+                    <input type="text" id="modal-address-district" name="district" placeholder="Örn: Çankaya" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="modal-address-detail">Tam Adres</label>
+                <input type="text" id="modal-address-detail" name="address-detail" placeholder="Mahalle, cadde, sokak, kapı ve daire no..." required>
+            </div>
+            <button type="submit" name="action" value="add_address" class="btn-account-save">Adresi Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<div id="payment-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-regular fa-credit-card"></i> Yeni Kart Ekle</h3>
+            <button class="modal-close" data-close="payment-modal">&times;</button>
+        </div>
+        <form method="POST" class="account-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="card-holder">Kart Üzerindeki İsim</label>
+                <input type="text" id="card-holder" name="card-holder" placeholder="Ad Soyad" required>
+            </div>
+            <div class="form-group">
+                <label for="card-number">Kart Numarası</label>
+                <input type="text" id="card-number" name="card-number" placeholder="•••• •••• •••• ••••" maxlength="19" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="card-expiry">Son Kullanma Tarihi</label>
+                    <input type="text" id="card-expiry" name="card-expiry" placeholder="AA/YY" maxlength="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-cvv">CVC / CVV</label>
+                    <input type="password" id="card-cvv" name="card-cvv" placeholder="•••" maxlength="3" required>
+                </div>
+            </div>
+            <button type="submit" name="action" value="add_card" class="btn-account-save">Kartı Güvenle Kaydet</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+    <script src="{% static 'js/user-account.js' %}?v={{ random_number }}"></script>
+{% endblock %}

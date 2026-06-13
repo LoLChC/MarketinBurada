@@ -30,3 +30,31 @@ class User(models.Model):
         if self.deleted_at:
             return timezone.now() >= self.deleted_at + timedelta(days=30)
         return False
+
+class Card(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cards")
+
+    card_holder = models.CharField(max_length=255)
+    card_number = models.CharField(max_length=19)  # 16-19 hane (space dahil olabilir)
+    expiry_month = models.PositiveSmallIntegerField()
+    expiry_year = models.PositiveSmallIntegerField()
+    card_cvv = models.CharField(max_length=4)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name_on_card} - {self.card_number[-4:]}"
+    
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
+
+    title = models.CharField(max_length=100)          # Adres başlığı
+    city = models.CharField(max_length=100)           # Şehir
+    district = models.CharField(max_length=100)       # İlçe
+    address_detail = models.TextField()               # Tam adres
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.card_holder} - {self.card_number[-4:]}"

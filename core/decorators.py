@@ -10,6 +10,7 @@ def required_login(view_func):
         if not user_id:
             return redirect("account:login")
         
+        
         user = cache.get(f"user-{user_id}")
 
         if not user:
