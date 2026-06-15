@@ -6,14 +6,14 @@ from .decorators import required_logout, required_login
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404, redirect
 from account.models import Address
-
+from . import utils
 
 # Create your views here.
-
+@required_login
 def read_verify_email(request):
     real_token = request.session.get("token")
     user_token = request.GET.get("token")
-    user_id = request.session.get("user-id")
+    user_id = utils.login_token_to_user_id(request)
 
     if real_token == user_token:
         user = User.objects.filter(id=user_id).first()
@@ -24,7 +24,7 @@ def read_verify_email(request):
         return redirect("account:verification-unsuccess")
 
 def verify_email_looking(request):
-    user_id = request.session.get("user-id")
+    user_id = utils.login_token_to_user_id(request)
     user = User.objects.filter(id=user_id).first()
     verify = user.email_verify
     if verify == True:

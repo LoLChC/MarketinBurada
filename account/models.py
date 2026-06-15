@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password, check_password
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
     email_verify = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
@@ -14,13 +15,12 @@ class User(models.Model):
 
     def password_hash(self, raw_password):
         self.password = make_password(raw_password)
-        self.save()
 
     def password_check(self, raw_password):
         return check_password(raw_password, self.password)
     
 
-class Card(models.Model):
+class Card(models.Model):   
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cards")
 
     card_holder = models.CharField(max_length=255)
@@ -32,7 +32,7 @@ class Card(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name_on_card} - {self.card_number[-4:]}"
+        return f"{self.card_holder} - {self.card_number[-4:]}"
     
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")

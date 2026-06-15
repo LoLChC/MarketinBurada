@@ -24,10 +24,10 @@
                     {% csrf_token %}
 
                     <div class="form-group">
-                        <label for="username">E-posta veya Kullanıcı Adı</label>
+                        <label for="username">E-posta</label>
                         <div class="input-wrapper">
                             <i class="fa-regular fa-envelope input-icon"></i>
-                            <input type="text" id="username" name="username-or-email" placeholder="ornek@eposta.com" required autocomplete="username">
+                            <input type="email" id="username" name="email" placeholder="ornek@eposta.com" required autocomplete="email">
                         </div>
                     </div>
 

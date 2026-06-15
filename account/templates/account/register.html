@@ -24,10 +24,18 @@
                     {% csrf_token %}
 
                     <div class="form-group">
-                        <label for="username">Kullanıcı Adı</label>
+                        <label for="username">Adınız</label>
                         <div class="input-wrapper">
                             <i class="fa-regular fa-user input-icon"></i>
-                            <input type="text" id="username" name="name" placeholder="Kullanıcı Adı" required autocomplete="username">
+                            <input type="text" id="username" name="name" placeholder="Adınız" required autocomplete="username">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Soyadınız</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-user input-icon"></i>
+                            <input type="text" id="username" name="surname" placeholder="Soyadınız" required autocomplete="username">
                         </div>
                     </div>
 

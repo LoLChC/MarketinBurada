@@ -7,6 +7,8 @@ from django.db.models import Q
 from core import utils
 from core import tokens
 from django.core.cache import cache
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your views here.
 
@@ -16,24 +18,23 @@ def register(request):
 
     if request.method == "POST":
         name = request.POST.get("name")
+        surname = request.POST.get("surname")
         email = request.POST.get("email").lower().strip()
         password = request.POST.get("password")
 
         if User.objects.filter(email=email).exists():
             return render(request, 'account/register.html', {'error': 'Bu email zaten kayıtlı.', 'random_number': random_number})
-        if User.objects.filter(name=name).exists():
-            return render(request, 'account/register.html', {'error': 'Bu kullanıcı adı zaten kayıtlı.', 'random_number': random_number})
 
-        user = User(name=name, email=email)
+        user = User(name=name, surname=surname, email=email)
         user.password = make_password(password)
         user.save()
 
-        request.session["user-id"] = user.id
+        return utils.login(user, "account:email-verification")
 
-        return redirect("account:email-verification")
     
     return render(request, 'account/register.html', {'random_number': random_number})
 
+@required_login
 def email_verification(request):
     random_number = random.randint(1, 2000)
     domain = request.get_host() 
@@ -44,7 +45,7 @@ def email_verification(request):
     url = "http://" + domain + "/core/read-verify-email?token=" + token
     url = str(url)
 
-    user_id = request.session.get("user-id")
+    user_id = utils.login_token_to_user_id(request)
 
     user = User.objects.filter(id=user_id).only("email").first()
     email = user.email
@@ -84,26 +85,24 @@ def login(request):
     random_number = random.randint(1, 2000)
     
     if request.method == "POST":
-        username_or_email = request.POST.get("username-or-email")
-        password = request.POST.get("password")
+        email = request.POST.get("username-or-email", "").strip().lower()
+        password = request.POST.get("password", "").strip()
         remember = request.POST.get("remember")
 
-        value = username_or_email.strip()
-        user = User.objects.filter(Q(email=value.lower()) | Q(name=value)).first()
+        email = email.strip().lower()
+        user = User.objects.filter(email=email).first()
 
         if not user:
-            return render(request, 'account/login.html', {'error': 'Kullanıcı adı veya email hatalı.','random_number': random_number})
+            return render(request, 'account/login.html', {'error': 'Email veya şifre hatalı.','random_number': random_number})
 
         if not user.password_check(password):
-            return render(request, 'account/login.html', {'error': 'Hatalı şifre.','random_number': random_number})
+            return render(request, 'account/login.html', {'error': 'Email veya şifre hatalı.','random_number': random_number})
         
-        request.session["user-id"] = user.id
+        if remember:
+            return utils.login(user, "account:user-account", 30)
+        else:
+            return utils.login(user, "account:user-account")
         
-        if not remember:
-            request.session.set_expiry(0)
-            
-        return redirect("account:user-account")
-
     return render(request, 'account/login.html', {'random_number': random_number})
 
 @required_logout
@@ -145,14 +144,9 @@ def forgot_password_change(request):
                 print("user kaydedildi")
             else:
                 return redirect("account:forgot-password")
-            request.session["user-id"] = user.id
-            print("login alındı")
-            print("user_code_email:", user_code_email)
-            print("bulunan user id:", user.id)
-            print(request.session.get("user-id"))
             del request.session["user-code-email"]
             del request.session["password-reset-verified"]
-            return redirect("account:user-account")
+            return utils.login(user, "account:user-account")
 
         return render(request, 'account/forgot-password-change.html', {'random_number': random_number})
     return redirect("account:forgot-password")
@@ -165,8 +159,7 @@ def forgot_password_unchange(request):
 
 @required_login
 def logout(request):
-    request.session.flush()
-    return redirect("account:login")
+    return utils.logout()
 
 @required_login
 def user_account(request):
