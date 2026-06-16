@@ -3,11 +3,11 @@ import random
 from .models import User, Card, Address
 from django.contrib.auth.hashers import make_password
 from core.decorators import required_login, required_logout
-from django.db.models import Q
 from core import utils
 from core import tokens
 from django.core.cache import cache
 from core.redis_client import redis_conf as redis
+from .forms import LoginForm, RegisterForm, ForgotPasswordForm, ForgotPasswordChangeForm
 
 # Create your views here.
 
@@ -16,19 +16,29 @@ def register(request):
     random_number = random.randint(1, 2000)
 
     if request.method == "POST":
-        name = request.POST.get("name")
-        surname = request.POST.get("surname")
-        email = request.POST.get("email").lower().strip()
-        password = request.POST.get("password")
+        form = RegisterForm(request.POST)
+        
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            surname = form.cleaned_data["surname"]
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
 
-        if User.objects.filter(email=email).exists():
-            return render(request, 'account/register.html', {'error': 'Bu email zaten kayıtlı.', 'random_number': random_number})
+            user = User(name=name, surname=surname, email=email)
+            user.password = make_password(password)
+            user.save()
 
-        user = User(name=name, surname=surname, email=email)
-        user.password = make_password(password)
-        user.save()
+            return utils.login(request, user, "account:email-verification")
 
-        return utils.login(request, user, "account:email-verification")
+        error = None
+
+        if "email" in form.errors:
+            error = form.errors["email"][0]
+
+        return render(request, "account/register.html", {"error": error, "random_number": random_number,})
+
+    else:
+        form = RegisterForm()
 
     
     return render(request, 'account/register.html', {'random_number': random_number})
@@ -79,23 +89,27 @@ def login(request):
     random_number = random.randint(1, 2000)
     
     if request.method == "POST":
-        email = request.POST.get("email", "").strip().lower()
-        password = request.POST.get("password", "").strip()
-        remember = request.POST.get("remember")
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"].strip().lower()
+            password = form.cleaned_data["password"]
+            remember = form.cleaned_data["remember"]
 
-        email = email.strip().lower()
-        user = User.objects.filter(email=email).first()
+            user = User.objects.filter(email=email).first()
 
-        if not user:
-            return render(request, 'account/login.html', {'error': 'Email veya şifre hatalı.','random_number': random_number})
+            if not user:
+                return render(request, 'account/login.html', {'error': 'Email veya şifre hatalı.','random_number': random_number})
 
-        if not user.password_check(password):
-            return render(request, 'account/login.html', {'error': 'Email veya şifre hatalı.','random_number': random_number})
-        
-        if remember:
-            return utils.login(request, user, "account:user-account", 30)
-        else:
-            return utils.login(request, user, "account:user-account")
+            if not user.password_check(password):
+                return render(request, 'account/login.html', {'error': 'Email veya şifre hatalı.','random_number': random_number})
+            
+            if remember:
+                return utils.login(request, user, "account:user-account", 30)
+            else:
+                return utils.login(request, user, "account:user-account")
+            
+    else:
+        form = LoginForm()
         
     return render(request, 'account/login.html', {'random_number': random_number})
 
@@ -103,40 +117,60 @@ def login(request):
 def forgot_password(request):
     random_number = random.randint(1, 2000)
     if request.method == "POST":
-        email = request.POST.get("email")
-        email = email.strip().lower()
-        user = User.objects.filter(email=email).first()
+        form = ForgotPasswordForm(request.POST)
 
-        if user is None:
-            return render(request, 'account/forgot-password.html', {'error': 'Bu email kayıtlı değil.', 'random_number': random_number})
+        if form.is_valid():
+            email = form.cleaned_data["email"]
 
-        domain = request.get_host()
-        code = tokens.generate_forgot_password_token(email)
+            user = User.objects.filter(email=email).first()
 
-        url = "http://" + domain + "/core/read-forgot-password?code=" + code 
-        url = str(url)
-        utils.send_mail_text("Şifre Sıfırlama", url, email)
-        str_email = str(email)
-        key = f"email:{str_email}"
-        redis.set(
-            key,
-            str_email,
-            ex=300,
-        )
+            if user is None:
+                return render(request, 'account/forgot-password.html', {'error': 'Bu email kayıtlı değil.', 'random_number': random_number})
+
+            domain = request.get_host()
+            code = tokens.generate_forgot_password_token(email)
+
+            url = "http://" + domain + "/core/read-forgot-password?code=" + code 
+            url = str(url)
+            utils.send_mail_text("Şifre Sıfırlama", url, email)
+            str_email = str(email)
+            key = f"email:{str_email}"
+            redis.set(
+                key,
+                str_email,
+                ex=300,
+            )
         
-        return render(request, 'account/forgot-password.html', {'success': True, 'random_number': random_number})
+            return render(request, 'account/forgot-password.html', {'success': True, 'random_number': random_number})
+        
+        error = None
 
+        if "email" in form.errors:
+            error = form.errors["email"][0]
+
+        return render(request, "account/forgot-password.html", {"error": error, "random_number": random_number,})
+    
+    else:
+        form = ForgotPasswordForm()
+        
     return render(request, 'account/forgot-password.html', {'random_number': random_number})
 
 @required_logout
 def forgot_password_change(request):
-    if request.COOKIES.get("password_reset_verified"):
-        random_number = random.randint(1, 2000)
-        if request.method == "POST":
-            password = request.POST.get("password")
-            token_email = request.COOKIES.get("token_email")
+    if not request.COOKIES.get("password_reset_verified"):
+        return redirect("account:forgot-password")
+    
+    random_number = random.randint(1, 2000)
+    token_email = request.COOKIES.get("token_email")
+
+    if request.method == "POST":
+        form = ForgotPasswordChangeForm(request.POST)
+
+        if form.is_valid():
             user = User.objects.filter(email=token_email).first()
+
             if user is not None:
+                password = form.cleaned_data["password"]
                 user.password = make_password(password)
                 user.save()
 
@@ -146,13 +180,25 @@ def forgot_password_change(request):
                 response.delete_cookie("token_email")
                 key = f"email:{token_email}"
                 redis.delete(key)
-                
+            
                 return response
             else:
                 return redirect("account:forgot-password")
 
-        return render(request, 'account/forgot-password-change.html', {'random_number': random_number})
-    return redirect("account:forgot-password")
+        error = None
+        if form.non_field_errors():
+            error = form.non_field_errors()[0]
+        elif "password" in form.errors:
+            error = form.errors["password"][0]
+        elif "password_confirm" in form.errors:
+            error = form.errors["password_confirm"][0]
+        
+        return render(request, 'account/forgot-password-change.html', {'error': error, 'random_number': random_number})
+    
+    else:
+        form = ForgotPasswordChangeForm()
+    
+    return render(request, 'account/forgot-password-change.html', {'random_number': random_number})
 
 @required_logout
 def forgot_password_unchange(request):
@@ -193,10 +239,9 @@ def user_account(request):
 
         # DELETE ACCOUNT (SOFT DELETE)
         if action == "delete_account":
-            utils.logout(user.id)
             user.delete()
-            
-            return redirect("account:login")
+
+            return utils.logout(request) 
         
         if action == "add_address":
             address_title = request.POST.get("address-title")
@@ -209,7 +254,7 @@ def user_account(request):
         if action == "add_card":
             card_holder = request.POST.get("card-holder")
             card_number = request.POST.get("card-number")
-            card_expiry = request.POST.get("card-expiry")  # "AA/YY"
+            card_expiry = request.POST.get("card-expiry")
             card_cvv = request.POST.get("card-cvv")
 
             if not (card_holder and card_number and card_expiry and card_cvv):

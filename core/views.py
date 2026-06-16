@@ -50,9 +50,10 @@ def verify_email_looking(request):
         user_id = str(request.user_obj.id)
         key = f"email_verify:{user_id}"
         code = redis.get(key)
-
+        redis.delete(key)
         if code is None:
             return JsonResponse({"verify": False})
+        
         
         answer = code
 
@@ -67,7 +68,6 @@ def verify_email_looking(request):
         answer = payload["answer"]
 
     if answer == "True":
-        redis.delete(key)
         response = JsonResponse({"verify": True})
         response.delete_cookie("email_verify_session") 
         return response
