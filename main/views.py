@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import random
 from core.utils import home_market_cache
+from core.redis_client import redis_conf as redis
 
 # Create your views here.
 

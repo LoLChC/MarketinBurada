@@ -8,7 +8,7 @@ def required_login(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
 
-        token = request.COOKIES.get('token')
+        token = request.COOKIES.get('login_token')
         if not token:
             return redirect("account:login")
 
@@ -40,7 +40,7 @@ def required_login(view_func):
 def required_logout(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        token = request.COOKIES.get('token')
+        token = request.COOKIES.get('login_token')
         if token:
             decoded = tokens.decode_login_token(token)
             if decoded:

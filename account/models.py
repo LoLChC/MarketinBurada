@@ -33,6 +33,7 @@ class Card(models.Model):
 
     def __str__(self):
         return f"{self.card_holder} - {self.card_number[-4:]}"
+
     
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")

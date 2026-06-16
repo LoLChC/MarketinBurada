@@ -18,32 +18,37 @@ def login(request, user, go, duration_days=None):
     if duration_days:
         times = timezone.now() + timedelta(days=duration_days)
         response.set_cookie(
-            "token",
+            "login_token",
             token,
             httponly=True,
             expires=times
         )
     else:
         response.set_cookie(
-            "token",
+            "login_token",
             token,
             httponly=True
         )
     request.session.flush()
     request.session.cycle_key()
-
+ 
     return response
 
-def logout():
+def logout(request):
+    user_id = request.user_obj.id
     response = redirect("account:login")
-    response.delete_cookie("token") 
+    response.delete_cookie("login_token")
+    cache.delete(f"user-{user_id}")
     return response
 
 def login_token_to_user_id(request):
-    token = request.COOKIES.get('token')
-    decoded_token = tokens.decode_login_token(token)
-    user_id = decoded_token.get("user-id")
-    return user_id
+    token = request.COOKIES.get('login_token')
+    if token:
+        decoded_token = tokens.decode_login_token(token)
+        user_id = decoded_token.get("user-id")
+        return user_id
+    else:
+        return None
     
 
 def send_mail_text(subject, message, to_email):
@@ -72,8 +77,6 @@ def send_mail_html(subject, message, to_email):
     email.attach_alternative(message, "text/html")
     email.send()
 
-
-
 def home_market_cache():
     key = "home-markets"
 
@@ -88,5 +91,5 @@ def home_market_cache():
 
 def auth_state(request):
     return {
-        "auth_state": bool(request.session.get("user-id"))
+        "auth_state": bool(login_token_to_user_id(request))
     }
