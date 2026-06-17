@@ -14,7 +14,6 @@ urlpatterns = [
     path('forgot-password-change/', views.forgot_password_change, name="forgot-password-change"),
     path('forgot-password-unchange/', views.forgot_password_unchange, name="forgot-password-unchange"),
     path('user-account/', views.user_account, name='user-account'),
-    path('cart/', views.cart, name='cart'),
     path('market-account/', views.market_account, name='market-account'),
     path('terms/', views.terms, name='terms'),
     path('kvkk/', views.kvkk, name='kvkk'),

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'core',
     'account',
     'markets',
+    'merchant',
     'main',
 ]
 

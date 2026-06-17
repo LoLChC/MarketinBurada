@@ -1,0 +1,228 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+body.theme-marketin-burada {
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.theme-marketin-burada h1, 
+.theme-marketin-burada h2, 
+.theme-marketin-burada h3 {
+    font-family: "Fraunces", serif;
+    color: #2B2A28;
+}
+
+.theme-marketin-burada a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Genel Kapsayıcı Yapı (Dokunulmadı) */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex: 1;
+}
+
+/* Ortak Buton Temelleri (Dokunulmadı) */
+.btn-primary {
+    background-color: #E07A5F;
+    color: white !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+/** HEADER **/
+
+header.header {
+    background-color: rgba(250, 247, 242, 0.95);
+    border-bottom: 0.06rem solid rgba(43, 42, 40, 0.06); 
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+header.header.scrolled {
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.03);
+    background-color: #FAF7F2;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2% 2%;
+    max-width: 96%;
+    margin: 0 auto;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-area img {
+    height: 2.8rem;
+    width: auto;
+}
+
+.logo-area span {
+    font-family: "Fraunces", serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.header-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.header-links > a {
+    font-weight: 500;
+    color: #6B645C;
+    transition: color 0.2s;
+}
+
+.header-links > a:hover { color: #E07A5F; }
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem; /* İkonlar sadece daire olduğu için aralarındaki boşluğu tatlı bir seviyeye çektik */
+    margin-left: 0.3rem;
+}
+
+.btn-login {
+    font-weight: 600;
+    color: #2B2A28 !important;
+    transition: color 0.2s;
+}
+
+.btn-login:hover { color: #E07A5F !important; }
+
+
+/* ================================================================= */
+/* NEW VIBE: SADECE İKONLAR İÇİN ULTRA PREMIUM DAİRESEL BUTONLAR      */
+/* ================================================================= */
+
+.header-icon-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;  /* Tam kare alan */
+    height: 40px; /* Tam kare alan */
+    border-radius: 50%; /* Kusursuz pürüzsüz yuvarlaklık */
+    font-size: 1.15rem; /* İkonun kutu içerisindeki premium büyüklüğü */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hesabım İkon Butonu: Transparan, gömülü asil bir gri-bej cam tonu */
+.header-icon-link:first-of-type {
+    background-color: rgba(43, 42, 40, 0.05);
+    color: #2B2A28 !important;
+}
+
+.header-icon-link:first-of-type:hover {
+    background-color: rgba(43, 42, 40, 0.1);
+    transform: translateY(-2px); /* Çok hafif yukarı zıplama efekti */
+}
+
+/* Sepetim İkon Butonu: Sitenin can damarı olan somon rengi, altında şık bir derinlik gölgesiyle */
+.header-icon-link:last-of-type {
+    background-color: #E07A5F;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(224, 122, 95, 0.2);
+}
+
+.header-icon-link:last-of-type:hover {
+    background-color: #d46b50;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(224, 122, 95, 0.35); /* Hoverda gölge patlaması */
+}
+
+/* ================================================================= */
+
+
+/** Loader Ekranı **/
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(250, 247, 242, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease;
+}
+
+.loader-box {
+    text-align: center;
+    font-family: "Inter", sans-serif;
+}
+
+.spinner {
+    width: 46px;
+    height: 46px;
+    border: 4px solid rgba(224, 122, 95, 0.15);
+    border-top: 4px solid #E07A5F;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: loaderSpin 0.8s linear infinite;
+}
+
+.loader-box p {
+    color: #2B2A28;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+@keyframes loaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/** FOOTER **/
+
+footer {    
+    background-color: #2B2A28;
+    color: #FAF7F2;
+    text-align: center;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+footer p {
+    padding: 1.8% 2%;
+    color: #FAF7F2;
+    opacity: 0.8;
+}

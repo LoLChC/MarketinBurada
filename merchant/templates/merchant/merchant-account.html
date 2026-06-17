@@ -1,0 +1,237 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Mağaza Yönetimi | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/merchant-account.css' %}?v={{ random_number }}">
+{% endblock %}
+
+{% block content %}
+<div class="container account-main-container">
+    <div class="account-layout">
+        
+        <!-- SOL PANEL (MERCHANT SIDEBAR) -->
+        <aside class="account-sidebar">
+            <div class="user-brief">
+                <div class="avatar-circle">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div class="user-info-text">
+                    <span class="welcome-text">Mağaza Paneli</span>
+                    <h3 class="user-fullname">{{ request.user_obj.name }}</h3>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <button class="menu-item active" data-target="m-orders">
+                    <i class="fa-solid fa-receipt"></i> Siparişler
+                </button>
+                <button class="menu-item" data-target="m-couriers">
+                    <i class="fa-solid fa-motorcycle"></i> Kuryeler
+                </button>
+                <button class="menu-item" data-target="m-stocks">
+                    <i class="fa-solid fa-cubes"></i> Stoklarım
+                </button>
+                <button class="menu-item" data-target="m-products">
+                    <i class="fa-solid fa-boxes-stacked"></i> Ürünlerim
+                </button>
+                <button class="menu-item" data-target="m-campaigns">
+                    <i class="fa-solid fa-tags"></i> Kampanya Oluşturma
+                </button>
+                <button class="menu-item" data-target="m-sales">
+                    <i class="fa-solid fa-chart-line"></i> Satışlarım
+                </button>
+                <button class="menu-item" data-target="m-profit">
+                    <i class="fa-solid fa-wallet"></i> Kâr
+                </button>
+                <button class="menu-item" data-target="m-pos">
+                    <i class="fa-solid fa-credit-card"></i> Sanal Poslarım
+                </button>
+                <button class="menu-item" data-target="m-traffic">
+                    <i class="fa-solid fa-users-viewfinder"></i> Müşteri Trafiği
+                </button>
+                <button class="menu-item" data-target="m-subscription">
+                    <i class="fa-solid fa-id-card-clip"></i> Abonelik Bilgilerim
+                </button>
+            </nav>
+
+            <div class="sidebar-footer-menu">
+                <a href="{% url 'account:logout' %}" class="menu-item logout-link">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış Yap
+                </a>
+            </div>
+        </aside>
+
+        <!-- SAĞ PANEL (İÇERİK ALANI) -->
+        <main class="account-content">
+            
+            <!-- 1. SİPARİŞLER -->
+            <section id="m-orders" class="content-panel active">
+                <h2>Siparişler</h2>
+                <p class="panel-subtitle">Gelen yeni siparişler ve teslimat süreçleri.</p>
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-date">Bugün, 14:22</span>
+                            <span class="order-id">#ORD-55421</span>
+                        </div>
+                        <span class="market-badge status-open">Yeni Sipariş</span>
+                    </div>
+                    <div class="order-body">
+                        <h4>Ahmet Yılmaz</h4>
+                        <p>5 Ürün • Toplam: <strong>480.00 TL</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. KURYELER -->
+            <section id="m-couriers" class="content-panel">
+                <h2>Kuryeler</h2>
+                <p class="panel-subtitle">Aktif kuryeleriniz ve anlık durumları.</p>
+                <div class="address-grid">
+                    <div class="address-card">
+                        <div class="address-title">
+                            <h3><i class="fa-solid fa-motorcycle"></i> Kurye Can</h3>
+                            <span class="text-success"><i class="fa-solid fa-circle" style="font-size:0.6rem;"></i> Aktif</span>
+                        </div>
+                        <p>Teslimatta: #ORD-55410<br>Telefon: 0555 123 45 67</p>
+                    </div>
+                    <button type="button" class="add-new-card">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Yeni Kurye Tanımla</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 3. STOKLARIM -->
+            <section id="m-stocks" class="content-panel">
+                <h2>Stoklarım</h2>
+                <p class="panel-subtitle">Kritik seviyedeki ve güncel ürün stok miktarları.</p>
+                <div class="support-box" style="text-align: left;">
+                    <p>⚠️ <strong>Kritik Stok Uyarısı:</strong> 3 ürünün stoğu tükenmek üzere.</p>
+                    <br>
+                    <p>• Tam Yağlı Süt (1L) - Kalan: 5 Adet</p>
+                    <p>• Yerli Muz (Kg) - Kalan: 2 Kg</p>
+                </div>
+            </section>
+
+            <!-- 4. ÜRÜNLERİM -->
+            <section id="m-products" class="content-panel">
+                <h2>Ürünlerim</h2>
+                <p class="panel-subtitle">Mağazanızda listelenen tüm ürünlerin yönetimi.</p>
+                <div class="address-grid">
+                    <div class="address-card">
+                        <div class="address-title">
+                            <h3>Sütaş Ayran 290ml</h3>
+                        </div>
+                        <p>Fiyat: 15.00 TL<br>Kategori: Süt & Şarküteri</p>
+                    </div>
+                    <button type="button" class="add-new-card">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Yeni Ürün Ekle</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 5. KAMPANYA OLUŞTURMA -->
+            <section id="m-campaigns" class="content-panel">
+                <h2>Kampanya Oluşturma</h2>
+                <p class="panel-subtitle">Müşterilerinize özel indirim ve fırsatlar tanımlayın.</p>
+                <form class="account-form" method="POST" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="camp-name">Kampanya Adı</label>
+                        <input type="text" id="camp-name" placeholder="Örn: Hafta Sonu Süt Ürünlerinde %10 İndirim">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="camp-type">Kampanya Türü</label>
+                            <input type="text" id="camp-type" placeholder="Örn: Sepette İndirim">
+                        </div>
+                        <div class="form-group">
+                            <label for="camp-rate">İndirim Oranı (%)</label>
+                            <input type="number" id="camp-rate" placeholder="10">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-account-save">Kampanyayı Başlat</button>
+                </form>
+            </section>
+
+            <!-- 6. SATIŞLARIM -->
+            <section id="m-sales" class="content-panel">
+                <h2>Satışlarım</h2>
+                <p class="panel-subtitle">Tamamlanan satışlarınızın genel dökümü.</p>
+                <div class="order-card" style="border-left: 4px solid #2b7a4b;">
+                    <div class="order-header">
+                        <div><span class="order-date">Bugün Toplam Satış</span></div>
+                        <h3 style="color: #2b7a4b; font-family:'Inter';">4,250.00 TL</h3>
+                    </div>
+                    <p style="font-size: 0.9rem; color:#6B645C;">Toplam 14 başarılı sipariş alındı.</p>
+                </div>
+            </section>
+
+            <!-- 7. KÂR -->
+            <section id="m-profit" class="content-panel">
+                <h2>Kâr Raporu</h2>
+                <p class="panel-subtitle">Komisyonlar ve maliyetler düşüldükten sonraki net kârınız.</p>
+                <div class="support-box">
+                    <p>Bu Ayki Tahmini Net Kârınız</p>
+                    <span class="support-phone" style="color: #2b7a4b !important;">18,450.00 TL</span>
+                    <p class="support-hours">Son güncelleme: 5 dakika önce</p>
+                </div>
+            </section>
+
+            <!-- 8. SANAL POSLARIM -->
+            <section id="m-pos" class="content-panel">
+                <h2>Sanal Poslarım</h2>
+                <p class="panel-subtitle">Ödeme aldığınız aktif entegrasyonlar.</p>
+                <div class="payment-card">
+                    <div class="payment-card-logo">
+                        <i class="fa-solid fa-credit-card text-troy"></i>
+                    </div>
+                    <div class="payment-card-info">
+                        <p class="card-number">İyzico Entegrasyonu</p>
+                        <p class="card-expiry" style="color: #2b7a4b;">✓ Aktif ve Bağlı</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. MÜŞTERİ TRAFİĞİ -->
+            <section id="m-traffic" class="content-panel">
+                <h2>Müşteri Trafiği</h2>
+                <p class="panel-subtitle">Mağazanızı ziyaret eden ve inceleyen kullanıcı istatistikleri.</p>
+                <div class="form-row">
+                    <div class="support-box">
+                        <h4>Tekil Ziyaretçi</h4>
+                        <h2 style="margin-top:10px;">1,240</h2>
+                    </div>
+                    <div class="support-box">
+                        <h4>Sepete Ekleme</h4>
+                        <h2 style="margin-top:10px;">342</h2>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. ABONELİK BİLGİLERİM -->
+            <section id="m-subscription" class="content-panel">
+                <h2>Abonelik Bilgilerim</h2>
+                <p class="panel-subtitle">Marketin Burada platform üyelik detaylarınız.</p>
+                <div class="order-card" style="border-top: 4px solid #E07A5F;">
+                    <div class="order-header">
+                        <div>
+                            <h4 style="font-family:'Inter'; font-weight:700;">Premium Esnaf Paketi</h4>
+                            <p class="order-id" style="margin-top:5px;">Yenilenme Tarihi: 01 Temmuz 2026</p>
+                        </div>
+                        <span class="market-badge status-open" style="background-color:rgba(224,122,95,0.1); color:#E07A5F;">Aktif</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+    <script src="{% static 'js/merchant-account.js' %}?v={{ random_number }}"></script>
+{% endblock %}

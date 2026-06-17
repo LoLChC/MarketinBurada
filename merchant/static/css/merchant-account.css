@@ -1,0 +1,345 @@
+/**
+ * ==========================================================================
+ * MARKETİN BURADA - MERCHANT PANELİ STİLLERİ
+ * ==========================================================================
+ */
+
+.account-main-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.account-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+    align-items: start;
+    min-height: 70vh;
+}
+
+/* --- SOL PANEL (SIDEBAR) --- */
+.account-sidebar {
+    background-color: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 12px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 650px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+}
+
+.user-brief {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #FAF7F2;
+}
+
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(224, 122, 95, 0.1);
+    color: #E07A5F;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.welcome-text {
+    font-size: 0.8rem;
+    color: #6B645C;
+    display: block;
+}
+
+.user-fullname {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2B2A28;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-footer-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #6B645C;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.menu-item i {
+    font-size: 1.05rem;
+    width: 20px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.menu-item:hover {
+    background-color: #FAF7F2;
+    color: #E07A5F;
+}
+
+.menu-item.active {
+    background-color: rgba(224, 122, 95, 0.1);
+    color: #E07A5F;
+    font-weight: 600;
+}
+
+.logout-link:hover {
+    background-color: #FDF2F0;
+    color: #d9534f;
+}
+
+/* --- SAĞ PANEL --- */
+.account-content {
+    background-color: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+}
+
+.content-panel {
+    display: none;
+    animation: panelFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.content-panel.active {
+    display: block;
+}
+
+@keyframes panelFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.account-content h2 {
+    font-family: "Fraunces", serif;
+    font-size: 1.8rem;
+    color: #2B2A28;
+    margin-bottom: 6px;
+}
+
+.panel-subtitle {
+    font-size: 0.95rem;
+    color: #6B645C;
+    margin-bottom: 30px;
+}
+
+/* Formlar */
+.account-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.account-form label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2B2A28;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.account-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    box-sizing: border-box;
+}
+
+.account-form input:focus {
+    outline: none;
+    border-color: #E07A5F;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
+}
+
+.btn-account-save {
+    background-color: #E07A5F;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.2s;
+}
+
+/* Kart Yapıları */
+.order-card, .address-card, .payment-card {
+    border: 1px solid #FAF7F2;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    background-color: #ffffff;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.88rem;
+}
+
+.order-date {
+    font-weight: 600;
+    color: #2B2A28;
+    margin-right: 10px;
+}
+
+.order-id {
+    color: #6B645C;
+}
+
+.market-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background-color: rgba(224, 122, 95, 0.15);
+    color: #E07A5F;
+}
+
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.address-card {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #FAF7F2;
+}
+
+.address-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.address-title h3 {
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+}
+
+.add-new-card {
+    border: 2px dashed rgb(240, 230, 140);
+    background-color: #FAF7F2;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #6B645C;
+    padding: 30px;
+    transition: all 0.2s;
+}
+
+.add-new-card:hover {
+    border-color: #E07A5F;
+    color: #E07A5F;
+    background-color: #ffffff;
+}
+
+.payment-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 0;
+    border: 1px solid #FAF7F2;
+}
+
+.payment-card-logo i {
+    font-size: 2.2rem;
+}
+
+.card-number {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.card-expiry {
+    font-size: 0.8rem;
+    color: #6B645C;
+}
+
+.support-box {
+    background-color: #FAF7F2;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.support-phone {
+    display: inline-block;
+    font-size: 1.8rem;
+    font-family: "Fraunces", serif;
+    color: #E07A5F;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.support-hours {
+    font-size: 0.88rem;
+    color: #6B645C;
+}
+
+.text-success { color: #2b7a4b !important; }
+.text-troy { color: #00A3E0 !important; }
+
+@media (max-width: 768px) {
+    .account-layout { grid-template-columns: 1fr; }
+    .account-sidebar { min-height: auto; }
+    .form-row { grid-template-columns: 1fr; }
+}

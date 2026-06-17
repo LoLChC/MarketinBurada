@@ -12,3 +12,7 @@ def market_details(request, slug):
     random_number = random.randint(1, 2000)
     market = get_object_or_404(Market, slug=slug)
     return render(request, 'markets/market-details.html', {'random_number': random_number , 'markets': market})
+
+def cart(request):
+    random_number = random.randint(1, 2000)
+    return render(request, 'markets/cart.html', {'random_number': random_number})
