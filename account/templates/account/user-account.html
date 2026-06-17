@@ -91,7 +91,7 @@
                         </div>
                         <div class="form-group">
                             <label for="acc-phone">Telefon Numarası</label>
-                            <input type="tel" id="acc-phone" name="phone_number" value="{{ request.user_obj.phone_number|default_if_none:'' }}">
+                            <input type="tel" id="acc-phone" name="phone-number" value="{{ request.user_obj.phone_number|default_if_none:'' }}">
                         </div>
                     </div>
                     <div class="form-row">
@@ -155,7 +155,25 @@
                     {% for cards in request.user_obj.cards.all %}
                         <div class="payment-card">
                             <div class="payment-card-logo">
-                                <i class="fa-brands fa-cc-visa"></i>
+                                {# 1. YÖNTEM: Eğer Backend'den cards.card_type (visa, mastercard) geliyorsa #}
+                                {% if cards.card_type|lower == 'visa' %}
+                                    <i class="fa-brands fa-cc-visa text-visa"></i>
+                                {% elif cards.card_type|lower == 'mastercard' %}
+                                    <i class="fa-brands fa-cc-mastercard text-mastercard"></i>
+                                {% elif cards.card_type|lower == 'amex' %}
+                                    <i class="fa-brands fa-cc-amex text-amex"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-credit-card"></i>
+                                {% endif %}
+
+                                {# 2. ALTERNATİF YÖNTEM: Eğer backend'de tip yoksa, kart numarasının ilk karakterine göre: #}
+                                {# {% if cards.card_number|slice:":1" == "4" %} #}
+                                {#     <i class="fa-brands fa-cc-visa text-visa"></i> #}
+                                {# {% elif cards.card_number|slice:":1" == "5" or cards.card_number|slice:":1" == "2" %} #}
+                                {#     <i class="fa-brands fa-cc-mastercard text-mastercard"></i> #}
+                                {# {% else %} #}
+                                {#     <i class="fa-solid fa-credit-card"></i> #}
+                                {# {% endif %} #}
                             </div>
                             <div class="payment-card-info">
                                 <p class="card-number">•••• •••• •••• {{ cards.card_number|slice:"-4:" }}</p>
@@ -244,16 +262,22 @@
             </div>
             <div class="form-group">
                 <label for="card-number">Kart Numarası</label>
-                <input type="text" id="card-number" name="card-number" placeholder="•••• •••• •••• ••••" maxlength="19" required>
+                <div class="input-with-icon" style="position: relative; display: flex; align-items: center;">
+                    <input type="text" id="card-number" name="card-number" placeholder="•••• •••• •••• ••••" maxlength="19" required style="width: 100%; padding-right: 45px;">
+                    <span id="card-icon" class="card-status-icon" style="position: absolute; right: 15px; font-size: 1.6rem; z-index: 10; pointer-events: none;"></span>
+                </div>
+                <span id="card-validation-text" class="card-validation-hint" style="display: block; font-size: 0.85rem; margin-top: 8px; font-weight: 600;"></span>
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label for="card-expiry">Son Kullanma Tarihi</label>
                     <input type="text" id="card-expiry" name="card-expiry" placeholder="AA/YY" maxlength="5" required>
+                    <span id="expiry-validation-text" class="card-validation-hint"></span>
                 </div>
                 <div class="form-group">
                     <label for="card-cvv">CVC / CVV</label>
                     <input type="password" id="card-cvv" name="card-cvv" placeholder="•••" maxlength="3" required>
+                    <span id="cvv-validation-text" class="card-validation-hint"></span>
                 </div>
             </div>
             <button type="submit" name="action" value="add_card" class="btn-account-save">Kartı Güvenle Kaydet</button>

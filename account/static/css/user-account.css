@@ -361,6 +361,49 @@
     font-size: 0.8rem;
     color: #6B645C;
 }
+/* Input ve İkonun Kapsayıcısı */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon input {
+    padding-right: 45px; /* Sağ taraftan ikon için boşluk açtık */
+    width: 100%;
+}
+
+/* İkonun Input İçinde Sıfırlanıp Sağ Köşeye Sabitlenmesi */
+.card-status-icon {
+    position: absolute;
+    right: 15px;
+    font-size: 1.6rem; /* Logolar daha net ve büyük görünsün */
+    display: inline-block;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 15; /* Üste çıkmasını garanti ediyoruz */
+}
+
+/* Kartların Resmi Marka Renkleri */
+.text-visa { color: #1A1F71 !important; }
+.text-mastercard { color: #FF5F00 !important; } /* Gerçek canlı Mastercard turuncu-kırmızı tonu */
+.text-amex { color: #016FD0 !important; }
+.text-troy { color: #00A3E0 !important; }
+
+/* Alt taraftaki dinamik bilgilendirme yazısı */
+.card-validation-hint {
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    transition: color 0.2s ease;
+}
+
+/* Renk Tanımlamaları */
+.text-danger { color: #d9534f !important; }
+.text-success { color: #2b7a4b !important; }
+.text-muted { color: #7A746D !important; }
 
 /* SSS ve Destek Alanı */
 .support-box {
