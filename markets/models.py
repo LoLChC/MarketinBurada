@@ -30,7 +30,6 @@ def market_banner_path(instance, filename):
 
 class Market(models.Model):
     name = models.CharField(max_length=255, verbose_name="Market Adı")
-    location = models.CharField(max_length=500, verbose_name="Market Konumu", blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name="Slug (URL Uzantısı)")
     
     # Hatanın çözümü için admin panelin aradığı min_price alanını buraya ekledik

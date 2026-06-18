@@ -50,9 +50,9 @@ class MarketBusinessHourInline(admin.TabularInline):
 
 @admin.register(Market)
 class MarketAdmin(admin.ModelAdmin):
-    list_display = ('name', 'location', 'min_price', 'status', 'slug')
+    list_display = ('name', 'min_price', 'status', 'slug')
     list_display_links = ('name',)
-    list_filter = ('status', 'location')
-    search_fields = ('name', 'location')
-    prepopulated_fields = {'slug': ('name', 'location')}
+    list_filter = ['status']
+    search_fields = ['name']
+    prepopulated_fields = {'slug': ('name',)}
     inlines = [MarketBusinessHourInline]
