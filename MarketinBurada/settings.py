@@ -19,6 +19,12 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+VENV_BASE = os.environ.get('VIRTUAL_ENV')
+
+if VENV_BASE:
+    # Klasördeki tam ada göre güncelledik:
+    GDAL_LIBRARY_PATH = os.path.join(VENV_BASE, 'Lib', 'site-packages', 'osgeo', 'gdal.dll')
+    GEOS_LIBRARY_PATH = os.path.join(VENV_BASE, 'Lib', 'site-packages', 'osgeo', 'geos_c.dll')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -43,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis', 
     'core',
     'account',
     'markets',
@@ -88,7 +95,7 @@ WSGI_APPLICATION = 'MarketinBurada.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
