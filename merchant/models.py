@@ -111,5 +111,85 @@ class Courier(models.Model):
             self.status = 'available'
             self.save()
 
-class Cart(models.Model):
-    pass     
+class Package(models.Model):
+    PACKAGE_STATUS = [
+        ('pending', 'Onay Bekliyor'),
+        ('preparing', 'Hazırlanıyor'),
+        ('ready', 'Paket Hazır / Kurye Bekliyor'),
+        ('on_the_way', 'Kurye Dağıtımda'),
+        ('delivered', 'Teslim Edildi'),
+        ('canceled', 'İptal Edildi'),
+    ]
+
+    # 1. OPERASYONEL BAĞLANTILAR
+    # Paketin ait olduğu müşteri (account.User)
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='packages', 
+        verbose_name="Müşteri"
+    )
+    
+    # Paketin hazırlandığı ve çıkış yapacağı şube
+    branch = models.ForeignKey(
+        Branch, 
+        on_delete=models.CASCADE, 
+        related_name='packages', 
+        verbose_name="Çıkış Şubesi"
+    )
+    
+    # Paketi teslimata çıkaran kurye (Hazırlık aşamasında boş kalabilir, 'ready' veya 'on_the_way' durumunda atanır)
+    courier = models.ForeignKey(
+        Courier, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='packages', 
+        verbose_name="Kurye"
+    )
+
+    # 2. PAKET DETAYLARI
+    status = models.CharField(
+        max_length=15, 
+        choices=PACKAGE_STATUS, 
+        default='pending', 
+        verbose_name="Paket Durumu"
+    )
+    
+    # Kullanıcının sepeti onayladığı anki fatura/paket tutarı
+    total_amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0.00, 
+        verbose_name="Paket Tutarı"
+    )
+    
+    # Teslimatın yapılacağı açık adres
+    delivery_address = models.TextField(verbose_name="Teslimat Adresi")
+
+    # 3. LOJİSTİK VE ZAMAN ANALİZİ
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Paket Oluşturulma Zamanı")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Durum Güncellemesi")
+    shipped_at = models.DateTimeField(null=True, blank=True, verbose_name="Yola Çıkış Zamanı")
+    delivered_at = models.DateTimeField(null=True, blank=True, verbose_name="Teslim Edilme Zamanı")
+
+    class Meta:
+        verbose_name = "Paket"
+        verbose_name_plural = "Paketler"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} {self.surname} ({self.branch.neighborhood} Şubesi)"
+    
+class Category(models.Model):
+    market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='branches')
+    title = models.CharField( max_length=50)
+    is_active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return f"Kategorisi: {self.title}"
+    
+class CategoryBranchSettings(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    is_available_in_branch = models.BooleanField(default=True)
