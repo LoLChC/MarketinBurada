@@ -195,15 +195,90 @@ class AislesBranchSettings(models.Model):
     is_available_in_branch = models.BooleanField(default=True)
 
 class Products(models.Model): # Ürünler
+    market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='products')
     aisles = models.ForeignKey(Aisles, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     images = models.ImageField(upload_to='product-images/')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField(default=0) # Şube içi
     isActive = models.BooleanField()
 
 
-class Stocks(models.Model): # Stoklar  Market İçi
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    products = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='branch_stocks')
+class Stocks(models.Model):
+    branch = models.ForeignKey(
+        Branch,
+        on_delete=models.CASCADE,
+        related_name="stocks"
+    )
+    product = models.ForeignKey(
+        Products,
+        on_delete=models.CASCADE,
+        related_name="stocks"
+    )
     stock = models.PositiveIntegerField(default=0)
+
+    @classmethod
+    def get_product_stock(cls, product):
+        """
+        Bir ürünün tüm şubelerdeki toplam stok miktarını döndürür.
+
+        Args:
+            product (Products):
+                Stoku hesaplanacak ürün nesnesi.
+
+        Returns:
+            int:
+                Ürünün tüm şubelerdeki toplam stok miktarı.
+                Eğer hiç stok kaydı yoksa 0 döner.
+        """
+        return cls.objects.filter(
+            product=product
+        ).aggregate(
+            total=Sum("stock")
+        )["total"] or 0
+
+    @classmethod
+    def get_branch_product_stock(cls, branch, product):
+        """
+        Belirli bir şubedeki ürün stok miktarını döndürür.
+
+        Args:
+            branch (Branch):
+                Stok sorgulanacak şube nesnesi.
+
+            product (Products):
+                Stok sorgulanacak ürün nesnesi.
+
+        Returns:
+            int:
+                Şubedeki ürünün stok miktarı.
+                Kayıt bulunamazsa 0 döner.
+        """
+        stock_obj = cls.objects.filter(
+            branch=branch,
+            product=product
+        ).first()
+
+        return stock_obj.stock if stock_obj else 0
+    
+
+    @classmethod
+    def get_product_stocks_by_branch(cls, product):
+        """
+        Bir ürünün tüm şubelerdeki stok dağılımını döndürür.
+
+        Args:
+            product (Products):
+                Stokları sorgulanacak ürün.
+
+        Returns:
+            dict:
+                {
+                    "Merkez Şube": 15,
+                    "Atakum Şube": 8,
+                    "İlkadım Şube": 0
+                }
+        """
+        return {
+            stock.branch.name: stock.stock
+            for stock in cls.objects.filter(product=product).select_related("branch")
+        }
