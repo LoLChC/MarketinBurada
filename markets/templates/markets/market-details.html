@@ -121,10 +121,7 @@
             
             <div class="products-grid" id="productsGrid">
                 {% for product in products %}
-                    <div class="product-card" 
-                         data-category="{{ product.category.slug|default:'diger' }}" 
-                         data-price="{{ product.price }}" 
-                         data-name="{{ product.name }}">
+                    <div class="product-card" data-category="{{ product.category.slug|default:'diger' }}" data-price="{{ product.price }}" data-name="{{ product.name }}">
                         <div class="product-img-slot">
                             {% if product.image %}
                                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="actual-product-image">
@@ -137,11 +134,7 @@
                             <h4 class="product-title">{{ product.name }}</h4>
                             <div class="product-footer">
                                 <span class="product-price">{{ product.price }} TL</span>
-                                <button type="button" class="add-to-cart-btn" 
-                                        data-id="{{ product.id }}" 
-                                        data-name="{{ product.name }}" 
-                                        data-price="{{ product.price }}"
-                                        data-image="{% if product.image %}{{ product.image.url }}{% endif %}">
+                                <button type="button" class="add-to-cart-btn" data-id="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.price }}" data-image="{% if product.image %}{{ product.image.url }}{% endif %}">
                                     <i class="fa-solid fa-plus"></i> Ekle
                                 </button>
                             </div>

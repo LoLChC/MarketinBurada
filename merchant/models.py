@@ -4,12 +4,12 @@ from django.contrib.gis.db import models as location_models
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 from account.models import User
-from django.db.models import Q
+from django.db.models import Q, Sum 
 import datetime
 
 # Create your models here.
 
-class Branch(models.Model):
+class Branch(models.Model): #Şubeler
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='branches')
     neighborhood = models.CharField(max_length=255, verbose_name="Mahalle İsmi")
     phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="Telefon")
@@ -58,7 +58,7 @@ class Branch(models.Model):
 
         return nearest_branch
     
-class Courier(models.Model):
+class Courier(models.Model): #Kuryeler
     COURIER_STATUS = [
         ('offline', 'Çevrimdışı'),
         ('available', 'Müsait (Şubede Bekliyor)'),
@@ -96,7 +96,7 @@ class Courier(models.Model):
         verbose_name_plural = "Kuryeler"
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.branch.neighborhood} Şubesi)"
+        return f"{self.name} {self.surname} ({self.branch.neighborhood} Şubesi)"
 
     # Sipariş teslim edildiğinde listeye eklemeyi kolaylaştıracak ufak bir metot:
     def complete_delivery(self):
@@ -111,85 +111,99 @@ class Courier(models.Model):
             self.status = 'available'
             self.save()
 
-class Package(models.Model):
-    PACKAGE_STATUS = [
-        ('pending', 'Onay Bekliyor'),
-        ('preparing', 'Hazırlanıyor'),
-        ('ready', 'Paket Hazır / Kurye Bekliyor'),
-        ('on_the_way', 'Kurye Dağıtımda'),
-        ('delivered', 'Teslim Edildi'),
-        ('canceled', 'İptal Edildi'),
-    ]
+# class Package(models.Model): #Paketler
+#     PACKAGE_STATUS = [
+#         ('pending', 'Onay Bekliyor'),
+#         ('preparing', 'Hazırlanıyor'),
+#         ('ready', 'Paket Hazır / Kurye Bekliyor'),
+#         ('on_the_way', 'Kurye Dağıtımda'),
+#         ('delivered', 'Teslim Edildi'),
+#         ('canceled', 'İptal Edildi'),
+#     ]
 
-    # 1. OPERASYONEL BAĞLANTILAR
-    # Paketin ait olduğu müşteri (account.User)
-    user = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
-        related_name='packages', 
-        verbose_name="Müşteri"
-    )
+#     # 1. OPERASYONEL BAĞLANTILAR
+#     # Paketin ait olduğu müşteri (account.User)
+#     user = models.ForeignKey(
+#         User, 
+#         on_delete=models.CASCADE, 
+#         related_name='packages', 
+#         verbose_name="Müşteri"
+#     )
     
-    # Paketin hazırlandığı ve çıkış yapacağı şube
-    branch = models.ForeignKey(
-        Branch, 
-        on_delete=models.CASCADE, 
-        related_name='packages', 
-        verbose_name="Çıkış Şubesi"
-    )
+#     # Paketin hazırlandığı ve çıkış yapacağı şube
+#     branch = models.ForeignKey(
+#         Branch, 
+#         on_delete=models.CASCADE, 
+#         related_name='packages', 
+#         verbose_name="Çıkış Şubesi"
+#     )
     
-    # Paketi teslimata çıkaran kurye (Hazırlık aşamasında boş kalabilir, 'ready' veya 'on_the_way' durumunda atanır)
-    courier = models.ForeignKey(
-        Courier, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        related_name='packages', 
-        verbose_name="Kurye"
-    )
+#     # Paketi teslimata çıkaran kurye (Hazırlık aşamasında boş kalabilir, 'ready' veya 'on_the_way' durumunda atanır)
+#     courier = models.ForeignKey(
+#         Courier, 
+#         on_delete=models.SET_NULL, 
+#         null=True, 
+#         blank=True, 
+#         related_name='packages', 
+#         verbose_name="Kurye"
+#     )
 
-    # 2. PAKET DETAYLARI
-    status = models.CharField(
-        max_length=15, 
-        choices=PACKAGE_STATUS, 
-        default='pending', 
-        verbose_name="Paket Durumu"
-    )
+#     # 2. PAKET DETAYLARI
+#     status = models.CharField(
+#         max_length=15, 
+#         choices=PACKAGE_STATUS, 
+#         default='pending', 
+#         verbose_name="Paket Durumu"
+#     )
     
-    # Kullanıcının sepeti onayladığı anki fatura/paket tutarı
-    total_amount = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        default=0.00, 
-        verbose_name="Paket Tutarı"
-    )
+#     # Kullanıcının sepeti onayladığı anki fatura/paket tutarı
+#     total_amount = models.DecimalField(
+#         max_digits=10, 
+#         decimal_places=2, 
+#         default=0.00, 
+#         verbose_name="Paket Tutarı"
+#     )
     
-    # Teslimatın yapılacağı açık adres
-    delivery_address = models.TextField(verbose_name="Teslimat Adresi")
+#     # Teslimatın yapılacağı açık adres
+#     delivery_address = models.TextField(verbose_name="Teslimat Adresi")
 
-    # 3. LOJİSTİK VE ZAMAN ANALİZİ
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Paket Oluşturulma Zamanı")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Durum Güncellemesi")
-    shipped_at = models.DateTimeField(null=True, blank=True, verbose_name="Yola Çıkış Zamanı")
-    delivered_at = models.DateTimeField(null=True, blank=True, verbose_name="Teslim Edilme Zamanı")
+#     # 3. LOJİSTİK VE ZAMAN ANALİZİ
+#     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Paket Oluşturulma Zamanı")
+#     updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Durum Güncellemesi")
+#     shipped_at = models.DateTimeField(null=True, blank=True, verbose_name="Yola Çıkış Zamanı")
+#     delivered_at = models.DateTimeField(null=True, blank=True, verbose_name="Teslim Edilme Zamanı")
 
-    class Meta:
-        verbose_name = "Paket"
-        verbose_name_plural = "Paketler"
-        ordering = ['-created_at']
+#     class Meta:
+#         verbose_name = "Paket"
+#         verbose_name_plural = "Paketler"
+#         ordering = ['-created_at']
 
-    def __str__(self):
-        return f"{self.name} {self.surname} ({self.branch.neighborhood} Şubesi)"
+#     def __str__(self):
+#         return f"Paket #{self.id} - {self.user.get_full_name() or self.user.username}"
     
-class Category(models.Model):
-    market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='branches')
+class Aisles(models.Model): #Reyonlar
+    market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='aisles')
     title = models.CharField( max_length=50)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
         return f"Kategorisi: {self.title}"
     
-class CategoryBranchSettings(models.Model):
+class AislesBranchSettings(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Aisles, on_delete=models.CASCADE)
     is_available_in_branch = models.BooleanField(default=True)
+
+class Products(models.Model): # Ürünler
+    aisles = models.ForeignKey(Aisles, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    images = models.ImageField(upload_to='product-images/')
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.PositiveIntegerField(default=0) # Şube içi
+    isActive = models.BooleanField()
+
+
+class Stocks(models.Model): # Stoklar  Market İçi
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    products = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='branch_stocks')
+    stock = models.PositiveIntegerField(default=0)
