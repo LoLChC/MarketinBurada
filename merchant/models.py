@@ -3,9 +3,11 @@ from markets.models import Market
 from django.contrib.gis.db import models as location_models
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
-from account.models import User
+from account.models import User, Address
 from django.db.models import Q, Sum 
+from django.utils import timezone
 import datetime
+import uuid
 
 # Create your models here.
 
@@ -110,76 +112,6 @@ class Courier(models.Model): #Kuryeler
             self.current_cart_id = None
             self.status = 'available'
             self.save()
-
-# class Package(models.Model): #Paketler
-#     PACKAGE_STATUS = [
-#         ('pending', 'Onay Bekliyor'),
-#         ('preparing', 'Hazırlanıyor'),
-#         ('ready', 'Paket Hazır / Kurye Bekliyor'),
-#         ('on_the_way', 'Kurye Dağıtımda'),
-#         ('delivered', 'Teslim Edildi'),
-#         ('canceled', 'İptal Edildi'),
-#     ]
-
-#     # 1. OPERASYONEL BAĞLANTILAR
-#     # Paketin ait olduğu müşteri (account.User)
-#     user = models.ForeignKey(
-#         User, 
-#         on_delete=models.CASCADE, 
-#         related_name='packages', 
-#         verbose_name="Müşteri"
-#     )
-    
-#     # Paketin hazırlandığı ve çıkış yapacağı şube
-#     branch = models.ForeignKey(
-#         Branch, 
-#         on_delete=models.CASCADE, 
-#         related_name='packages', 
-#         verbose_name="Çıkış Şubesi"
-#     )
-    
-#     # Paketi teslimata çıkaran kurye (Hazırlık aşamasında boş kalabilir, 'ready' veya 'on_the_way' durumunda atanır)
-#     courier = models.ForeignKey(
-#         Courier, 
-#         on_delete=models.SET_NULL, 
-#         null=True, 
-#         blank=True, 
-#         related_name='packages', 
-#         verbose_name="Kurye"
-#     )
-
-#     # 2. PAKET DETAYLARI
-#     status = models.CharField(
-#         max_length=15, 
-#         choices=PACKAGE_STATUS, 
-#         default='pending', 
-#         verbose_name="Paket Durumu"
-#     )
-    
-#     # Kullanıcının sepeti onayladığı anki fatura/paket tutarı
-#     total_amount = models.DecimalField(
-#         max_digits=10, 
-#         decimal_places=2, 
-#         default=0.00, 
-#         verbose_name="Paket Tutarı"
-#     )
-    
-#     # Teslimatın yapılacağı açık adres
-#     delivery_address = models.TextField(verbose_name="Teslimat Adresi")
-
-#     # 3. LOJİSTİK VE ZAMAN ANALİZİ
-#     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Paket Oluşturulma Zamanı")
-#     updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Durum Güncellemesi")
-#     shipped_at = models.DateTimeField(null=True, blank=True, verbose_name="Yola Çıkış Zamanı")
-#     delivered_at = models.DateTimeField(null=True, blank=True, verbose_name="Teslim Edilme Zamanı")
-
-#     class Meta:
-#         verbose_name = "Paket"
-#         verbose_name_plural = "Paketler"
-#         ordering = ['-created_at']
-
-#     def __str__(self):
-#         return f"Paket #{self.id} - {self.user.get_full_name() or self.user.username}"
     
 class Aisles(models.Model): #Reyonlar
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='aisles')
@@ -282,3 +214,85 @@ class Stocks(models.Model):
             stock.branch.name: stock.stock
             for stock in cls.objects.filter(product=product).select_related("branch")
         }
+    
+# Diğer importlarını buraya ekleyebilirsin (Branch, Courier vb.)
+
+class Package(models.Model):
+    PACKAGE_STATUS = [
+        ('pending', 'Onay Bekliyor'),
+        ('preparing', 'Hazırlanıyor'),
+        ('ready', 'Paket Hazır / Kurye Bekliyor'),
+        ('on_the_way', 'Kurye Dağıtımda'),
+        ('delivered', 'Teslim Edildi'),
+        ('canceled', 'İptal Edildi'),
+    ]
+
+    # 1. TAKİP VE OPERASYONEL BAĞLANTILAR
+    tracking_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="Takip Numarası")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='packages', verbose_name="Müşteri")
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='packages', verbose_name="Çıkış Şubesi")
+    courier = models.ForeignKey(Courier, on_delete=models.SET_NULL, null=True, blank=True, related_name='packages', verbose_name="Kurye")
+
+    # 2. PAKET DETAYLARI VE ADRES
+    status = models.CharField(max_length=15, choices=PACKAGE_STATUS, default='pending', verbose_name="Paket Durumu")
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Paket Tutarı")
+    
+    # Kullanıcı adresini silse bile faturadaki adres kaybolmasın diye TextField kalmalı, 
+    # ancak account.Address ile referans bağlantısı da kuruyoruz.
+    address_reference = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Kayıtlı Adres Referansı")
+    delivery_address = models.TextField(verbose_name="Teslimat Adresi (Snapshot)")
+
+    # Paketin içeriği (İleride PackageItem modeline geçebilirsin ama şimdilik JSON ideal)
+    package_index = models.JSONField(verbose_name="Paketin İçeriği")
+
+    # 3. LOJİSTİK VE ZAMAN ANALİZİ
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Paket Oluşturulma Zamanı")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Durum Güncellemesi")
+    shipped_at = models.DateTimeField(null=True, blank=True, verbose_name="Yola Çıkış Zamanı")
+    delivered_at = models.DateTimeField(null=True, blank=True, verbose_name="Teslim Edilme Zamanı")
+
+    class Meta:
+        verbose_name = "Paket"
+        verbose_name_plural = "Paketler"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {self.user.get_full_name() or self.user.username}"
+
+    # ==========================================================================
+    # OTOMATİZASYON VE HELPER METOTLAR
+    # ==========================================================================
+
+    def save(self, *args, **kwargs):
+        """ Paket durumuna göre yola çıkış ve teslim tarihlerini otomatik atar. """
+        if self.status == 'on_the_way' and not self.shipped_at:
+            self.shipped_at = timezone.now()
+        
+        if self.status == 'delivered' and not self.delivered_at:
+            self.delivered_at = timezone.now()
+            
+        super().save(*args, **kwargs)
+
+    def assign_courier(self, courier_instance):
+        """ 
+        Pakete kurye atar ve kuryenin durumunu günceller.
+        Kullanım: package.assign_courier(secilen_kurye)
+        """
+        self.courier = courier_instance
+        self.status = 'on_the_way'
+        self.save()
+
+        # Kuryeyi dağıtıma çıkar
+        courier_instance.current_cart_id = self.id
+        courier_instance.status = 'delivery'
+        courier_instance.save()
+
+    def mark_as_delivered(self):
+        """ 
+        Paketi teslim edildi olarak işaretler ve kuryenin complete_delivery() metodunu tetikler. 
+        """
+        self.status = 'delivered'
+        self.save() # save metodu delivered_at tarihini otomatik dolduracak
+
+        if self.courier:
+            self.courier.complete_delivery()
