@@ -211,7 +211,7 @@ class Stocks(models.Model):
                 }
         """
         return {
-            stock.branch.name: stock.stock
+            stock.branch.neighborhood: stock.stock
             for stock in cls.objects.filter(product=product).select_related("branch")
         }
     
