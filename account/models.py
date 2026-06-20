@@ -13,6 +13,10 @@ class User(models.Model):
     register_date = models.DateTimeField(auto_now_add=True)
     login_dates = models.JSONField(default=list, blank=True)
 
+    def get_full_name(self):
+        full_name = self.name + self.surname
+        return full_name
+
     def password_hash(self, raw_password):
         self.password = make_password(raw_password)
 

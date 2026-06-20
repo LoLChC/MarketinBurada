@@ -81,7 +81,7 @@ class Courier(models.Model): #Kuryeler
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
     
     # Operasyonel Durumlar
-    vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPES, default='moto', verbose_name="Araç Tipi")
+    vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPES, default='motorcycle', verbose_name="Araç Tipi")
     status = models.CharField(max_length=15, choices=COURIER_STATUS, default='offline', verbose_name="Durumu")
     
     # Kurye şu an dağıtımda ise aktif olarak taşıdığı sepetin ID'si (Boşsa null olur)
@@ -257,7 +257,7 @@ class Package(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {self.user.get_full_name() or self.user.username}"
+        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {self.user.get_full_name()}"
 
     # ==========================================================================
     # OTOMATİZASYON VE HELPER METOTLAR
