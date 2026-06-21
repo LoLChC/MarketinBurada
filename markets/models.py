@@ -2,6 +2,7 @@ import os
 import datetime
 from django.db import models
 from django.utils.text import slugify
+import uuid
 
 # ==========================================================================
 # 1. GÖRSEL YÜKLEME YOLLARI VE DINAMIK ISIMLENDIRME
@@ -55,7 +56,8 @@ class Market(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            base_slug = slugify(self.name)
+            self.slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
         super().save(*args, **kwargs)
 
     @property

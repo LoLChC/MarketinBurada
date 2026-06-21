@@ -4,9 +4,8 @@ from django.contrib.gis.db import models as location_models
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 from account.models import User, Address
-from django.db.models import F, Q, Sum
-from django.utils import timezone
-import datetime
+from django.db.models import Q, Sum
+from django.utils import timezone   
 import uuid
 
 # Create your models here.
@@ -27,7 +26,11 @@ class Branch(models.Model): #Şubeler
     @property
     def is_active(self):
         status_info = self.market.current_status_info
-        return status_info.get("status") == "open"
+        # status_info'nun geçerli bir dictionary olup olmadığını manuel kontrol et
+        if isinstance(status_info, dict):
+            return status_info.get("status") == "open"
+        
+        return False
 
     @classmethod
     def find_nearest_branch(cls, market, latitude, longitude):
@@ -54,9 +57,17 @@ class Branch(models.Model): #Şubeler
 
         
 
-        return active_branches.annotate(
+        nearest_branch = active_branches.annotate(
             mesafe=Distance('location', customer_location)
         ).order_by('mesafe').first()
+
+        # Bulunan en yakın şubenin, müşteriye olan mesafesi şubenin dağıtım menzilinden küçük veya eşit mi?
+        if nearest_branch and hasattr(nearest_branch, 'mesafe'):
+            # Distance objesi genelde .km veya .m property'lerine sahiptir.
+            if nearest_branch.mesafe.km <= nearest_branch.delivery_radius_km:
+                return nearest_branch
+
+        return None
 
     
 class Courier(models.Model): #Kuryeler
@@ -84,9 +95,15 @@ class Courier(models.Model): #Kuryeler
     status = models.CharField(max_length=15, choices=COURIER_STATUS, default='offline', verbose_name="Durumu")
     
     # Kurye şu an dağıtımda ise aktif olarak taşıdığı sepetin ID'si (Boşsa null olur)
-    current_cart_id = models.PositiveIntegerField(blank=True, null=True, verbose_name="Şu Anki Sepet ID")
+    current_package = models.ForeignKey(
+        'Package', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='active_couriers',
+        verbose_name="Şu Anki Sepet"
+    )
     
-    # Bu ay attığı tüm paketlerin ID'lerini bir liste olarak tutar: Örn: [12, 45, 89, 112]
     monthly_delivery_count = models.PositiveIntegerField(default=0, verbose_name="Bu Ayki Teslimat Sayısı")
     
     # Konum Takibi
@@ -104,15 +121,18 @@ class Courier(models.Model): #Kuryeler
         """Kurye paketi teslim ettiğinde çalışacak yardımcı metot"""
         
         if self.current_cart_id:
-            Package.objects.filter(id=self.current_cart_id).update(status='delivered', delivered_at=timezone.now())
-            
+            package = self.current_package
+            package.status = 'delivered'
+            package.delivered_at = timezone.now()
+            package.save()
+
+
             # Eğer liste henüz yoksa boş liste oluştur, varsa mevcut listeye ekle
-            Courier.objects.filter(id=self.id).update(
-                monthly_delivery_count=F('monthly_delivery_count') + 1,
-                status='available',
-                current_cart_id=None
-            )
-            self.refresh_from_db(fields=['monthly_delivery_count', 'status', 'current_cart_id'])
+            self.monthly_delivery_count += 1
+            self.status = 'available'
+            self.current_package = None
+
+            self.save(update_fields=['monthly_delivery_count', 'status', 'current_package'])
 
 class Aisles(models.Model): #Reyonlar
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='aisles')
@@ -126,6 +146,14 @@ class AislesBranchSettings(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     category = models.ForeignKey(Aisles, on_delete=models.CASCADE)
     is_available_in_branch = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['branch', 'category'], 
+                name='unique_branch_category_mapping'
+            )
+        ]
 
 class Products(models.Model): # Ürünler
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='products')
@@ -212,7 +240,10 @@ class Stocks(models.Model):
                 }
         """
         return {
-            stock.branch.neighborhood: stock.stock
+            stock.branch.id: {
+                "neighborhood": stock.branch.neighborhood,
+                "stock_count": stock.stock
+            }
             for stock in cls.objects.filter(product=product).select_related("branch")
         }
 
@@ -280,9 +311,9 @@ class Package(models.Model):
         """
         self.courier = courier_instance
         self.status = 'on_the_way'
-        self.save()
+        self.save(update_fields=['courier', 'status'])
 
         # Kuryeyi dağıtıma çıkar
-        courier_instance.current_cart_id = self.id
+        courier_instance.current_package_id = self.id
         courier_instance.status = 'delivery'
-        courier_instance.save()
+        courier_instance.save(update_fields=['current_package', 'status'])
