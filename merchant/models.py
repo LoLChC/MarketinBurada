@@ -4,7 +4,7 @@ from django.contrib.gis.db import models as location_models
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 from account.models import User, Address
-from django.db.models import Q, Sum 
+from django.db.models import F, Q, Sum
 from django.utils import timezone
 import datetime
 import uuid
@@ -29,16 +29,16 @@ class Branch(models.Model): #Şubeler
         status_info = self.market.current_status_info
         return status_info.get("status") == "open"
 
-    
-    def find_nearest_branch(self, latitude, longitude):
+    @classmethod
+    def find_nearest_branch(cls, market, latitude, longitude):
         customer_location = Point(longitude, latitude, srid=4326)
-        now = datetime.datetime.now()
+        now = timezone.localtime()
         current_day = now.weekday()
         current_time = now.time()
 
         active_branches = Branch.objects.filter(
 
-            market=self.market, 
+            market=market, 
             market__status=True, 
             market__hours__day=current_day, 
             market__hours__is_closed=False).filter(
@@ -54,11 +54,10 @@ class Branch(models.Model): #Şubeler
 
         
 
-        nearest_branch = active_branches.annotate(
+        return active_branches.annotate(
             mesafe=Distance('location', customer_location)
         ).order_by('mesafe').first()
 
-        return nearest_branch
     
 class Courier(models.Model): #Kuryeler
     COURIER_STATUS = [
@@ -88,7 +87,7 @@ class Courier(models.Model): #Kuryeler
     current_cart_id = models.PositiveIntegerField(blank=True, null=True, verbose_name="Şu Anki Sepet ID")
     
     # Bu ay attığı tüm paketlerin ID'lerini bir liste olarak tutar: Örn: [12, 45, 89, 112]
-    monthly_delivered_cart_ids = models.JSONField(default=list, blank=True, verbose_name="Bu Ay Teslim Edilen Sepet ID'leri")
+    monthly_delivery_count = models.PositiveIntegerField(default=0, verbose_name="Bu Ayki Teslimat Sayısı")
     
     # Konum Takibi
     current_location = location_models.PointField(srid=4326, null=True, geography=True, blank=True, verbose_name="Anlık Konum")
@@ -105,14 +104,13 @@ class Courier(models.Model): #Kuryeler
         """Kurye paketi teslim ettiğinde çalışacak yardımcı metot"""
         if self.current_cart_id:
             # Eğer liste henüz yoksa boş liste oluştur, varsa mevcut listeye ekle
-            if not isinstance(self.monthly_delivered_cart_ids, list):
-                self.monthly_delivered_cart_ids = []
-                
-            self.monthly_delivered_cart_ids.append(self.current_cart_id)
-            self.current_cart_id = None
-            self.status = 'available'
-            self.save()
-    
+            Courier.objects.filter(id=self.id).update(
+                monthly_delivery_count=F('monthly_delivery_count') + 1,
+                status='available',
+                current_cart_id=None
+            )
+            self.refresh_from_db(fields=['monthly_delivery_count', 'status', 'current_cart_id'])
+
 class Aisles(models.Model): #Reyonlar
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='aisles')
     title = models.CharField( max_length=50)
@@ -132,7 +130,7 @@ class Products(models.Model): # Ürünler
     title = models.CharField(max_length=50)
     images = models.ImageField(upload_to='product-images/')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    isActive = models.BooleanField()
+    is_active = models.BooleanField()
 
 
 class Stocks(models.Model):
@@ -214,8 +212,6 @@ class Stocks(models.Model):
             stock.branch.neighborhood: stock.stock
             for stock in cls.objects.filter(product=product).select_related("branch")
         }
-    
-# Diğer importlarını buraya ekleyebilirsin (Branch, Courier vb.)
 
 class Package(models.Model):
     PACKAGE_STATUS = [
@@ -257,7 +253,8 @@ class Package(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {self.user.get_full_name()}"
+        user_name = self.user.get_full_name() if self.user else "Silinmiş Müşteri"
+        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {user_name}"
 
     # ==========================================================================
     # OTOMATİZASYON VE HELPER METOTLAR
@@ -286,13 +283,3 @@ class Package(models.Model):
         courier_instance.current_cart_id = self.id
         courier_instance.status = 'delivery'
         courier_instance.save()
-
-    def mark_as_delivered(self):
-        """ 
-        Paketi teslim edildi olarak işaretler ve kuryenin complete_delivery() metodunu tetikler. 
-        """
-        self.status = 'delivered'
-        self.save() # save metodu delivered_at tarihini otomatik dolduracak
-
-        if self.courier:
-            self.courier.complete_delivery()
