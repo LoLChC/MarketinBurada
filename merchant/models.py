@@ -102,7 +102,10 @@ class Courier(models.Model): #Kuryeler
     # Sipariş teslim edildiğinde listeye eklemeyi kolaylaştıracak ufak bir metot:
     def complete_delivery(self):
         """Kurye paketi teslim ettiğinde çalışacak yardımcı metot"""
+        
         if self.current_cart_id:
+            Package.objects.filter(id=self.current_cart_id).update(status='delivered', delivered_at=timezone.now())
+            
             # Eğer liste henüz yoksa boş liste oluştur, varsa mevcut listeye ekle
             Courier.objects.filter(id=self.id).update(
                 monthly_delivery_count=F('monthly_delivery_count') + 1,
@@ -130,7 +133,7 @@ class Products(models.Model): # Ürünler
     title = models.CharField(max_length=50)
     images = models.ImageField(upload_to='product-images/')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
 
 
 class Stocks(models.Model):
