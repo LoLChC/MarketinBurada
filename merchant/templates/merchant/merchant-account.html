@@ -11,8 +11,12 @@
 <div class="container account-main-container">
     <div class="account-layout">
         
-        <!-- SOL PANEL (MERCHANT SIDEBAR) -->
+        <!-- ========================================== -->
+        <!-- BÖLÜM 1: SOL PANEL (MERCHANT SIDEBAR)      -->
+        <!-- ========================================== -->
         <aside class="account-sidebar">
+            
+            <!-- Kullanıcı Özet Bilgisi -->
             <div class="user-brief">
                 <div class="avatar-circle">
                     <i class="fa-solid fa-store"></i>
@@ -23,9 +27,13 @@
                 </div>
             </div>
 
+            <!-- Ana Navigasyon Menüsü -->
             <nav class="sidebar-menu">
                 <button class="menu-item active" data-target="m-orders">
                     <i class="fa-solid fa-receipt"></i> Siparişler
+                </button>
+                <button class="menu-item" data-target="m-branches">
+                    <i class="fa-solid fa-shop"></i> Şubelerim
                 </button>
                 <button class="menu-item" data-target="m-couriers">
                     <i class="fa-solid fa-motorcycle"></i> Kuryeler
@@ -33,11 +41,14 @@
                 <button class="menu-item" data-target="m-stocks">
                     <i class="fa-solid fa-cubes"></i> Stoklarım
                 </button>
+                <button class="menu-item" data-target="m-aisles">
+                    <i class="fa-solid fa-layer-group"></i> Reyonlar
+                </button>
                 <button class="menu-item" data-target="m-products">
                     <i class="fa-solid fa-boxes-stacked"></i> Ürünlerim
                 </button>
                 <button class="menu-item" data-target="m-campaigns">
-                    <i class="fa-solid fa-tags"></i> Kampanya Oluşturma
+                    <i class="fa-solid fa-tags"></i> Kampanyalar
                 </button>
                 <button class="menu-item" data-target="m-sales">
                     <i class="fa-solid fa-chart-line"></i> Satışlarım
@@ -56,6 +67,7 @@
                 </button>
             </nav>
 
+            <!-- Alt Menü (Çıkış) -->
             <div class="sidebar-footer-menu">
                 <a href="{% url 'account:logout' %}" class="menu-item logout-link">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış Yap
@@ -63,81 +75,252 @@
             </div>
         </aside>
 
-        <!-- SAĞ PANEL (İÇERİK ALANI) -->
+        <!-- ========================================== -->
+        <!-- BÖLÜM 2: SAĞ PANEL (İÇERİK ALANI)          -->
+        <!-- ========================================== -->
         <main class="account-content">
             
-            <!-- 1. SİPARİŞLER -->
+            <!-- PANEL: SİPARİŞLER -->
             <section id="m-orders" class="content-panel active">
                 <h2>Siparişler</h2>
-                <p class="panel-subtitle">Gelen yeni siparişler ve teslimat süreçleri.</p>
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <span class="order-date">Bugün, 14:22</span>
-                            <span class="order-id">#ORD-55421</span>
+                <p class="panel-subtitle">Gelen yeni siparişler ve teslimat süreçleri. Detayları görmek için sipariş kartına tıklayın.</p>
+                
+                <div class="address-grid">
+                    <div class="order-card clickable-order-card" data-order-id="ORD-55421" data-order-date="Bugün, 14:22" data-order-total="480.00" data-order-address="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir/İstanbul" data-order-status="Hazırlanıyor">
+                        <div class="order-header">
+                            <div>
+                                <span class="order-date">Bugün, 14:22</span>
+                                <span class="order-id">#ORD-55421</span>
+                            </div>
+                            <span class="market-badge status-open">Yeni</span>
                         </div>
-                        <span class="market-badge status-open">Yeni Sipariş</span>
-                    </div>
-                    <div class="order-body">
-                        <h4>Ahmet Yılmaz</h4>
-                        <p>5 Ürün • Toplam: <strong>480.00 TL</strong></p>
+                        <div class="order-body">
+                            <h4 class="card-main-title">Ahmet Yılmaz</h4>
+                            <ul class="card-stats-list mt-0">
+                                <li><span>Teslimat:</span> <strong class="truncate-text" title="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir/İstanbul">Atatürk Mah. Cumburi...</strong></li>
+                                <li><span>İçerik:</span> <strong>5 Çeşit Ürün</strong></li>
+                                <li><span>Toplam:</span> <strong class="price-text-success">480.00 TL</strong></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. KURYELER -->
+            <!-- PANEL: ŞUBELERİM -->
+            <section id="m-branches" class="content-panel">
+                <h2>Şubelerim</h2>
+                <p class="panel-subtitle">Marketinize bağlı tüm şubelerin satış ve operasyon detayları.</p>
+                
+                <div class="address-grid">
+                    <div class="address-card branch-card">
+                        <div class="address-title">
+                            <h3><i class="fa-solid fa-shop icon-theme-primary"></i> Kadıköy Şubesi</h3>
+                        </div>
+                        <ul class="card-stats-list">
+                            <li><span>Aylık Ciro:</span> <strong>120,450.00 TL</strong></li>
+                            <li><span>Teslim Edilen:</span> <strong>1,450 Adet</strong></li>
+                            <li><span>Aktif Kurye:</span> <strong>4 Kişi</strong></li>
+                        </ul>
+                        <a href="#" class="btn-account-save btn-full-width mt-auto text-center td-none">Şube Hesabına Git</a>
+                    </div>
+
+                    <div class="address-card branch-card">
+                        <div class="address-title">
+                            <h3><i class="fa-solid fa-shop icon-theme-primary"></i> Beşiktaş Şubesi</h3>
+                        </div>
+                        <ul class="card-stats-list">
+                            <li><span>Aylık Ciro:</span> <strong>85,200.00 TL</strong></li>
+                            <li><span>Teslim Edilen:</span> <strong>980 Adet</strong></li>
+                            <li><span>Aktif Kurye:</span> <strong>2 Kişi</strong></li>
+                        </ul>
+                        <a href="#" class="btn-account-save btn-full-width mt-auto text-center td-none">Şube Hesabına Git</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL: KURYELER -->
             <section id="m-couriers" class="content-panel">
                 <h2>Kuryeler</h2>
-                <p class="panel-subtitle">Aktif kuryeleriniz ve anlık durumları.</p>
+                <p class="panel-subtitle">Aktif kuryeleriniz, aylık paket istatistikleri ve yönetim alanları.</p>
+                
                 <div class="address-grid">
-                    <div class="address-card">
+                    <div class="address-card courier-card" data-courier-id="1" data-courier-name="Kurye Can" data-courier-phone="0555 123 45 67" data-courier-vehicle="Motosiklet" data-courier-branch="kadikoy">
                         <div class="address-title">
                             <h3><i class="fa-solid fa-motorcycle"></i> Kurye Can</h3>
-                            <span class="text-success"><i class="fa-solid fa-circle" style="font-size:0.6rem;"></i> Aktif</span>
+                            <button type="button" class="btn-card-action btn-open-courier-edit-modal" title="Düzenle">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
                         </div>
-                        <p>Teslimatta: #ORD-55410<br>Telefon: 0555 123 45 67</p>
+                        
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Şube:</span> <strong>Kadıköy</strong></li>
+                            <li><span>Durum:</span> <strong class="text-theme-primary">Teslimatta</strong></li>
+                            <li><span>Telefon:</span> <strong>0555 123 45 67</strong></li>
+                            <li><span>Araç:</span> <strong>Motosiklet</strong></li>
+                        </ul>
+
+                        <div class="courier-stats-badge">
+                            <i class="fa-solid fa-box"></i> Bu Ay Atılan Paket: <strong>142</strong>
+                        </div>
                     </div>
-                    <button type="button" class="add-new-card">
+                    
+                    <!-- Yeni Kurye Ekle Butonu -->
+                    <button type="button" class="add-new-card" id="btn-open-courier-modal">
                         <i class="fa-solid fa-plus"></i>
                         <span>Yeni Kurye Tanımla</span>
                     </button>
                 </div>
             </section>
 
-            <!-- 3. STOKLARIM -->
+            <!-- PANEL: STOKLARIM -->
             <section id="m-stocks" class="content-panel">
                 <h2>Stoklarım</h2>
-                <p class="panel-subtitle">Kritik seviyedeki ve güncel ürün stok miktarları.</p>
-                <div class="support-box" style="text-align: left;">
-                    <p>⚠️ <strong>Kritik Stok Uyarısı:</strong> 3 ürünün stoğu tükenmek üzere.</p>
-                    <br>
-                    <p>• Tam Yağlı Süt (1L) - Kalan: 5 Adet</p>
-                    <p>• Yerli Muz (Kg) - Kalan: 2 Kg</p>
+                <p class="panel-subtitle">Güncel ürün stok miktarları. Şube dökümü için karta tıklayın.</p>
+                
+                <!-- Arama ve Filtreleme Araç Çubuğu -->
+                <div class="toolbar-container">
+                    <div class="search-box-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="stock-search-input" placeholder="Stoklarda ürün ismi ile ara...">
+                    </div>
+                    <div class="filter-box-wrapper">
+                        <select id="stock-aisle-filter" class="custom-filter-select">
+                            <option value="all">Tüm Reyonlar</option>
+                            <option value="sut-sarkuteri">Süt & Şarküteri</option>
+                            <option value="manav">Manav</option>
+                            <option value="atistirmalik">Atıştırmalık</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="address-grid" id="stock-cards-container">
+                    <div class="address-card stock-item-card clickable-stock-card" data-product-name="Tam Yağlı Süt (1L)" data-aisle="sut-sarkuteri">
+                        <div class="card-header-standard">
+                            <h3>Tam Yağlı Süt (1L)</h3>
+                        </div>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Reyon:</span> <strong>Süt & Şarküteri</strong></li>
+                            <li><span>Toplam Stok:</span> <strong class="stock-text-warning">5 Adet</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="address-card stock-item-card clickable-stock-card" data-product-name="Yerli Muz (Kg)" data-aisle="manav">
+                        <div class="card-header-standard">
+                            <h3>Yerli Muz (Kg)</h3>
+                        </div>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Reyon:</span> <strong>Manav</strong></li>
+                            <li><span>Toplam Stok:</span> <strong class="stock-text-warning">2 Kg</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="address-card stock-item-card clickable-stock-card" data-product-name="Sütaş Ayran 290ml" data-aisle="sut-sarkuteri">
+                        <div class="card-header-standard">
+                            <h3>Sütaş Ayran 290ml</h3>
+                        </div>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Reyon:</span> <strong>Süt & Şarküteri</strong></li>
+                            <li><span>Toplam Stok:</span> <strong class="stock-text-success">100 Adet</strong></li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
-            <!-- 4. ÜRÜNLERİM -->
+            <!-- PANEL: REYONLAR -->
+            <section id="m-aisles" class="content-panel">
+                <h2>Reyon Yönetimi</h2>
+                <p class="panel-subtitle">Market seviyesinde tanımlı reyonlar, ürün çeşitliliği ve fiyat ortalamaları.</p>
+                
+                <div class="address-grid">
+                    <div class="address-card aisle-card">
+                        <div class="card-header-centered">
+                            <h3 class="aisle-title-text icon-theme-primary">Süt & Şarküteri</h3>
+                        </div>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Ürün Çeşidi:</span> <strong>24 Çeşit</strong></li>
+                            <li><span>Ortalama Fiyat:</span> <strong>68.50 TL</strong></li>
+                        </ul>
+                        <button type="button" class="btn-account-save btn-full-width btn-show-products mt-auto" data-target-aisle="sut-sarkuteri">Ürünleri Göster</button>
+                    </div>
+                    
+                    <div class="address-card aisle-card">
+                        <div class="card-header-centered">
+                            <h3 class="aisle-title-text icon-theme-primary">Manav</h3>
+                        </div>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Ürün Çeşidi:</span> <strong>18 Çeşit</strong></li>
+                            <li><span>Ortalama Fiyat:</span> <strong>34.20 TL</strong></li>
+                        </ul>
+                        <button type="button" class="btn-account-save btn-full-width btn-show-products mt-auto" data-target-aisle="manav">Ürünleri Göster</button>
+                    </div>
+
+                    <div class="address-card aisle-card">
+                        <div class="card-header-centered">
+                            <h3 class="aisle-title-text icon-theme-primary">Atıştırmalık</h3>
+                        </div>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Ürün Çeşidi:</span> <strong>42 Çeşit</strong></li>
+                            <li><span>Ortalama Fiyat:</span> <strong>22.80 TL</strong></li>
+                        </ul>
+                        <button type="button" class="btn-account-save btn-full-width btn-show-products mt-auto" data-target-aisle="atistirmalik">Ürünleri Göster</button>
+                    </div>
+                    
+                    <!-- Yeni Reyon Ekle Butonu -->
+                    <button type="button" class="add-new-card" id="btn-open-aisle-modal">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Yeni Reyon Ekle</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- PANEL: ÜRÜNLERİM -->
             <section id="m-products" class="content-panel">
                 <h2>Ürünlerim</h2>
-                <p class="panel-subtitle">Mağazanızda listelenen tüm ürünlerin yönetimi.</p>
-                <div class="address-grid">
-                    <div class="address-card">
+                <p class="panel-subtitle">Mağazanızda listelenen tüm ürünlerin vitrin ve içerik yönetimi.</p>
+
+                <div class="toolbar-container">
+                    <div class="search-box-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="product-search-input" placeholder="Ürün ismi ile ara...">
+                    </div>
+                    <div class="filter-box-wrapper">
+                        <select id="product-aisle-filter" class="custom-filter-select">
+                            <option value="all">Tüm Reyonlar</option>
+                            <option value="sut-sarkuteri">Süt & Şarküteri</option>
+                            <option value="manav">Manav</option>
+                            <option value="atistirmalik">Atıştırmalık</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="address-grid" id="product-cards-container">
+                    <div class="address-card product-item-card" data-product-id="101" data-product-name="Sütaş Ayran 290ml" data-product-price="15.00" data-product-aisle="sut-sarkuteri">
                         <div class="address-title">
                             <h3>Sütaş Ayran 290ml</h3>
+                            <button type="button" class="btn-card-action btn-open-product-edit-modal" title="Düzenle">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
                         </div>
-                        <p>Fiyat: 15.00 TL<br>Kategori: Süt & Şarküteri</p>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Fiyat:</span> <strong class="price-text-success">15.00 TL</strong></li>
+                            <li><span>Reyon:</span> <strong>Süt & Şarküteri</strong></li>
+                            <li><span>Durum:</span> <strong>Satışta</strong></li>
+                        </ul>
                     </div>
-                    <button type="button" class="add-new-card">
+                    
+                    <!-- Yeni Ürün Ekle Butonu -->
+                    <button type="button" class="add-new-card" id="btn-open-product-modal">
                         <i class="fa-solid fa-plus"></i>
                         <span>Yeni Ürün Ekle</span>
                     </button>
                 </div>
             </section>
 
-            <!-- 5. KAMPANYA OLUŞTURMA -->
+            <!-- PANEL: KAMPANYALAR -->
             <section id="m-campaigns" class="content-panel">
-                <h2>Kampanya Oluşturma</h2>
+                <h2>Kampanyalar</h2>
                 <p class="panel-subtitle">Müşterilerinize özel indirim ve fırsatlar tanımlayın.</p>
+                
                 <form class="account-form" method="POST" onsubmit="return false;">
                     <div class="form-group">
                         <label for="camp-name">Kampanya Adı</label>
@@ -145,8 +328,8 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="camp-type">Kampanya Türü</label>
-                            <input type="text" id="camp-type" placeholder="Örn: Sepette İndirim">
+                            <label for="camp-code">Kampanya Kodu</label>
+                            <input type="text" id="camp-code" placeholder="Örn: YAZ2026">
                         </div>
                         <div class="form-group">
                             <label for="camp-rate">İndirim Oranı (%)</label>
@@ -155,33 +338,54 @@
                     </div>
                     <button type="submit" class="btn-account-save">Kampanyayı Başlat</button>
                 </form>
-            </section>
 
-            <!-- 6. SATIŞLARIM -->
-            <section id="m-sales" class="content-panel">
-                <h2>Satışlarım</h2>
-                <p class="panel-subtitle">Tamamlanan satışlarınızın genel dökümü.</p>
-                <div class="order-card" style="border-left: 4px solid #2b7a4b;">
-                    <div class="order-header">
-                        <div><span class="order-date">Bugün Toplam Satış</span></div>
-                        <h3 style="color: #2b7a4b; font-family:'Inter';">4,250.00 TL</h3>
+                <hr class="section-divider">
+                
+                <h3>Aktif Kampanyalar</h3>
+                <p class="panel-subtitle">Yürürlükte olan kampanyalarınız. Detaylar için karta tıklayın.</p>
+                
+                <div class="address-grid">
+                    <div class="address-card campaign-card clickable-campaign" data-camp-id="1" data-camp-title="Yaz İndirimi" data-camp-code="YAZ2026" data-camp-usage="145">
+                        <div class="address-title">
+                            <h3 class="icon-theme-primary">YAZ2026</h3>
+                            <button type="button" class="btn-card-action btn-pause-campaign" title="Kampanyayı Durdur">
+                                <i class="fa-solid fa-pause"></i>
+                            </button>
+                        </div>
+                        <ul class="card-stats-list mt-0">
+                            <li><span>Kategori:</span> <strong>Tüm Sepet</strong></li>
+                            <li><span>İndirim:</span> <strong class="text-success">%15</strong></li>
+                            <li><span>Durum:</span> <strong class="text-success">Aktif</strong></li>
+                        </ul>
                     </div>
-                    <p style="font-size: 0.9rem; color:#6B645C;">Toplam 14 başarılı sipariş alındı.</p>
                 </div>
             </section>
 
-            <!-- 7. KÂR -->
+            <!-- PANEL: SATIŞLARIM -->
+            <section id="m-sales" class="content-panel">
+                <h2>Satışlarım</h2>
+                <p class="panel-subtitle">Tamamlanan satışlarınızın genel dökümü.</p>
+                <div class="order-card card-border-success">
+                    <div class="order-header">
+                        <div><span class="order-date">Bugün Toplam Satış</span></div>
+                        <h3 class="price-header-success">4,250.00 TL</h3>
+                    </div>
+                    <p class="card-sub-text">Toplam 14 başarılı sipariş alındı.</p>
+                </div>
+            </section>
+
+            <!-- PANEL: KÂR -->
             <section id="m-profit" class="content-panel">
                 <h2>Kâr Raporu</h2>
                 <p class="panel-subtitle">Komisyonlar ve maliyetler düşüldükten sonraki net kârınız.</p>
                 <div class="support-box">
                     <p>Bu Ayki Tahmini Net Kârınız</p>
-                    <span class="support-phone" style="color: #2b7a4b !important;">18,450.00 TL</span>
+                    <span class="support-phone price-header-success">18,450.00 TL</span>
                     <p class="support-hours">Son güncelleme: 5 dakika önce</p>
                 </div>
             </section>
 
-            <!-- 8. SANAL POSLARIM -->
+            <!-- PANEL: SANAL POSLARIM -->
             <section id="m-pos" class="content-panel">
                 <h2>Sanal Poslarım</h2>
                 <p class="panel-subtitle">Ödeme aldığınız aktif entegrasyonlar.</p>
@@ -191,43 +395,372 @@
                     </div>
                     <div class="payment-card-info">
                         <p class="card-number">İyzico Entegrasyonu</p>
-                        <p class="card-expiry" style="color: #2b7a4b;">✓ Aktif ve Bağlı</p>
+                        <p class="card-expiry text-success">✓ Aktif ve Bağlı</p>
                     </div>
                 </div>
             </section>
 
-            <!-- 9. MÜŞTERİ TRAFİĞİ -->
+            <!-- PANEL: MÜŞTERİ TRAFİĞİ -->
             <section id="m-traffic" class="content-panel">
                 <h2>Müşteri Trafiği</h2>
                 <p class="panel-subtitle">Mağazanızı ziyaret eden ve inceleyen kullanıcı istatistikleri.</p>
                 <div class="form-row">
                     <div class="support-box">
                         <h4>Tekil Ziyaretçi</h4>
-                        <h2 style="margin-top:10px;">1,240</h2>
+                        <h2 class="mt-10">1,240</h2>
                     </div>
                     <div class="support-box">
                         <h4>Sepete Ekleme</h4>
-                        <h2 style="margin-top:10px;">342</h2>
+                        <h2 class="mt-10">342</h2>
                     </div>
                 </div>
             </section>
 
-            <!-- 10. ABONELİK BİLGİLERİM -->
+            <!-- PANEL: ABONELİK BİLGİLERİM -->
             <section id="m-subscription" class="content-panel">
                 <h2>Abonelik Bilgilerim</h2>
                 <p class="panel-subtitle">Marketin Burada platform üyelik detaylarınız.</p>
-                <div class="order-card" style="border-top: 4px solid #E07A5F;">
+                <div class="order-card card-border-theme">
                     <div class="order-header">
                         <div>
-                            <h4 style="font-family:'Inter'; font-weight:700;">Premium Esnaf Paketi</h4>
-                            <p class="order-id" style="margin-top:5px;">Yenilenme Tarihi: 01 Temmuz 2026</p>
+                            <h4 class="fw-700">Premium Esnaf Paketi</h4>
+                            <p class="order-id mt-5">Yenilenme Tarihi: 01 Temmuz 2026</p>
                         </div>
-                        <span class="market-badge status-open" style="background-color:rgba(224,122,95,0.1); color:#E07A5F;">Aktif</span>
+                        <span class="market-badge status-theme">Aktif</span>
                     </div>
                 </div>
             </section>
 
         </main>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- BÖLÜM 3: MODAL (POP-UP) YAPILARI           -->
+<!-- ========================================== -->
+
+<!-- MODAL: Sipariş Detayı -->
+<div id="order-detail-modal" class="modal-overlay">
+    <div class="modal-box modal-box-large">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-circle-info"></i> Sipariş İçeriği Detayı</h3>
+            <button class="modal-close" data-close="order-detail-modal">&times;</button>
+        </div>
+        <div class="order-detail-popup-content">
+            
+            <!-- Yenilenen Sipariş Bilgi Alanı (Grid Layout) -->
+            <div class="popup-order-info-grid">
+                
+                <!-- Sipariş ID -->
+                <div class="info-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-hashtag"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Sipariş ID</span>
+                        <strong id="popup-order-id" class="info-value">#ORD-55421</strong>
+                    </div>
+                </div>
+                
+                <!-- Sipariş Tarihi -->
+                <div class="info-box">
+                    <div class="info-box-icon"><i class="fa-regular fa-clock"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Sipariş Tarihi</span>
+                        <strong id="popup-order-date" class="info-value">Bugün, 14:22</strong>
+                    </div>
+                </div>
+
+                <!-- Sipariş Durumu (YENİ EKLENEN KISIM) -->
+                <div class="info-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Güncel Durum</span>
+                        <strong id="popup-order-status" class="info-value text-theme-primary">Hazırlanıyor</strong>
+                    </div>
+                </div>
+                
+                <!-- Teslimat Adresi -->
+                <div class="info-box address-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Teslimat Adresi</span>
+                        <span id="popup-order-address" class="info-value address-text">Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir/İstanbul</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive-wrapper">
+                <table class="custom-popup-table">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th class="text-center">Adet</th>
+                            <th class="text-right">Birim Fiyat</th>
+                            <th class="text-right">Toplam</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popup-order-items-body">
+                        <!-- Statik Veriler (JS ile Dinamik Doldurulabilir) -->
+                        <tr>
+                            <td>Sütaş Süt 1L</td>
+                            <td class="text-center">2</td>
+                            <td class="text-right">40.00 TL</td>
+                            <td class="text-right">80.00 TL</td>
+                        </tr>
+                        <tr>
+                            <td>Sütaş Ayran 290ml</td>
+                            <td class="text-center">10</td>
+                            <td class="text-right">15.00 TL</td>
+                            <td class="text-right">150.00 TL</td>
+                        </tr>
+                        <tr>
+                            <td>Dana Kıyma (Kg)</td>
+                            <td class="text-center">1</td>
+                            <td class="text-right">250.00 TL</td>
+                            <td class="text-right">250.00 TL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="order-summary-total-row">
+                <span>Genel Toplam:</span>
+                <strong id="popup-order-grand-total">480.00 TL</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Stok Şube Detayı -->
+<div id="stock-detail-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-cubes"></i> Stok Detayı: <span id="popup-stock-title">Ürün</span></h3>
+            <button class="modal-close" data-close="stock-detail-modal">&times;</button>
+        </div>
+        <div class="order-detail-popup-content">
+            <p class="mb-15 text-muted">Hangi şubede kaç adet ürün bulunduğunu aşağıdan inceleyebilirsiniz.</p>
+            <div class="table-responsive-wrapper">
+                <table class="custom-popup-table">
+                    <thead>
+                        <tr>
+                            <th>Şube Adı</th>
+                            <th class="text-right">Mevcut Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kadıköy Şubesi</td>
+                            <td class="text-right"><strong>45 Adet</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Beşiktaş Şubesi</td>
+                            <td class="text-right"><strong>12 Adet</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Merkez Şube</td>
+                            <td class="text-right"><strong>80 Adet</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Kampanya Detayları -->
+<div id="campaign-detail-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-tags"></i> Kampanya İstatistikleri</h3>
+            <button class="modal-close" data-close="campaign-detail-modal">&times;</button>
+        </div>
+        <div class="order-detail-popup-content">
+            <h2 class="popup-camp-title-hero" id="popup-camp-code">YAZ2026</h2>
+            <ul class="popup-camp-list">
+                <li><strong>Kampanya Başlığı:</strong> <span id="popup-camp-title">Yaz İndirimi</span></li>
+                <li><strong>Kullanım Sayısı:</strong> <strong class="text-success" id="popup-camp-usage">145</strong> Kez Kullanıldı</li>
+                <li><strong>Kazanılan Tahmini Ciro Etkisi:</strong> +12,450 TL</li>
+                <li><strong>Oluşturulma Tarihi:</strong> 15 Haziran 2026</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Yeni Kurye Ekle -->
+<div id="courier-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-motorcycle"></i> Yeni Kurye Tanımla</h3>
+            <button class="modal-close" data-close="courier-modal">&times;</button>
+        </div>
+        <form method="POST" class="account-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="modal-courier-name">Kurye Adı ve Soyadı</label>
+                <input type="text" id="modal-courier-name" name="courier-name" placeholder="Örn: Can Yılmaz" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="modal-courier-phone">Telefon Numarası</label>
+                    <input type="tel" id="modal-courier-phone" name="courier-phone" placeholder="05XX XXX XX XX" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-courier-vehicle">Araç Tipi</label>
+                    <input type="text" id="modal-courier-vehicle" name="courier-vehicle" placeholder="Örn: Motosiklet" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="modal-courier-branch">Bağlı Olduğu Şube</label>
+                <select id="modal-courier-branch" name="courier-branch" required class="custom-popup-select">
+                    <option value="" disabled selected>Şube Seçiniz</option>
+                    <option value="merkez">Merkez Şube</option>
+                    <option value="kadikoy">Kadıköy Şubesi</option>
+                    <option value="besiktas">Beşiktaş Şubesi</option>
+                </select>
+            </div>
+            <button type="submit" name="action" value="add_courier" class="btn-account-save btn-full-width">Kuryeyi Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: Kurye Düzenle -->
+<div id="courier-edit-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-regular fa-pen-to-square"></i> Kurye Bilgilerini Düzenle</h3>
+            <button class="modal-close" data-close="courier-edit-modal">&times;</button>
+        </div>
+        <form method="POST" class="account-form" id="form-courier-edit">
+            {% csrf_token %}
+            <input type="hidden" id="edit-courier-id" name="courier-id">
+            <div class="form-group">
+                <label for="edit-courier-name">Kurye Adı ve Soyadı</label>
+                <input type="text" id="edit-courier-name" name="courier-name" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="edit-courier-phone">Telefon Numarası</label>
+                    <input type="tel" id="edit-courier-phone" name="courier-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-courier-vehicle">Araç Tipi</label>
+                    <input type="text" id="edit-courier-vehicle" name="courier-vehicle" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="edit-courier-branch">Bağlı Olduğu Şube</label>
+                <select id="edit-courier-branch" name="courier-branch" required class="custom-popup-select">
+                    <option value="merkez">Merkez Şube</option>
+                    <option value="kadikoy">Kadıköy Şubesi</option>
+                    <option value="besiktas">Beşiktaş Şubesi</option>
+                </select>
+            </div>
+            <button type="submit" name="action" value="edit_courier" class="btn-account-save btn-full-width">Değişiklikleri Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: Yeni Reyon Ekle -->
+<div id="aisle-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-layer-group"></i> Yeni Reyon Ekle</h3>
+            <button class="modal-close" data-close="aisle-modal">&times;</button>
+        </div>
+        <form method="POST" class="account-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="modal-aisle-name">Reyon Adı</label>
+                <input type="text" id="modal-aisle-name" name="aisle-name" placeholder="Örn: Atıştırmalık, Temizlik" required>
+            </div>
+            <button type="submit" name="action" value="add_aisle" class="btn-account-save btn-full-width">Reyonu Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: Yeni Ürün Ekle -->
+<div id="product-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-boxes-stacked"></i> Yeni Ürün Ekle</h3>
+            <button class="modal-close" data-close="product-modal">&times;</button>
+        </div>
+        <form method="POST" class="account-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>Ürün Görseli</label>
+                <label for="modal-product-image" class="custom-file-upload">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span id="file-name-display">Görsel Seç veya Sürükle</span>
+                    <input type="file" id="modal-product-image" name="product-image" accept="image/*" required>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="modal-product-name">Ürün Adı</label>
+                <input type="text" id="modal-product-name" name="product-name" placeholder="Örn: Sütaş Ayran 290ml" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="modal-product-price">Satış Fiyatı (TL)</label>
+                    <input type="number" step="0.01" id="modal-product-price" name="product-price" placeholder="Örn: 15.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="modal-product-category">Reyon</label>
+                    <select id="modal-product-category" name="product-category" required class="custom-popup-select">
+                        <option value="" disabled selected>Lütfen Reyon Seçiniz</option>
+                        <option value="sut-sarkuteri">Süt & Şarküteri</option>
+                        <option value="manav">Manav</option>
+                        <option value="atistirmalik">Atıştırmalık</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" name="action" value="add_product" class="btn-account-save btn-full-width">Ürünü Vitrine Ekle</button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: Ürün Düzenle -->
+<div id="product-edit-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-regular fa-pen-to-square"></i> Ürün Bilgilerini Düzenle</h3>
+            <button class="modal-close" data-close="product-edit-modal">&times;</button>
+        </div>
+        <form method="POST" class="account-form" id="form-product-edit" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" id="edit-product-id" name="product-id">
+            
+            <div class="form-group">
+                <label>Ürün Görseli (İsteğe Bağlı)</label>
+                <label for="edit-product-image" class="custom-file-upload">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span id="edit-file-name-display">Yeni Görsel Seç</span>
+                    <input type="file" id="edit-product-image" name="product-image" accept="image/*">
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-product-name">Ürün Adı</label>
+                <input type="text" id="edit-product-name" name="product-name" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="edit-product-price">Satış Fiyatı (TL)</label>
+                    <input type="number" step="0.01" id="edit-product-price" name="product-price" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-category">Reyon</label>
+                    <select id="edit-product-category" name="product-category" required class="custom-popup-select">
+                        <option value="sut-sarkuteri">Süt & Şarküteri</option>
+                        <option value="manav">Manav</option>
+                        <option value="atistirmalik">Atıştırmalık</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" name="action" value="edit_product" class="btn-account-save btn-full-width">Değişiklikleri Kaydet</button>
+        </form>
     </div>
 </div>
 {% endblock %}
