@@ -1,15 +1,6 @@
 /**
  * ==========================================================================
  * MARKETİN BURADA - MERCHANT PANELİ STİLLERİ
- * * İÇİNDEKİLER (TOC):
- * 1. Temel Düzen ve Container (Layout)
- * 2. Sol Panel (Sidebar)
- * 3. Sağ Panel (Main Content & Tabs)
- * 4. Araç Çubukları (Toolbars, Search, Filters)
- * 5. Formlar ve Dosya Yükleme Ekranları
- * 6. Kart Bileşenleri (Cards, Badges, Lists)
- * 7. Modallar (Pop-up Pencereleri)
- * 8. Yardımcı Sınıflar (Utility Classes) & Responsive
  * ==========================================================================
  */
 
@@ -268,8 +259,7 @@
 
 .account-form input[type="text"],
 .account-form input[type="number"],
-.account-form input[type="tel"],
-.custom-popup-select {
+.account-form input[type="tel"] {
     width: 100%;
     padding: 12px;
     border: 1px solid rgb(240, 230, 140);
@@ -282,55 +272,11 @@
     transition: all 0.2s ease;
 }
 
-.account-form input:focus,
-.custom-popup-select:focus {
+.account-form input:focus {
     outline: none;
     border-color: #E07A5F;
     background-color: #ffffff;
     box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
-}
-
-.custom-file-upload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 20px;
-    border: 2px dashed rgb(240, 230, 140);
-    border-radius: 8px;
-    background-color: #FAF7F2;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #6B645C;
-    text-align: center;
-    margin-bottom: 0;
-}
-
-.custom-file-upload:hover {
-    border-color: #E07A5F;
-    background-color: #ffffff;
-    color: #E07A5F;
-}
-
-.custom-file-upload i {
-    font-size: 2.2rem;
-    margin-bottom: 10px;
-    color: #E07A5F;
-    transition: transform 0.3s ease;
-}
-
-.custom-file-upload:hover i {
-    transform: translateY(-5px);
-}
-
-.custom-file-upload span {
-    font-family: "Inter", sans-serif;
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-.custom-file-upload input[type="file"] {
-    display: none;
 }
 
 .btn-account-save {
@@ -384,30 +330,15 @@
 }
 
 .clickable-order-card,
-.clickable-stock-card,
-.clickable-campaign {
+.clickable-stock-card {
     cursor: pointer;
 }
 
 .clickable-order-card:hover,
-.clickable-stock-card:hover,
-.clickable-campaign:hover {
+.clickable-stock-card:hover {
     border-color: #E07A5F;
     background-color: #FAF7F2;
     transform: translateY(-2px);
-}
-
-.aisle-card {
-    cursor: default;
-    border-top: 4px solid #E07A5F;
-}
-
-.aisle-card:hover {
-    border-color: #FAF7F2;
-    border-top-color: #E07A5F !important;
-    transform: none !important;
-    background-color: #ffffff !important;
-    box-shadow: none !important;
 }
 
 .order-header {
@@ -432,21 +363,6 @@
 .card-main-title {
     margin-bottom: 14px;
     font-size: 1.15rem;
-    color: #2B2A28;
-}
-
-.card-header-centered {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #FAF7F2;
-}
-
-.card-header-centered h3 {
-    font-family: "Fraunces", serif;
-    font-size: 1.4rem;
     color: #2B2A28;
 }
 
@@ -517,39 +433,180 @@
     color: #2b7a4b;
 }
 
-.courier-stats-badge {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid #FAF7F2;
-    font-size: 0.85rem;
-    color: #6B645C;
-}
-
-.add-new-card {
-    border: 2px dashed rgb(240, 230, 140);
-    background-color: #FAF7F2;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    color: #6B645C;
-    padding: 30px;
-    transition: all 0.2s;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-.add-new-card:hover {
-    border-color: #E07A5F;
+.status-theme {
+    background-color: rgba(224, 122, 95, 0.1);
     color: #E07A5F;
-    background-color: #ffffff;
 }
 
-.add-new-card i {
+/* Sipariş Statü Rozetleri */
+.badge-preparing {
+    background-color: #e0f2fe;
+    color: #00A3E0;
+}
+
+.badge-ready {
+    background-color: #fef08a;
+    color: #b45309;
+}
+
+.badge-ontheway {
+    background-color: #d1fae5;
+    color: #15803d;
+}
+
+.badge-canceled {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Buton ve Action Wrapper Stilleri */
+.action-buttons-wrapper {
+    display: flex;
+    gap: 12px;
+    /* Ferahlık için artırıldı */
+    margin-top: 20px;
+    /* Ferahlık için artırıldı */
+    flex-wrap: wrap;
+}
+
+.action-buttons-wrapper.flex-column {
+    flex-direction: column;
+}
+
+.action-buttons-wrapper .btn-account-save {
+    flex: 1;
+}
+
+.action-buttons-wrapper .btn-full {
+    flex: 100%;
+}
+
+.btn-primary {
+    background-color: #E07A5F;
+    color: #ffffff;
+}
+
+.btn-success {
+    background-color: #2b7a4b;
+    color: #ffffff;
+}
+
+.btn-danger {
+    background-color: #d9534f;
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: #6B645C;
+    color: #ffffff;
+}
+
+.btn-large-primary {
+    background-color: #E07A5F;
+    padding: 15px 30px;
+}
+
+.btn-small {
+    padding: 8px 15px;
+}
+
+/* Yardımcı (Utility) Sınıflar */
+.card-border-danger {
+    border-left: 4px solid #d9534f;
+}
+
+.card-border-success {
+    border-left: 4px solid #2b7a4b;
+}
+
+.card-border-theme {
+    border-top: 4px solid #E07A5F;
+}
+
+.panel-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.input-small {
+    padding: 8px;
+}
+
+.form-label-small {
+    font-size: 0.8rem;
+}
+
+.mt-15 {
+    margin-top: 15px !important;
+}
+
+.mt-10 {
+    margin-top: 10px !important;
+}
+
+.mt-0 {
+    margin-top: 0 !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.icon-large {
     font-size: 1.5rem;
+}
+
+.revenue-amount {
+    font-size: 1.8rem;
+    margin: 15px 0;
+}
+
+.text-strike {
+    text-decoration: line-through;
+}
+
+.text-success-dark {
+    color: #15803d;
+}
+
+.grid-1-col {
+    grid-template-columns: 1fr !important;
+}
+
+.price-text-success {
+    font-size: 1.05rem;
+    color: #2b7a4b;
+}
+
+.stock-text-success {
+    font-size: 1.05rem;
+    color: #2b7a4b;
+}
+
+.stock-text-warning {
+    font-size: 1.05rem;
+    color: #E07A5F;
+}
+
+.price-header-success {
+    color: #2b7a4b;
+    font-family: "Inter", sans-serif;
+}
+
+.truncate-text {
+    display: inline-block;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
 }
 
 /* ==========================================================================
@@ -673,7 +730,6 @@
     font-size: 0.8rem;
     color: #6B645C;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     font-weight: 600;
 }
 
@@ -685,18 +741,6 @@
 
 .address-text {
     line-height: 1.4;
-}
-
-.popup-camp-title-hero {
-    color: #E07A5F;
-    margin-bottom: 20px;
-    font-family: 'Fraunces', serif;
-}
-
-.popup-camp-list {
-    list-style: none;
-    padding: 0;
-    line-height: 2;
 }
 
 .table-responsive-wrapper {
@@ -727,130 +771,18 @@
     color: #6B645C;
 }
 
+.modal-grand-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 1.2rem;
+    border-top: 2px solid #FAF7F2;
+    padding-top: 15px;
+}
+
 /* ==========================================================================
-   8. YARDIMCI SINIFLAR (UTILITIES) & RESPONSIVE
+   8. RESPONSIVE
    ========================================================================== */
-.text-success {
-    color: #2b7a4b !important;
-}
-
-.text-troy {
-    color: #00A3E0 !important;
-}
-
-.text-muted {
-    color: #6B645C !important;
-}
-
-.icon-theme-primary {
-    color: #E07A5F !important;
-}
-
-.text-theme-primary {
-    color: #E07A5F !important;
-}
-
-.price-text-success {
-    font-size: 1.05rem;
-    color: #2b7a4b;
-}
-
-.stock-text-success {
-    font-size: 1.05rem;
-    color: #2b7a4b;
-}
-
-.stock-text-warning {
-    font-size: 1.05rem;
-    color: #E07A5F;
-}
-
-.price-header-success {
-    color: #2b7a4b;
-    font-family: "Inter", sans-serif;
-}
-
-.text-center {
-    text-align: center !important;
-}
-
-.text-right {
-    text-align: right !important;
-}
-
-.mt-0 {
-    margin-top: 0 !important;
-}
-
-.mt-5 {
-    margin-top: 5px !important;
-}
-
-.mt-10 {
-    margin-top: 10px !important;
-}
-
-.mb-15 {
-    margin-bottom: 15px !important;
-}
-
-.mt-auto {
-    margin-top: auto !important;
-}
-
-.fw-700 {
-    font-weight: 700 !important;
-}
-
-.td-none {
-    text-decoration: none !important;
-}
-
-.truncate-text {
-    display: inline-block;
-    max-width: 140px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: bottom;
-}
-
-.section-divider {
-    border: 0;
-    border-top: 2px dashed rgb(240, 230, 140);
-    margin: 40px 0;
-}
-
-.card-border-success {
-    border-left: 4px solid #2b7a4b;
-}
-
-.card-border-theme {
-    border-top: 4px solid #E07A5F;
-}
-
-.status-theme {
-    background-color: rgba(224, 122, 95, 0.1);
-    color: #E07A5F;
-}
-
-.btn-card-action {
-    background: none;
-    border: none;
-    color: #6B645C;
-    cursor: pointer;
-    opacity: 0.7;
-    font-size: 1.1rem;
-    padding: 4px;
-    transition: all 0.2s ease;
-}
-
-.btn-card-action:hover {
-    color: #E07A5F;
-    opacity: 1;
-    transform: scale(1.1);
-}
-
 @media (max-width: 768px) {
     .account-layout {
         grid-template-columns: 1fr;
@@ -871,5 +803,11 @@
 
     .popup-order-info-grid {
         grid-template-columns: 1fr;
+    }
+
+    .panel-header-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
     }
 }

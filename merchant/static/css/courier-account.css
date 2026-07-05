@@ -1,0 +1,529 @@
+/**
+ * ==========================================================================
+ * MARKETİN BURADA - KURYE PANELİ STİLLERİ
+ * ==========================================================================
+ */
+
+.account-main-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.account-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+    align-items: start;
+    min-height: 70vh;
+}
+
+/* Sidebar Tasarımı */
+.account-sidebar {
+    background-color: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 12px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 650px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+}
+
+.user-brief {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #FAF7F2;
+}
+
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(224, 122, 95, 0.1);
+    color: #E07A5F;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.welcome-text {
+    font-size: 0.8rem;
+    color: #6B645C;
+    display: block;
+}
+
+.user-fullname {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2B2A28;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-footer-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #6B645C;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.menu-item i {
+    font-size: 1.05rem;
+    width: 20px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.menu-item:hover {
+    background-color: #FAF7F2;
+    color: #E07A5F;
+}
+
+.menu-item.active {
+    background-color: rgba(224, 122, 95, 0.1);
+    color: #E07A5F;
+    font-weight: 600;
+}
+
+.logout-link:hover {
+    background-color: #FDF2F0;
+    color: #d9534f;
+}
+
+/* İçerik Alanı ve Kartlar */
+.account-content {
+    background-color: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+}
+
+.content-panel {
+    display: none;
+    animation: panelFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.content-panel.active {
+    display: block;
+}
+
+@keyframes panelFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.account-content h2 {
+    font-family: "Fraunces", serif;
+    font-size: 1.8rem;
+    color: #2B2A28;
+    margin-bottom: 6px;
+}
+
+.panel-subtitle {
+    font-size: 0.95rem;
+    color: #6B645C;
+    margin-bottom: 30px;
+}
+
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    /* Ferahlık için 20'den 24'e çıkarıldı */
+}
+
+.order-card {
+    border: 1px solid #FAF7F2;
+    border-radius: 12px;
+    padding: 24px;
+    /* Ferahlık için 20'den 24'e çıkarıldı */
+    margin-bottom: 16px;
+    background-color: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.clickable-order-card {
+    cursor: pointer;
+}
+
+.clickable-order-card:hover {
+    border-color: #E07A5F;
+    background-color: #FAF7F2;
+    transform: translateY(-2px);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    /* Ferahlık için artırıldı */
+    font-size: 0.88rem;
+}
+
+.order-date {
+    font-weight: 600;
+    color: #2B2A28;
+    margin-right: 10px;
+}
+
+.order-id {
+    color: #6B645C;
+}
+
+.card-main-title {
+    font-size: 1.15rem;
+    margin-bottom: 14px;
+    color: #2B2A28;
+}
+
+.card-stats-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    /* Ferahlık için artırıldı */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Ferahlık için artırıldı */
+}
+
+.card-stats-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6B645C;
+    background-color: #FAF7F2;
+    padding: 12px 16px;
+    /* Ferahlık için artırıldı */
+    border-radius: 8px;
+}
+
+.card-stats-list li strong {
+    color: #2B2A28;
+}
+
+.market-badge {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-ready {
+    background-color: #fef08a;
+    color: #b45309;
+}
+
+.badge-ontheway {
+    background-color: #d1fae5;
+    color: #15803d;
+}
+
+.status-success {
+    background-color: #f1f9f5;
+    color: #2b7a4b;
+}
+
+/* Kurye Özel Kısımları */
+.address-box-courier {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.4;
+    font-weight: 600;
+    color: #2B2A28;
+}
+
+/* Butonlar */
+.action-buttons-wrapper {
+    display: flex;
+    gap: 12px;
+    /* Ferahlık için artırıldı */
+    margin-top: 20px;
+    /* Ferahlık için artırıldı */
+    flex-wrap: wrap;
+}
+
+.action-buttons-wrapper.flex-column {
+    flex-direction: column;
+}
+
+.btn-account-save {
+    background-color: #E07A5F;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-account-save:hover {
+    opacity: 0.95;
+}
+
+.btn-success {
+    background-color: #2b7a4b;
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: #6B645C;
+    color: #ffffff;
+}
+
+.btn-primary {
+    background-color: #E07A5F;
+    color: #ffffff;
+}
+
+.btn-full-width {
+    width: 100%;
+}
+
+/* Yardımcılar */
+.card-border-theme {
+    border-top: 4px solid #E07A5F;
+}
+
+.card-border-success {
+    border-left: 4px solid #2b7a4b;
+}
+
+.price-text-success {
+    font-size: 1.05rem;
+    color: #2b7a4b;
+}
+
+.icon-theme-primary {
+    color: #E07A5F !important;
+}
+
+.mt-0 {
+    margin-top: 0 !important;
+}
+
+.truncate-text {
+    display: inline-block;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+}
+
+/* ==========================================================================
+   MODALLAR
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(43, 42, 40, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.modal-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-box {
+    background-color: #ffffff;
+    border: 1px solid rgb(240, 230, 140);
+    border-radius: 14px;
+    padding: 30px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-box-large {
+    max-width: 640px;
+}
+
+.modal-overlay.modal-active .modal-box {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #FAF7F2;
+}
+
+.modal-header h3 {
+    font-family: "Fraunces", serif;
+    font-size: 1.35rem;
+    color: #2B2A28;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #6B645C;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #d9534f;
+}
+
+.popup-order-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.popup-order-info-grid .address-box {
+    grid-column: 1 / -1;
+}
+
+.info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: #FAF7F2;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(224, 122, 95, 0.1);
+}
+
+.info-box-icon {
+    width: 36px;
+    height: 36px;
+    background-color: #ffffff;
+    color: #E07A5F;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
+}
+
+.info-box-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: #6B645C;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    color: #2B2A28;
+    font-family: "Inter", sans-serif;
+}
+
+.address-text {
+    line-height: 1.4;
+}
+
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.custom-popup-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", sans-serif;
+    font-size: 0.9rem;
+}
+
+.custom-popup-table th {
+    background-color: #FAF7F2;
+    color: #2B2A28;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid rgb(240, 230, 140);
+}
+
+.custom-popup-table td {
+    padding: 12px;
+    border-bottom: 1px solid #FAF7F2;
+    color: #6B645C;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .account-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .account-sidebar {
+        min-height: auto;
+    }
+
+    .popup-order-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

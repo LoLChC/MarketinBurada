@@ -86,7 +86,7 @@
                 <p class="panel-subtitle">Gelen yeni siparişler ve teslimat süreçleri. Detayları görmek için sipariş kartına tıklayın.</p>
                 
                 <div class="address-grid">
-                    <div class="order-card clickable-order-card" data-order-id="ORD-55421" data-order-date="Bugün, 14:22" data-order-total="480.00" data-order-address="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir/İstanbul" data-order-status="Hazırlanıyor">
+                    <div class="order-card clickable-order-card" data-order-id="ORD-55421" data-order-date="Bugün, 14:22" data-order-total="480.00" data-order-address="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir/İstanbul" data-order-status="Hazırlanıyor" data-order-customer="Ahmet Yılmaz" data-order-phone="0555 123 45 67">
                         <div class="order-header">
                             <div>
                                 <span class="order-date">Bugün, 14:22</span>
@@ -97,6 +97,7 @@
                         <div class="order-body">
                             <h4 class="card-main-title">Ahmet Yılmaz</h4>
                             <ul class="card-stats-list mt-0">
+                                <li><span>Telefon:</span> <strong>0555 123 45 67</strong></li>
                                 <li><span>Teslimat:</span> <strong class="truncate-text" title="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir/İstanbul">Atatürk Mah. Cumburi...</strong></li>
                                 <li><span>İçerik:</span> <strong>5 Çeşit Ürün</strong></li>
                                 <li><span>Toplam:</span> <strong class="price-text-success">480.00 TL</strong></li>
@@ -448,7 +449,6 @@
         </div>
         <div class="order-detail-popup-content">
             
-            <!-- Yenilenen Sipariş Bilgi Alanı (Grid Layout) -->
             <div class="popup-order-info-grid">
                 
                 <!-- Sipariş ID -->
@@ -469,12 +469,22 @@
                     </div>
                 </div>
 
-                <!-- Sipariş Durumu (YENİ EKLENEN KISIM) -->
+                <!-- Sipariş Durumu -->
                 <div class="info-box">
                     <div class="info-box-icon"><i class="fa-solid fa-box-open"></i></div>
                     <div class="info-box-content">
                         <span class="info-label">Güncel Durum</span>
                         <strong id="popup-order-status" class="info-value text-theme-primary">Hazırlanıyor</strong>
+                    </div>
+                </div>
+                
+                <!-- Müşteri ve Telefon Bilgisi -->
+                <div class="info-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Müşteri Bilgisi</span>
+                        <strong id="popup-order-customer" class="info-value">Ahmet Yılmaz</strong>
+                        <span id="popup-order-phone" class="info-value" style="color: #6B645C; font-size: 0.85rem;">0555 123 45 67</span>
                     </div>
                 </div>
                 

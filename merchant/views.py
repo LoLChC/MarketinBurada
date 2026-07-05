@@ -10,3 +10,7 @@ def dashboard(request):
 def branchs(request):
     random_number = random.randint(1, 2000)
     return render(request, 'merchant/branch-account.html', {'random_number': random_number})
+
+def courier(request):
+    random_number = random.randint(1, 2000)
+    return render(request, 'merchant/courier-account.html', {'random_number': random_number})

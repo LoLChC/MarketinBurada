@@ -1,0 +1,240 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Kurye Paneli | Marketin Burada{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/courier-account.css' %}?v={{ random_number }}">
+{% endblock %}
+
+{% block content %}
+<div class="container account-main-container">
+    <div class="account-layout">
+        
+        <!-- ========================================== -->
+        <!-- BÖLÜM 1: SOL PANEL (KURYE SIDEBAR)         -->
+        <!-- ========================================== -->
+        <aside class="account-sidebar">
+            <div class="user-brief">
+                <div class="avatar-circle">
+                    <i class="fa-solid fa-motorcycle"></i>
+                </div>
+                <div class="user-info-text">
+                    <span class="welcome-text">Kurye Paneli</span>
+                    <h3 class="user-fullname">{{ request.user_obj.name }}</h3>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <button class="menu-item active" data-target="c-waiting-tasks">
+                    <i class="fa-solid fa-boxes-packing"></i> Bekleyen Paketler
+                </button>
+                <button class="menu-item" data-target="c-my-tasks">
+                    <i class="fa-solid fa-truck-ramp-box"></i> Üzerimdeki Paketler
+                </button>
+                <button class="menu-item" data-target="c-past-tasks">
+                    <i class="fa-solid fa-check-double"></i> Tamamlananlar
+                </button>
+            </nav>
+
+            <div class="sidebar-footer-menu">
+                <a href="{% url 'account:logout' %}" class="menu-item logout-link">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış Yap
+                </a>
+            </div>
+        </aside>
+
+        <!-- ========================================== -->
+        <!-- BÖLÜM 2: SAĞ PANEL (İÇERİK ALANI)          -->
+        <!-- ========================================== -->
+        <main class="account-content">
+            
+            <!-- PANEL: BEKLEYEN PAKETLER (HAVUZ) -->
+            <section id="c-waiting-tasks" class="content-panel active">
+                <h2>Bekleyen Paketler</h2>
+                <p class="panel-subtitle">Şubenizde hazırlanmış ve kurye ataması bekleyen siparişler.</p>
+                
+                <div class="address-grid">
+                    <!-- Bekleyen Sipariş Kartı (TELEFON NUMARASI YOK) -->
+                    <div class="order-card card-border-theme clickable-order-card" data-order-id="ORD-55418" data-order-status="Kurye Bekliyor" data-order-customer="Zeynep Yılmaz" data-order-phone="" data-order-address="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir">
+                        <div class="order-header">
+                            <div>
+                                <span class="order-date">Hazırlandı: 14:10</span>
+                                <span class="order-id">#ORD-55418</span>
+                            </div>
+                            <span class="market-badge badge-ready">Kurye Bekliyor</span>
+                        </div>
+                        <div class="order-body">
+                            <h4 class="card-main-title">Zeynep Yılmaz</h4>
+                            <ul class="card-stats-list mt-0">
+                                <li>
+                                    <div class="address-box-courier">
+                                        <i class="fa-solid fa-map-location-dot icon-theme-primary"></i>
+                                        <span>Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir</span>
+                                    </div>
+                                </li>
+                                <li><span>Paket İçeriği:</span> <strong>3 Çeşit Ürün</strong></li>
+                                <li><span>Mesafe Tahmini:</span> <strong>~2.5 km</strong></li>
+                            </ul>
+                            
+                            <div class="action-buttons-wrapper flex-column">
+                                <button class="btn-account-save btn-full-width btn-primary js-claim-package">
+                                    <i class="fa-solid fa-hand-holding-box"></i> Görevi Üstlen (Paketi Al)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL: ÜZERİMDEKİ PAKETLER -->
+            <section id="c-my-tasks" class="content-panel">
+                <h2>Üzerimdeki Paketler</h2>
+                <p class="panel-subtitle">Şu anda dağıtımını üstlendiğiniz siparişlerin detayları.</p>
+                
+                <div class="address-grid">
+                    <!-- Aktif Dağıtım Kartı (TELEFON NUMARASI VAR) -->
+                    <div class="order-card card-border-theme clickable-order-card" data-order-id="ORD-55415" data-order-status="Dağıtımda" data-order-customer="Ayşe Yıldız" data-order-phone="0505 444 55 66" data-order-address="Barbaros Mah. Zambak Sok. No:12 D:5 Ataşehir">
+                        <div class="order-header">
+                            <div>
+                                <span class="order-date">Hedef Süre: ~15 Dk</span>
+                                <span class="order-id">#ORD-55415</span>
+                            </div>
+                            <span class="market-badge badge-ontheway">Dağıtımda</span>
+                        </div>
+                        <div class="order-body">
+                            <h4 class="card-main-title">Ayşe Yıldız</h4>
+                            <ul class="card-stats-list mt-0">
+                                <li><span>Telefon:</span> <strong>0505 444 55 66</strong></li>
+                                <li>
+                                    <div class="address-box-courier">
+                                        <i class="fa-solid fa-map-location-dot icon-theme-primary"></i>
+                                        <span>Barbaros Mah. Zambak Sok. No:12 D:5 Ataşehir</span>
+                                    </div>
+                                </li>
+                                <li><span>Paket İçeriği:</span> <strong>5 Çeşit Ürün</strong></li>
+                                <li><span>Tahsil Edilecek:</span> <strong class="price-text-success">350.00 TL</strong></li>
+                            </ul>
+                            
+                            <div class="action-buttons-wrapper flex-column">
+                                <button class="btn-account-save btn-full-width btn-success js-complete-task">
+                                    <i class="fa-solid fa-check"></i> Teslim Edildi İşaretle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL: TAMAMLANANLAR -->
+            <section id="c-past-tasks" class="content-panel">
+                <h2>Bugün Tamamlananlar</h2>
+                <p class="panel-subtitle">Bugün sorunsuz şekilde müşteriye ulaştırdığınız paketler.</p>
+                
+                <div class="address-grid">
+                    <div class="order-card card-border-success clickable-order-card" data-order-id="ORD-55380" data-order-status="Teslim Edildi" data-order-customer="Can Kaya" data-order-phone="0533 222 77 88" data-order-address="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir">
+                        <div class="order-header">
+                            <div>
+                                <span class="order-date">14:30</span>
+                                <span class="order-id">#ORD-55380</span>
+                            </div>
+                            <span class="market-badge status-success">Teslim Edildi</span>
+                        </div>
+                        <div class="order-body">
+                            <h4 class="card-main-title">Can Kaya</h4>
+                            <ul class="card-stats-list mt-0">
+                                <li><span>Telefon:</span> <strong>0533 222 77 88</strong></li>
+                                <li><span>Teslimat Adresi:</span> <strong class="truncate-text" title="Atatürk Mah. Cumhuriyet Cad. No:1 D:4 Ataşehir/İstanbul">Atatürk Mah. Cum...</strong></li>
+                                <li><span>Tahsilat:</span> <strong class="price-text-success">320.00 TL</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- BÖLÜM 3: MODAL (POP-UP) YAPILARI           -->
+<!-- ========================================== -->
+
+<!-- MODAL: Paket İçeriği Pop-up (Detaylı Grid Yapısı ile) -->
+<div id="package-items-modal" class="modal-overlay">
+    <div class="modal-box modal-box-large">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-box"></i> Sipariş İçeriği</h3>
+            <button class="modal-close js-close-modal" data-target="package-items-modal">&times;</button>
+        </div>
+        <div class="order-detail-popup-content">
+            
+            <div class="popup-order-info-grid">
+                <!-- Sipariş ID -->
+                <div class="info-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-hashtag"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Sipariş ID</span>
+                        <strong id="popup-order-id" class="info-value">#ORD-55415</strong>
+                    </div>
+                </div>
+
+                <!-- Durum -->
+                <div class="info-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Durum</span>
+                        <strong id="popup-order-status" class="info-value text-theme-primary">Dağıtımda</strong>
+                    </div>
+                </div>
+
+                <!-- Müşteri ve Telefon Bilgisi -->
+                <div class="info-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Müşteri Bilgisi</span>
+                        <strong id="popup-order-customer" class="info-value">Ayşe Yıldız</strong>
+                        <span id="popup-order-phone" class="info-value" style="color: #6B645C; font-size: 0.85rem;">0505 444 55 66</span>
+                    </div>
+                </div>
+                
+                <!-- Adres -->
+                <div class="info-box address-box">
+                    <div class="info-box-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <div class="info-box-content">
+                        <span class="info-label">Teslimat Adresi</span>
+                        <span id="popup-order-address" class="info-value address-text">Barbaros Mah. Zambak Sok. No:12 D:5 Ataşehir</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive-wrapper">
+                <table class="custom-popup-table">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th class="text-center">Adet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tam Yağlı Süt (1L)</td>
+                            <td class="text-center">2</td>
+                        </tr>
+                        <tr>
+                            <td>Sütaş Ayran 290ml</td>
+                            <td class="text-center">4</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script src="{% static 'js/courier-account.js' %}?v={{ random_number }}"></script>
+{% endblock %}
