@@ -74,7 +74,7 @@ class Courier(models.Model): #Kuryeler
     COURIER_STATUS = [
         ('offline', 'Çevrimdışı'),
         ('available', 'Müsait (Şubede Bekliyor)'),
-        ('delivery', 'Dağıtımda / Siparişte'),
+        ('delivery', 'Dağıtım   da / Siparişte'),
     ]
 
     VEHICLE_TYPES = [
@@ -115,6 +115,31 @@ class Courier(models.Model): #Kuryeler
 
     def __str__(self):
         return f"{self.name} {self.surname} ({self.branch.neighborhood} Şubesi)"
+
+    # Kuryenin adını ve soyadını ayırmak için yardımcı metotlar:
+    def get_name(index):
+        index = index.strip()
+        index_parts = index.split()
+        
+        if not index_parts:
+            return "İsimsiz"  # Tamamen boş gelirse veri tabanının çökmesini engeller
+            
+        if len(index_parts) == 1:
+            return index_parts[0]  # Tek kelime girildiyse o kelime isimdir
+            
+        return " ".join(index_parts[:-1])  # Birden fazla kelime varsa sonuncu hariç hepsi isimdir
+
+    def get_surname(index):
+        index = index.strip()
+        index_parts = index.split()
+        
+        if not index_parts:
+            return "-"  # Tamamen boş gelirse veri tabanının çökmesini engeller
+            
+        if len(index_parts) == 1:
+            return "-"  # Tek kelime girildiyse soyadı yoktur, veri tabanı için varsayılan değer dönülür
+            
+        return index_parts[-1]
 
     # Sipariş teslim edildiğinde listeye eklemeyi kolaylaştıracak ufak bir metot:
     def complete_delivery(self):
