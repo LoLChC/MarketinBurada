@@ -5,7 +5,9 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 from account.models import User, Address
 from django.db.models import Q, Sum
-from django.utils import timezone   
+from django.utils import timezone
+from datetime import timedelta, date
+import calendar
 import uuid
 
 # Create your models here.
@@ -69,12 +71,63 @@ class Branch(models.Model): #Şubeler
 
         return None
 
+    def get_day_turnover(self, date):
+        turnover = self.packages.filter(
+            status='delivered',
+            delivered_at__date=date
+        ).aggregate(
+            total_turnover=Sum('total_amount')
+        )['total_turnover']
+
+        return turnover or 0.00
+    
+    def get_weekly_turnover(self, target_date):
+        """
+        Belirtilen tarihin bulunduğu haftanın (Pazartesi'den Pazar'a) cirosunu hesaplar.
+        Framework'e bağımlı kalmamak için hafta aralığı Python ile hesaplanır.
+        """
+        # weekday() Pazartesi için 0, Pazar için 6 döner. 
+        # Hedef tarihten bu değeri çıkararak haftanın ilk günü olan Pazartesi'yi buluyoruz.
+        start_of_week = target_date - timedelta(days=target_date.weekday())
+        
+        # Pazartesi'ye 6 gün ekleyerek Pazar gününü buluyoruz.
+        end_of_week = start_of_week + timedelta(days=6)
+
+        turnover = self.packages.filter(
+            status='delivered',
+            delivered_at__date__range=(start_of_week, end_of_week)
+        ).aggregate(
+            total_turnover=Sum('total_amount')
+        )['total_turnover']
+
+        return turnover or 0.00
+    
+    def get_monthly_turnover(self, year, month):
+        """
+        Belirtilen yıl ve aydaki toplam ciroyu hesaplar.
+        Veritabanına özel ay/yıl fonksiyonları yerine Python'un takvim modülü kullanılır.
+        """
+        # calendar.monthrange, belirtilen ayın kaç gün çektiğini döner (örn: Şubat için 28 veya 29).
+        _, last_day = calendar.monthrange(year, month)
+        
+        # Ayın ilk günü ve son gününü net bir tarih objesi olarak oluşturuyoruz.
+        start_date = date(year, month, 1)
+        end_date = date(year, month, last_day)
+
+        turnover = self.packages.filter(
+            status='delivered',
+            delivered_at__date__range=(start_date, end_date)
+        ).aggregate(
+            total_turnover=Sum('total_amount')
+        )['total_turnover']
+
+        return turnover or 0.00
     
 class Courier(models.Model): #Kuryeler
     COURIER_STATUS = [
         ('offline', 'Çevrimdışı'),
         ('available', 'Müsait (Şubede Bekliyor)'),
-        ('delivery', 'Dağıtım   da / Siparişte'),
+        ('delivery', 'Dağıtımda / Siparişte'),
     ]
 
     VEHICLE_TYPES = [
@@ -94,15 +147,8 @@ class Courier(models.Model): #Kuryeler
     vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPES, default='motorcycle', verbose_name="Araç Tipi")
     status = models.CharField(max_length=15, choices=COURIER_STATUS, default='offline', verbose_name="Durumu")
     
-    # Kurye şu an dağıtımda ise aktif olarak taşıdığı sepetin ID'si (Boşsa null olur)
-    current_package = models.ForeignKey(
-        'Package', 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        related_name='active_couriers',
-        verbose_name="Şu Anki Sepet"
-    )
+    # REVİZE EDİLDİ: current_package alanı tamamen kaldırıldı. Bir kuryenin birden fazla paket alabilmesi için 
+    # Package modelindeki "courier" ForeignKey ilişkisi üzerinden işlem yapılacak.
     
     monthly_delivery_count = models.PositiveIntegerField(default=0, verbose_name="Bu Ayki Teslimat Sayısı")
     
@@ -117,47 +163,74 @@ class Courier(models.Model): #Kuryeler
         return f"{self.name} {self.surname} ({self.branch.neighborhood} Şubesi)"
 
     # Kuryenin adını ve soyadını ayırmak için yardımcı metotlar:
+    @staticmethod
     def get_name(index):
         index = index.strip()
         index_parts = index.split()
         
         if not index_parts:
-            return "İsimsiz"  # Tamamen boş gelirse veri tabanının çökmesini engeller
+            return "İsimsiz"
             
         if len(index_parts) == 1:
-            return index_parts[0]  # Tek kelime girildiyse o kelime isimdir
+            return index_parts[0]
             
-        return " ".join(index_parts[:-1])  # Birden fazla kelime varsa sonuncu hariç hepsi isimdir
+        return " ".join(index_parts[:-1])
 
+    @staticmethod
     def get_surname(index):
         index = index.strip()
         index_parts = index.split()
         
         if not index_parts:
-            return "-"  # Tamamen boş gelirse veri tabanının çökmesini engeller
+            return "-"
             
         if len(index_parts) == 1:
-            return "-"  # Tek kelime girildiyse soyadı yoktur, veri tabanı için varsayılan değer dönülür
+            return "-"
             
         return index_parts[-1]
 
-    # Sipariş teslim edildiğinde listeye eklemeyi kolaylaştıracak ufak bir metot:
-    def complete_delivery(self):
-        """Kurye paketi teslim ettiğinde çalışacak yardımcı metot"""
+    # ==========================================================================
+    # OTOMATİZASYON VE HELPER METOTLAR
+    # ==========================================================================
+
+    def get_completed_packages_last_30_days(self):
+        """
+        Kuryenin son 30 gün içerisinde başarıyla teslim ettiği paketleri döndürür.
+        """
+        # YENİ EKLENDİ: Framework bağımlılığını azaltmak için zaman aralığı Python'un yerleşik timedelta modülüyle hesaplandı.
+        thirty_days_ago = timezone.now() - timedelta(days=30)
         
-        if self.current_cart_id:
-            package = self.current_package
+        # REVİZE EDİLDİ: Sadece ID'leri veren 'values_list' kaldırıldı. 
+        # Kurye sayfasında paket detaylarını gösterebilmen için direkt filtrelenmiş QuerySet döndürüldü.
+        return self.packages.filter(
+            status='delivered',
+            delivered_at__gte=thirty_days_ago
+        ).order_by('-delivered_at') # YENİ EKLENDİ: Sayfada en son teslim edilen paket en üstte görünsün diye sıralama eklendi.
+
+    def get_active_packages(self):
+        """
+        Kuryenin şu anda dağıtımda olduğu (üstüne aldığı) tüm paketleri getirir.
+        """
+        # YENİ EKLENDİ: Kurye sayfasında kuryenin anlık taşıdığı tüm paketleri filtreleyip gösterebilmen için eklendi.
+        return self.packages.filter(status='on_the_way')
+
+    def complete_delivery(self, package):
+        """
+        Kurye, üzerinde bulunan spesifik bir paketi teslim ettiğinde çalışır.
+        """
+        # REVİZE EDİLDİ: Kuryenin üstünde birden fazla paket olabileceği için parametre olarak dışarıdan 'package' objesi alındı.
+        if package.courier == self and package.status == 'on_the_way':
             package.status = 'delivered'
             package.delivered_at = timezone.now()
-            package.save()
+            package.save(update_fields=['status', 'delivered_at'])
 
-
-            # Eğer liste henüz yoksa boş liste oluştur, varsa mevcut listeye ekle
             self.monthly_delivery_count += 1
-            self.status = 'available'
-            self.current_package = None
-
-            self.save(update_fields=['monthly_delivery_count', 'status', 'current_package'])
+            
+            # YENİ EKLENDİ: Kuryenin üzerinde başka aktif paket kalıp kalmadığı kontrol ediliyor.
+            if not self.get_active_packages().exists():
+                self.status = 'available'
+            
+            self.save(update_fields=['monthly_delivery_count', 'status'])
 
 class Aisles(models.Model): #Reyonlar
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='aisles')
@@ -272,6 +345,9 @@ class Stocks(models.Model):
             for stock in cls.objects.filter(product=product).select_related("branch")
         }
 
+class PackageItem(models.Model):
+    pass    
+
 class Package(models.Model):
     PACKAGE_STATUS = [
         ('pending', 'Onay Bekliyor'),
@@ -282,6 +358,12 @@ class Package(models.Model):
         ('canceled', 'İptal Edildi'),
     ]
 
+    PAYMENT_METHODS = [
+        ('cash_on_delivery', 'Kapıda Nakit'),
+        ('card_on_delivery', 'Kapıda Kredi Kartı'),
+        ('online_credit_card', 'Online Kredi Kartı'),
+    ]
+
     # 1. TAKİP VE OPERASYONEL BAĞLANTILAR
     tracking_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="Takip Numarası")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='packages', verbose_name="Müşteri")
@@ -289,17 +371,19 @@ class Package(models.Model):
     courier = models.ForeignKey(Courier, on_delete=models.SET_NULL, null=True, blank=True, related_name='packages', verbose_name="Kurye")
 
     # 2. PAKET DETAYLARI VE ADRES
+    payment_method = models.CharField(max_length=30, choices=PAYMENT_METHODS, default='online_credit_card', verbose_name="Ödeme Yöntemi")
     status = models.CharField(max_length=15, choices=PACKAGE_STATUS, default='pending', verbose_name="Paket Durumu")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Paket Tutarı")
     
-    # Kullanıcı adresini silse bile faturadaki adres kaybolmasın diye TextField kalmalı, 
-    # ancak account.Address ile referans bağlantısı da kuruyoruz.
+    # 2. MÜŞTERI BİLGİLERİ (SNAPSHOT)
+    customer_name_snapshot = models.CharField(max_length=255, blank=True, verbose_name="Müşteri Adı Soyadı (Snapshot)")
+    customer_phone_snapshot = models.CharField(max_length=20, blank=True, verbose_name="Müşteri Telefonu (Snapshot)")
+
     address_reference = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Kayıtlı Adres Referansı")
     delivery_address = models.TextField(verbose_name="Teslimat Adresi (Snapshot)")
 
-    # Paketin içeriği (İleride PackageItem modeline geçebilirsin ama şimdilik JSON ideal)
-    package_index = models.JSONField(verbose_name="Paketin İçeriği")
-
+    package_index = models.JSONField(default=list, blank=True, verbose_name="Paketin İçeriği")
+    
     # 3. LOJİSTİK VE ZAMAN ANALİZİ
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Paket Oluşturulma Zamanı")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Durum Güncellemesi")
@@ -312,8 +396,7 @@ class Package(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        user_name = self.user.get_full_name() if self.user else "Silinmiş Müşteri"
-        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {user_name}"
+        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {self.customer_name_snapshot}" 
 
     # ==========================================================================
     # OTOMATİZASYON VE HELPER METOTLAR
@@ -321,6 +404,12 @@ class Package(models.Model):
 
     def save(self, *args, **kwargs):
         """ Paket durumuna göre yola çıkış ve teslim tarihlerini otomatik atar. """
+        if not self.pk and self.user:                                          
+            if not self.customer_name_snapshot:
+                self.customer_name_snapshot = self.user.get_full_name() or self.user.username
+            if not self.customer_phone_snapshot and hasattr(self.user, 'phone'):
+                self.customer_phone_snapshot = self.user.phone
+
         if self.status == 'on_the_way' and not self.shipped_at:
             self.shipped_at = timezone.now()
         
@@ -332,13 +421,22 @@ class Package(models.Model):
     def assign_courier(self, courier_instance):
         """ 
         Pakete kurye atar ve kuryenin durumunu günceller.
-        Kullanım: package.assign_courier(secilen_kurye)
         """
         self.courier = courier_instance
         self.status = 'on_the_way'
         self.save(update_fields=['courier', 'status'])
 
-        # Kuryeyi dağıtıma çıkar
-        courier_instance.current_package_id = self.id
-        courier_instance.status = 'delivery'
-        courier_instance.save(update_fields=['current_package', 'status'])
+        if courier_instance.status != 'delivery':
+            courier_instance.status = 'delivery'
+            courier_instance.save(update_fields=['status'])
+
+    def calculate_total_from_json(self):
+        """ JSONField içindeki ürün fiyatlarını ve adetlerini çarparak toplam tutarı döner. """
+        from decimal import Decimal
+        total = Decimal('0.00')
+        if isinstance(self.package_index, list):
+            for item in self.package_index:
+                price = Decimal(str(item.get('price_per_item', 0)))
+                qty = int(item.get('quantity', 0))
+                total += price * qty
+        return total
