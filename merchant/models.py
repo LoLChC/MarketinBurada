@@ -14,7 +14,7 @@ import uuid
 
 class Branch(models.Model): #Şubeler
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='branches')
-    neighborhood = models.CharField(max_length=255, verbose_name="Mahalle İsmi")
+    name = models.CharField(max_length=255, verbose_name="Şube Adı")
     phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="Telefon")
 
     district = models.CharField(max_length=50, blank=True, verbose_name="İlçe")
@@ -160,7 +160,7 @@ class Courier(models.Model): #Kuryeler
         verbose_name_plural = "Kuryeler"
 
     def __str__(self):
-        return f"{self.name} {self.surname} ({self.branch.neighborhood} Şubesi)"
+        return f"{self.name} {self.surname} ({self.branch.name} Şubesi)"
 
     # Kuryenin adını ve soyadını ayırmak için yardımcı metotlar:
     @staticmethod
@@ -273,57 +273,120 @@ class Stocks(models.Model):
         on_delete=models.CASCADE,
         related_name="stocks"
     )
+    ailes = models.ForeignKey(
+        Aisles,
+        on_delete=models.CASCADE,
+        related_name="stocks"
+    )
     stock = models.PositiveIntegerField(default=0)
 
     @classmethod
-    def get_product_stock(cls, product):
+    def get_branch_stock_details(cls, branch):
         """
-        Bir ürünün tüm şubelerdeki toplam stok miktarını döndürür.
+        Belirli bir şubedeki tüm ürünlerin stok miktarını ve reyon (ailes) bilgisini döndürür.
+
+        Branch saygasında göstermek için kullanılacak. 
 
         Args:
-            product (Products):
-                Stoku hesaplanacak ürün nesnesi.
-
-        Returns:
-            int:
-                Ürünün tüm şubelerdeki toplam stok miktarı.
-                Eğer hiç stok kaydı yoksa 0 döner.
-        """
-        return cls.objects.filter(
-            product=product
-        ).aggregate(
-            total=Sum("stock")
-        )["total"] or 0
-
-    @classmethod
-    def get_branch_product_stock(cls, branch, product):
-        """
-        Belirli bir şubedeki ürün stok miktarını döndürür.
-
-        Args:
-            branch (Branch):
+            branch (Branch): 
                 Stok sorgulanacak şube nesnesi.
 
-            product (Products):
-                Stok sorgulanacak ürün nesnesi.
-
         Returns:
-            int:
-                Şubedeki ürünün stok miktarı.
-                Kayıt bulunamazsa 0 döner.
+            dict: 
+                Ürün adı anahtarına (key) sahip, stok ve reyon detaylarını içeren sözlük.
+                Örnek Çıktı:
+                {
+                    "Ürün Adı 1": {"stock": 15, "ailes": "Meyve Sebze"},
+                    "Ürün Adı 2": {"stock": 8, "ailes": "Süt Ürünleri"},
+                    "Ürün Adı 3": {"stock": 0, "ailes": None}
+                }
         """
-        stock_obj = cls.objects.filter(
+        # Veritabanı sorgusunu optimize etmek için hem product hem de ailes 
+        # ilişkilerini select_related içerisine alıyoruz (N+1 problemini önlemek için).
+        queryset = cls.objects.filter(
             branch=branch,
-            product=product
-        ).first()
+            product__is_active=True
+        ).select_related("product", "ailes")
 
-        return stock_obj.stock if stock_obj else 0
-    
+        return {
+            stock.product.title: {
+                "stock": stock.stock,
+                "ailes": stock.ailes.name if stock.ailes else None
+            }
+            for stock in queryset
+        }
+
+    @classmethod
+    # def get
+
+    @classmethod
+    def get_all(cls, market):
+        """
+        Merchant sayfası için tüm verileri döndürür.
+
+        Dönen veriler: 
+        - Tüm aktif ürünler (stoku sıfır olsa bile)
+        - Ürünlerin reyon bilgileri ve fiyatları
+        - Ürünlerin tüm şubelerdeki toplam stok miktarı
+        - Ürünlerin tek tek hangi şubede ne kadar stoka sahip olduğu
+        """
+        
+        # 1. AŞAMA: İlgili marketin tüm aktif ürünlerini reyoniyle birlikte çek.
+        # Products modeli Models.py içinde olduğu için doğrudan import edebiliyoruz.
+        
+        products = Products.objects.filter(
+            market=market,
+            is_active=True
+        ).select_related('aisles')
+
+        # Ürün ID'lerini anahtar (key) olarak kullanacağımız ana iskeleti oluşturuyoruz.
+        # Stoku olmayan ürünler de raporda sıfır olarak çıksın diye yapıyı baştan kuruyoruz.
+        products_dict = {}
+        for product in products:
+            products_dict[product.id] = {
+                "product_id": product.id,
+                "product_title": product.title,
+                "price": float(product.price),
+                "image_url": product.images.url,
+                "aisle_name": product.aisles.title,
+                "total_stock": 0,
+                "branch_stocks": {} # Örnek: { "Merkez Şube": 15, "Atakum Şube": 10 }
+            }
+
+        # 2. AŞAMA: İlgili markete bağlı tüm şubelerdeki stok kayıtlarını çek.
+        stocks = cls.objects.filter(
+            branch__market=market,
+            product__is_active=True
+        ).select_related('branch')
+
+        # 3. AŞAMA: Python üzerinde eşleştirme (Custom veri manipülasyonu)
+        # Karmaşık SQL fonksiyonlarına güvenmek yerine veriyi kendi mantığımızla işliyoruz.
+        for stock_obj in stocks:
+            p_id = stock_obj.product_id
+            
+            # Ürün önceden çektiğimiz aktif ürünler sözlüğündeyse verilerini güncelle
+            if p_id in products_dict:
+                # 3.1. Genel market stok toplamına ekle
+                products_dict[p_id]["total_stock"] += stock_obj.stock
+                
+                # 3.2. Şube bazlı stoku kaydet / güncelle
+                branch_name = stock_obj.branch.name
+                
+                # Eğer aynı şube/ürün kombinasyonu birden çok kez girilmişse hata yapmamak için toplayarak gidiyoruz
+                if branch_name in products_dict[p_id]["branch_stocks"]:
+                    products_dict[p_id]["branch_stocks"][branch_name] += stock_obj.stock
+                else:
+                    products_dict[p_id]["branch_stocks"][branch_name] = stock_obj.stock
+
+        # Sadece değerleri döndürerek liste (array of objects) formatını yakalıyoruz
+        return list(products_dict.values())
 
     @classmethod
     def get_product_stocks_by_branch(cls, product):
         """
         Bir ürünün tüm şubelerdeki stok dağılımını döndürür.
+
+        Products to All Branches !!!! Branch
 
         Args:
             product (Products):
@@ -339,7 +402,7 @@ class Stocks(models.Model):
         """
         return {
             stock.branch.id: {
-                "neighborhood": stock.branch.neighborhood,
+                "branch_name": stock.branch.name,
                 "stock_count": stock.stock
             }
             for stock in cls.objects.filter(product=product).select_related("branch")
