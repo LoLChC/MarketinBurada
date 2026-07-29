@@ -6,29 +6,27 @@ from django.contrib.gis.db.models.functions import Distance
 from account.models import User, Address
 from django.db.models import Q, Sum
 from django.utils import timezone
+from decimal import Decimal
 from datetime import timedelta, date
 import calendar
 import uuid
 
 # Create your models here.
 
-class Branch(models.Model): #Şubeler
+class Branch(models.Model):
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='branches')
     name = models.CharField(max_length=255, verbose_name="Şube Adı")
     phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="Telefon")
-
     district = models.CharField(max_length=50, blank=True, verbose_name="İlçe")
     address = models.TextField(blank=True, verbose_name="Tam Adres")
-
     location = location_models.PointField(srid=4326, null=True, geography=True, blank=True, verbose_name="Tam konum")
     delivery_radius_km = models.PositiveIntegerField(default=5, verbose_name="Teslimat Menzili (KM)")
 
     
-    
     @property
     def is_active(self):
-        status_info = self.market.current_status_info
-        # status_info'nun geçerli bir dictionary olup olmadığını manuel kontrol et
+        status_info = self.market.current_status_info   
+
         if isinstance(status_info, dict):
             return status_info.get("status") == "open"
         
@@ -63,67 +61,33 @@ class Branch(models.Model): #Şubeler
             mesafe=Distance('location', customer_location)
         ).order_by('mesafe').first()
 
-        # Bulunan en yakın şubenin, müşteriye olan mesafesi şubenin dağıtım menzilinden küçük veya eşit mi?
         if nearest_branch and hasattr(nearest_branch, 'mesafe'):
-            # Distance objesi genelde .km veya .m property'lerine sahiptir.
             if nearest_branch.mesafe.km <= nearest_branch.delivery_radius_km:
                 return nearest_branch
 
         return None
 
     def get_day_turnover(self, date):
-        turnover = self.packages.filter(
-            status='delivered',
-            delivered_at__date=date
-        ).aggregate(
-            total_turnover=Sum('total_amount')
-        )['total_turnover']
+        turnover = self.packages.filter(status='delivered', delivered_at__date=date).aggregate(total_turnover=Sum('total_amount'))['total_turnover']
 
         return turnover or 0.00
     
     def get_weekly_turnover(self, target_date):
-        """
-        Belirtilen tarihin bulunduğu haftanın (Pazartesi'den Pazar'a) cirosunu hesaplar.
-        Framework'e bağımlı kalmamak için hafta aralığı Python ile hesaplanır.
-        """
-        # weekday() Pazartesi için 0, Pazar için 6 döner. 
-        # Hedef tarihten bu değeri çıkararak haftanın ilk günü olan Pazartesi'yi buluyoruz.
         start_of_week = target_date - timedelta(days=target_date.weekday())
-        
-        # Pazartesi'ye 6 gün ekleyerek Pazar gününü buluyoruz.
         end_of_week = start_of_week + timedelta(days=6)
-
-        turnover = self.packages.filter(
-            status='delivered',
-            delivered_at__date__range=(start_of_week, end_of_week)
-        ).aggregate(
-            total_turnover=Sum('total_amount')
-        )['total_turnover']
+        turnover = self.packages.filter(status='delivered',delivered_at__date__range=(start_of_week, end_of_week)).aggregate(total_turnover=Sum('total_amount'))['total_turnover']
 
         return turnover or 0.00
     
     def get_monthly_turnover(self, year, month):
-        """
-        Belirtilen yıl ve aydaki toplam ciroyu hesaplar.
-        Veritabanına özel ay/yıl fonksiyonları yerine Python'un takvim modülü kullanılır.
-        """
-        # calendar.monthrange, belirtilen ayın kaç gün çektiğini döner (örn: Şubat için 28 veya 29).
         _, last_day = calendar.monthrange(year, month)
-        
-        # Ayın ilk günü ve son gününü net bir tarih objesi olarak oluşturuyoruz.
         start_date = date(year, month, 1)
         end_date = date(year, month, last_day)
-
-        turnover = self.packages.filter(
-            status='delivered',
-            delivered_at__date__range=(start_date, end_date)
-        ).aggregate(
-            total_turnover=Sum('total_amount')
-        )['total_turnover']
+        turnover = self.packages.filter(status='delivered', delivered_at__date__range=(start_date, end_date)).aggregate(total_turnover=Sum('total_amount'))['total_turnover']
 
         return turnover or 0.00
     
-class Courier(models.Model): #Kuryeler
+class Courier(models.Model):
     COURIER_STATUS = [
         ('offline', 'Çevrimdışı'),
         ('available', 'Müsait (Şubede Bekliyor)'),
@@ -135,35 +99,16 @@ class Courier(models.Model): #Kuryeler
         ('car', 'Araba'),
     ]
 
-    # Şube Bağlantısı
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='couriers', verbose_name="Bağlı Olduğu Şube")
-    
-    # Kimlik ve İletişim Bilgileri
     name = models.CharField(max_length=50, verbose_name="Adı")
     surname = models.CharField(max_length=50, verbose_name="Soyadı")
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
-    
-    # Operasyonel Durumlar
     vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPES, default='motorcycle', verbose_name="Araç Tipi")
     status = models.CharField(max_length=15, choices=COURIER_STATUS, default='offline', verbose_name="Durumu")
-    
-    # REVİZE EDİLDİ: current_package alanı tamamen kaldırıldı. Bir kuryenin birden fazla paket alabilmesi için 
-    # Package modelindeki "courier" ForeignKey ilişkisi üzerinden işlem yapılacak.
-    
     monthly_delivery_count = models.PositiveIntegerField(default=0, verbose_name="Bu Ayki Teslimat Sayısı")
-    
-    # Konum Takibi
     current_location = location_models.PointField(srid=4326, null=True, geography=True, blank=True, verbose_name="Anlık Konum")
 
-    class Meta:
-        verbose_name = "Kurye"
-        verbose_name_plural = "Kuryeler"
-
-    def __str__(self):
-        return f"{self.name} {self.surname} ({self.branch.name} Şubesi)"
-
-    # Kuryenin adını ve soyadını ayırmak için yardımcı metotlar:
-    @staticmethod
+    @staticmethod # For get_all() and register, separate name
     def get_name(index):
         index = index.strip()
         index_parts = index.split()
@@ -176,7 +121,7 @@ class Courier(models.Model): #Kuryeler
             
         return " ".join(index_parts[:-1])
 
-    @staticmethod
+    @staticmethod # For get_all() and register, separate surname
     def get_surname(index):
         index = index.strip()
         index_parts = index.split()
@@ -189,36 +134,16 @@ class Courier(models.Model): #Kuryeler
             
         return index_parts[-1]
 
-    # ==========================================================================
-    # OTOMATİZASYON VE HELPER METOTLAR
-    # ==========================================================================
 
-    def get_completed_packages_last_30_days(self):
-        """
-        Kuryenin son 30 gün içerisinde başarıyla teslim ettiği paketleri döndürür.
-        """
-        # YENİ EKLENDİ: Framework bağımlılığını azaltmak için zaman aralığı Python'un yerleşik timedelta modülüyle hesaplandı.
+    def get_completed_packages_last_30_days(self): # For get_all(), last 30 days packages 
         thirty_days_ago = timezone.now() - timedelta(days=30)
         
-        # REVİZE EDİLDİ: Sadece ID'leri veren 'values_list' kaldırıldı. 
-        # Kurye sayfasında paket detaylarını gösterebilmen için direkt filtrelenmiş QuerySet döndürüldü.
-        return self.packages.filter(
-            status='delivered',
-            delivered_at__gte=thirty_days_ago
-        ).order_by('-delivered_at') # YENİ EKLENDİ: Sayfada en son teslim edilen paket en üstte görünsün diye sıralama eklendi.
+        return self.packages.filter(status='delivered',delivered_at__gte=thirty_days_ago).order_by('-delivered_at')
 
-    def get_active_packages(self):
-        """
-        Kuryenin şu anda dağıtımda olduğu (üstüne aldığı) tüm paketleri getirir.
-        """
-        # YENİ EKLENDİ: Kurye sayfasında kuryenin anlık taşıdığı tüm paketleri filtreleyip gösterebilmen için eklendi.
+    def get_active_packages(self): # For get_all(), on_the_way process
         return self.packages.filter(status='on_the_way')
 
-    def complete_delivery(self, package):
-        """
-        Kurye, üzerinde bulunan spesifik bir paketi teslim ettiğinde çalışır.
-        """
-        # REVİZE EDİLDİ: Kuryenin üstünde birden fazla paket olabileceği için parametre olarak dışarıdan 'package' objesi alındı.
+    def package_set_delivery(self, package): # For Views file, delivered process
         if package.courier == self and package.status == 'on_the_way':
             package.status = 'delivered'
             package.delivered_at = timezone.now()
@@ -226,7 +151,6 @@ class Courier(models.Model): #Kuryeler
 
             self.monthly_delivery_count += 1
             
-            # YENİ EKLENDİ: Kuryenin üzerinde başka aktif paket kalıp kalmadığı kontrol ediliyor.
             if not self.get_active_packages().exists():
                 self.status = 'available'
             
@@ -234,110 +158,76 @@ class Courier(models.Model): #Kuryeler
 
 class Aisles(models.Model): #Reyonlar
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='aisles')
-    title = models.CharField( max_length=50)
+    title = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
     
-    def __str__(self):
-        return f"Kategorisi: {self.title}"
-    
-class AislesBranchSettings(models.Model):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    category = models.ForeignKey(Aisles, on_delete=models.CASCADE)
-    is_available_in_branch = models.BooleanField(default=True)
+    @staticmethod
+    def get_all(market):
+        market = int(market)
+        aisles = Aisles.objects.filter(market=market)
+        
+        aisles_dict = {}
+        for aisle in aisles:
+            count = aisle.products.count()
+            total = 0
+            for product in aisle.products.all():
+                total += product.price
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['branch', 'category'], 
-                name='unique_branch_category_mapping'
-            )
-        ]
+            if count == 0:
+                average = "No Products"
+            else:
+                average = total / count
 
-class Products(models.Model): # Ürünler
+            aisles_dict[aisle.title] = {
+                "title" : aisle.title,
+                "count" : count,
+                "average" : average
+            }
+
+        return list(aisles_dict.values())
+        
+
+class Products(models.Model):
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='products')
-    aisles = models.ForeignKey(Aisles, on_delete=models.CASCADE)
+    aisles = models.ForeignKey(Aisles, on_delete=models.CASCADE, related_name='products')
     title = models.CharField(max_length=50)
     images = models.ImageField(upload_to='product-images/')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_active = models.BooleanField(default=True)
 
+    @staticmethod
+    def get_all(market):
+        market = int(market)
+        products = Products.objects.filter(market=market)
+        
+        products_dict = {}
+        for product in products:
+
+            products_dict[product.title] = {
+                "aisles" : product.aisles.title,
+                "title" : product.title,
+                "images" : str(product.images),
+                "price" : product.price,
+                "is_active" : product.is_active,
+            }
+
+        return list(products_dict.values())
+
 
 class Stocks(models.Model):
-    branch = models.ForeignKey(
-        Branch,
-        on_delete=models.CASCADE,
-        related_name="stocks"
-    )
-    product = models.ForeignKey(
-        Products,
-        on_delete=models.CASCADE,
-        related_name="stocks"
-    )
-    ailes = models.ForeignKey(
-        Aisles,
-        on_delete=models.CASCADE,
-        related_name="stocks"
-    )
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="stocks")
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="stocks")
+    ailes = models.ForeignKey(Aisles, on_delete=models.CASCADE, related_name="stocks")
     stock = models.PositiveIntegerField(default=0)
 
-    @classmethod
-    def get_branch_stock_details(cls, branch):
-        """
-        Belirli bir şubedeki tüm ürünlerin stok miktarını ve reyon (ailes) bilgisini döndürür.
-
-        Branch saygasında göstermek için kullanılacak. 
-
-        Args:
-            branch (Branch): 
-                Stok sorgulanacak şube nesnesi.
-
-        Returns:
-            dict: 
-                Ürün adı anahtarına (key) sahip, stok ve reyon detaylarını içeren sözlük.
-                Örnek Çıktı:
-                {
-                    "Ürün Adı 1": {"stock": 15, "ailes": "Meyve Sebze"},
-                    "Ürün Adı 2": {"stock": 8, "ailes": "Süt Ürünleri"},
-                    "Ürün Adı 3": {"stock": 0, "ailes": None}
-                }
-        """
-        # Veritabanı sorgusunu optimize etmek için hem product hem de ailes 
-        # ilişkilerini select_related içerisine alıyoruz (N+1 problemini önlemek için).
-        queryset = cls.objects.filter(
-            branch=branch,
-            product__is_active=True
-        ).select_related("product", "ailes")
-
-        return {
-            stock.product.title: {
-                "stock": stock.stock,
-                "ailes": stock.ailes.name if stock.ailes else None
-            }
-            for stock in queryset
-        }
-
-    @classmethod
-    # def get
-
-    @classmethod
-    def get_all(cls, market):
-        """
-        Merchant sayfası için tüm verileri döndürür.
-
-        Dönen veriler: 
-        - Tüm aktif ürünler (stoku sıfır olsa bile)
-        - Ürünlerin reyon bilgileri ve fiyatları
-        - Ürünlerin tüm şubelerdeki toplam stok miktarı
-        - Ürünlerin tek tek hangi şubede ne kadar stoka sahip olduğu
-        """
+    @staticmethod
+    def get_all(market):
         
         # 1. AŞAMA: İlgili marketin tüm aktif ürünlerini reyoniyle birlikte çek.
         # Products modeli Models.py içinde olduğu için doğrudan import edebiliyoruz.
-        
-        products = Products.objects.filter(
-            market=market,
-            is_active=True
-        ).select_related('aisles')
+        market = int(market)
+
+        products = Products.objects.filter(market=market, is_active=True).select_related('aisles')
 
         # Ürün ID'lerini anahtar (key) olarak kullanacağımız ana iskeleti oluşturuyoruz.
         # Stoku olmayan ürünler de raporda sıfır olarak çıksın diye yapıyı baştan kuruyoruz.
@@ -354,10 +244,7 @@ class Stocks(models.Model):
             }
 
         # 2. AŞAMA: İlgili markete bağlı tüm şubelerdeki stok kayıtlarını çek.
-        stocks = cls.objects.filter(
-            branch__market=market,
-            product__is_active=True
-        ).select_related('branch')
+        stocks = Stocks.objects.filter(branch__market=market, product__is_active=True).select_related('branch')
 
         # 3. AŞAMA: Python üzerinde eşleştirme (Custom veri manipülasyonu)
         # Karmaşık SQL fonksiyonlarına güvenmek yerine veriyi kendi mantığımızla işliyoruz.
@@ -381,33 +268,6 @@ class Stocks(models.Model):
         # Sadece değerleri döndürerek liste (array of objects) formatını yakalıyoruz
         return list(products_dict.values())
 
-    @classmethod
-    def get_product_stocks_by_branch(cls, product):
-        """
-        Bir ürünün tüm şubelerdeki stok dağılımını döndürür.
-
-        Products to All Branches !!!! Branch
-
-        Args:
-            product (Products):
-                Stokları sorgulanacak ürün.
-
-        Returns:
-            dict:
-                {
-                    "Merkez Şube": 15,
-                    "Atakum Şube": 8,
-                    "İlkadım Şube": 0
-                }
-        """
-        return {
-            stock.branch.id: {
-                "branch_name": stock.branch.name,
-                "stock_count": stock.stock
-            }
-            for stock in cls.objects.filter(product=product).select_related("branch")
-        }
-
 class PackageItem(models.Model):
     pass    
 
@@ -426,44 +286,24 @@ class Package(models.Model):
         ('card_on_delivery', 'Kapıda Kredi Kartı'),
         ('online_credit_card', 'Online Kredi Kartı'),
     ]
-
-    # 1. TAKİP VE OPERASYONEL BAĞLANTILAR
     tracking_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="Takip Numarası")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='packages', verbose_name="Müşteri")
+    market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='packages', verbose_name="Market")
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='packages', verbose_name="Çıkış Şubesi")
     courier = models.ForeignKey(Courier, on_delete=models.SET_NULL, null=True, blank=True, related_name='packages', verbose_name="Kurye")
-
-    # 2. PAKET DETAYLARI VE ADRES
     payment_method = models.CharField(max_length=30, choices=PAYMENT_METHODS, default='online_credit_card', verbose_name="Ödeme Yöntemi")
     status = models.CharField(max_length=15, choices=PACKAGE_STATUS, default='pending', verbose_name="Paket Durumu")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Paket Tutarı")
-    
-    # 2. MÜŞTERI BİLGİLERİ (SNAPSHOT)
     customer_name_snapshot = models.CharField(max_length=255, blank=True, verbose_name="Müşteri Adı Soyadı (Snapshot)")
     customer_phone_snapshot = models.CharField(max_length=20, blank=True, verbose_name="Müşteri Telefonu (Snapshot)")
-
-    address_reference = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Kayıtlı Adres Referansı")
-    delivery_address = models.TextField(verbose_name="Teslimat Adresi (Snapshot)")
-
+    address_id = models.PositiveIntegerField(verbose_name="Addres id")
+    delivery_address = models.TextField(verbose_name="Teslimat Adresi")
     package_index = models.JSONField(default=list, blank=True, verbose_name="Paketin İçeriği")
-    
-    # 3. LOJİSTİK VE ZAMAN ANALİZİ
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Paket Oluşturulma Zamanı")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Durum Güncellemesi")
     shipped_at = models.DateTimeField(null=True, blank=True, verbose_name="Yola Çıkış Zamanı")
     delivered_at = models.DateTimeField(null=True, blank=True, verbose_name="Teslim Edilme Zamanı")
 
-    class Meta:
-        verbose_name = "Paket"
-        verbose_name_plural = "Paketler"
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return f"Paket #{self.id} ({self.tracking_number.hex[:8]}) - {self.customer_name_snapshot}" 
-
-    # ==========================================================================
-    # OTOMATİZASYON VE HELPER METOTLAR
-    # ==========================================================================
 
     def save(self, *args, **kwargs):
         """ Paket durumuna göre yola çıkış ve teslim tarihlerini otomatik atar. """
@@ -481,21 +321,37 @@ class Package(models.Model):
             
         super().save(*args, **kwargs)
 
-    def assign_courier(self, courier_instance):
-        """ 
-        Pakete kurye atar ve kuryenin durumunu günceller.
-        """
-        self.courier = courier_instance
+    def get_address(self):
+        address  = Address.objects.filter(id=self.address_id)
+
+
+    def pending(self):
+        package_market = self.market
+        user_longitude = self.address.x
+        user_latitude = self.address.y
+
+        branch = Branch.find_nearest_branch(package_market, user_latitude, user_longitude)
+
+        self.branch = branch
+
+    def set_on_the_way(self, courier): #For Views file, on_the_way procsess
+        self.courier = courier
         self.status = 'on_the_way'
         self.save(update_fields=['courier', 'status'])
 
-        if courier_instance.status != 'delivery':
-            courier_instance.status = 'delivery'
-            courier_instance.save(update_fields=['status'])
+        if courier.status != 'delivery':
+            courier.status = 'delivery'
+            courier.save(update_fields=['status'])
+
+    def set_delivered(self):
+        self.status = 'delivered'
+        self.save(update_fields=['status'])
+
+    # set_delivery on Courier it is name is package_set_delivery
 
     def calculate_total_from_json(self):
         """ JSONField içindeki ürün fiyatlarını ve adetlerini çarparak toplam tutarı döner. """
-        from decimal import Decimal
+        
         total = Decimal('0.00')
         if isinstance(self.package_index, list):
             for item in self.package_index:
@@ -503,3 +359,34 @@ class Package(models.Model):
                 qty = int(item.get('quantity', 0))
                 total += price * qty
         return total
+    
+class Campaign(models.Model):
+    market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='Campaign')
+    title = models.CharField(max_length=50)
+    code = models.CharField(max_length=50)
+    discount_ratio = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, verbose_name="İndirim Oranı (%)")
+    start_time = models.DateTimeField(auto_now_add=True, verbose_name="Kampanya Başlangıç Tarihi")
+    end_time = models.DateTimeField(auto_now_add=True, verbose_name="Kampanya Bitiş Tarihi")
+    use_count = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    @staticmethod
+    def get_all(market):
+        market = int(market)
+
+        campaigns = Campaign.objects.filter(market=market)
+
+        campaigns_dict = {}
+        for campaign in campaigns:
+
+            campaigns_dict[campaign.title] = {
+                "title" : campaign.title,
+                "code" : campaign.code,
+                "discount_ratio" : campaign.discount_ratio,
+                "start_time" : str(campaign.start_time),
+                "end_time" : str(campaign.end_time),
+                "use_count" : campaign.use_count,
+                "is_active" : campaign.is_active,
+            }
+
+        return list(campaigns_dict.values())

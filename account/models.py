@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.gis.db import models
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
@@ -41,8 +42,8 @@ class Card(models.Model):
     
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
-
     title = models.CharField(max_length=100)
+    location = models.PointField(srid=4326)
     city = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
     address_detail = models.TextField()

@@ -93,3 +93,82 @@ def auth_state(request):
     return {
         "auth_state": bool(login_token_to_user_id(request))
     }
+
+def write_header(response, header_name, header_value):
+    """
+    İstemciye (client) dönecek olan response objesine yeni header ekler veya
+    var olan bir header'ı ezer.
+    """
+    # 1. HTTP protokolünde header değerleri her zaman metin (string) olmak zorundadır.
+    # Ne gelirse gelsin güvenliğe ve protokole uyması için string'e çeviriyoruz.
+    safe_value = str(header_value)
+    
+    # 2. Response objesi arka planda bir sözlük (dictionary) gibi davranır.
+    # Anahtar-değer (key-value) mantığıyla header'ı doğrudan response içine yazıyoruz.
+    response[header_name] = safe_value
+    
+    # 3. İşlemi bitmiş response objesini geri döndürüyoruz.
+    return response
+
+def read_header(request, header_name, default_value=None):
+    """
+    WSGI standartlarına uygun olarak gelen request üzerinden header okur.
+    Framework'ün sunduğu soyutlama katmanlarını atlayarak doğrudan sunucu 
+    ortam değişkenlerine (META) bakar.
+    """
+    # 1. Header adını WSGI formatına dönüştürüyoruz
+    # Örnek: 'X-Api-Key' -> 'X_API_KEY'
+    formatted_name = header_name.replace('-', '_').upper()
+    
+    # 2. Standart HTTP header'ları WSGI'da 'HTTP_' ön eki alır.
+    # Örnek: 'X_API_KEY' -> 'HTTP_X_API_KEY'
+    meta_key = f"HTTP_{formatted_name}"
+    
+    # 3. Content-Type ve Content-Length standart dışıdır, 'HTTP_' ön eki almazlar.
+    # Bu iki istisnayı manuel olarak yakalıyoruz.
+    if formatted_name in ['CONTENT_TYPE', 'CONTENT_LENGTH']:
+        meta_key = formatted_name
+
+    # 4. Doğrudan ortam değişkenleri (META) sözlüğünden veriyi çekiyoruz. 
+    # Bulamazsa varsayılan değeri (default_value) döndürüyoruz.
+    return request.META.get(meta_key, default_value)
+
+def delete_header(response, header_name):
+    """
+    İstemciye (client) dönecek olan response objesinden belirtilen header'ı siler.
+    """
+    # 1. response.has_header() ile bu başlığın gerçekten var olup olmadığını kontrol ediyoruz.
+    # Bu kontrolü yapmazsak ve olmayan bir şeyi silmeye çalışırsak Python 'KeyError' hatası fırlatır.
+    if response.has_header(header_name):
+        
+        # 2. Sözlük (dictionary) mantığı ile 'del' komutunu kullanarak header'ı siliyoruz.
+        del response[header_name]
+        
+    # 3. İşlemi bitmiş veya zaten o başlığa sahip olmayan response objesini geri döndürüyoruz.
+    return response
+
+def delete_all_headers(response, hayati_olanlari_koru=True):
+    """
+    Response üzerindeki tüm header'ları siler.
+    hayati_olanlari_koru=True (varsayılan) olarak ayarlandığında, 
+    sistemin çökmemesi için Content-Type gibi zorunlu HTTP başlıklarını silmez.
+    """
+    # 1. Sözlük (dictionary) boyutunu değiştirirken hata almamak için 
+    # mevcut header isimlerini önce bağımsız bir listeye alıyoruz.
+    mevcut_headerlar = [header_name for header_name, deger in response.items()]
+    
+    # 2. HTTP protokolünün ayakta kalması için kesinlikle gereken başlıklar
+    korunacak_headerlar = ['Content-Type', 'Content-Length']
+    
+    # 3. Listelediğimiz tüm header'ları tek tek dönüyoruz
+    for header in mevcut_headerlar:
+        
+        # Eğer koruma aktifse ve bu header hayati listesindeyse silmeden atla
+        if hayati_olanlari_koru and header in korunacak_headerlar:
+            continue
+            
+        # Header'ı bellekten tamamen sil
+        if response.has_header(header):
+            del response[header]
+            
+    return response

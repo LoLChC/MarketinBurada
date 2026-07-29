@@ -12,19 +12,23 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 from dotenv import load_dotenv
-
-load_dotenv() 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-VENV_BASE = os.environ.get('VIRTUAL_ENV')
+env_path = BASE_DIR / '.env'
+load_dotenv() 
 
-if VENV_BASE:
-    # Klasördeki tam ada göre güncelledik:
-    GDAL_LIBRARY_PATH = os.path.join(VENV_BASE, 'Lib', 'site-packages', 'osgeo', 'gdal.dll')
-    GEOS_LIBRARY_PATH = os.path.join(VENV_BASE, 'Lib', 'site-packages', 'osgeo', 'geos_c.dll')
+osgeo_path = os.path.join(sys.prefix, 'Lib', 'site-packages', 'osgeo')
+
+GDAL_LIBRARY_PATH = os.path.join(osgeo_path, 'gdal.dll')
+GEOS_LIBRARY_PATH = os.path.join(osgeo_path, 'geos_c.dll')
+
+# Windows'ta DLL'lerin bulunamama hatasını önlemek için:
+if os.name == 'nt':
+    os.add_dll_directory(osgeo_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -33,6 +37,7 @@ if VENV_BASE:
 SECRET_KEY = os.getenv('SECRET_KEY')
 EMAIL_VERIFY_KEY = os.getenv('EMAIL_VERIFY_KEY')
 FORGOT_PASSWORD_KEY = os.getenv('FORGOT_PASSWORD_KEY')
+MARKET_KEY = os.getenv('MARKET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False')
@@ -49,7 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.gis', 
+    'django.contrib.gis',
+    'json_api',
     'core',
     'account',
     'markets',

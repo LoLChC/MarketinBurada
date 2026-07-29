@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    path('json-api/', include('json_api.urls')),
     path('core/', include('core.urls')),
     path('account/', include('account.urls')),
     path('markets/', include('markets.urls')),

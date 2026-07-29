@@ -269,6 +269,7 @@
 .account-form input[type="text"],
 .account-form input[type="number"],
 .account-form input[type="tel"],
+.account-form input[type="date"],
 .custom-popup-select {
     width: 100%;
     padding: 12px;
