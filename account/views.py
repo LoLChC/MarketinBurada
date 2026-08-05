@@ -280,8 +280,9 @@ def user_account(request):
                     city = AddressForm.cleaned_data.get('city')
                     district = AddressForm.cleaned_data.get('district')
                     address_detail = AddressForm.cleaned_data.get('address_detail')
+                    main_address = AddressForm.cleaned_data.get('main_address')
 
-                    Address.objects.create(user=user, title=address_title, city=city, district=district, address_detail=address_detail)
+                    Address.objects.create(user=user, title=address_title, city=city, district=district, address_detail=address_detail, main_address=main_address)
 
                     return redirect("account:user-account")
 
