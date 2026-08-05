@@ -25,7 +25,10 @@ def required_login(view_func):
         if not user:
             user = User.objects.filter(id=user_id).first()
             if user:
-                cache.set(f"user-{user_id}", user, timeout=300)
+                if not user.email_verify:
+                    cache.set(f"user-{user_id}", user, timeout=5)
+                else:
+                    cache.set(f"user-{user_id}", user, timeout=300)
             else:
                 response = redirect("account:login")
                 response.delete_cookie("token")

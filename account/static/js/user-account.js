@@ -2,7 +2,7 @@
  * Marketin Burada - Kullanıcı Paneli Yönetim Scripti
  */
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     // ==========================================================================
     // 1. Sekme Değiştirme ve F5 Koruma Mantığı (LocalStorage)
     // ==========================================================================
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================================================
     const openAddressModalBtn = document.getElementById("btn-open-address-modal");
     const openPaymentModalBtn = document.getElementById("btn-open-payment-modal");
-    
+
     // Projedeki olası tüm kapatma buton sınıflarını (.close-modal, .btn-modal-close, .modal-close) kapsıyoruz
     const closeModalsBtns = document.querySelectorAll(".btn-modal-close, .close-modal, .modal-close, .modal-overlay");
     const modalBoxes = document.querySelectorAll(".modal-box");
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (cardNumberInput && cardIcon && validationText) {
         cardNumberInput.addEventListener("input", function (e) {
             let cursorPosition = e.target.selectionStart;
-            let value = e.target.value.replace(/\D/g, ""); 
+            let value = e.target.value.replace(/\D/g, "");
             let formattedValue = "";
 
             for (let i = 0; i < value.length; i++) {
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             let rawNumber = formattedValue.replace(/\s/g, '');
-            
+
             if (rawNumber.length === 0) {
                 cardIcon.className = "card-status-icon";
                 validationText.textContent = "";
@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (cardExpiryInput && expiryValidationText) {
         cardExpiryInput.addEventListener("input", function (e) {
             let value = e.target.value.replace(/\D/g, ""); // Sadece rakamları yakala
-            
+
             // Ay Giriş Kontrolü
             if (value.length >= 1) {
                 let firstDigit = parseInt(value.substring(0, 1), 10);
@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     expiryValidationText.className = "card-validation-hint text-danger";
                     return;
                 }
-                
+
                 if (inputYearShort === currentYearShort && month < currentMonth) {
                     expiryValidationText.textContent = "✗ Kartın kullanım süresi dolmuş!";
                     expiryValidationText.className = "card-validation-hint text-danger";
@@ -293,8 +293,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (cardCvvInput && cvvValidationText) {
         cardCvvInput.addEventListener("input", function (e) {
-            let cleanValue = e.target.value.replace(/\D/g, ""); 
-            
+            let cleanValue = e.target.value.replace(/\D/g, "");
+
             if (cleanValue.length > 3) {
                 cleanValue = cleanValue.substring(0, 3);
             }

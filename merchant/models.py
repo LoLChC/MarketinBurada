@@ -286,6 +286,7 @@ class Package(models.Model):
         ('card_on_delivery', 'Kapıda Kredi Kartı'),
         ('online_credit_card', 'Online Kredi Kartı'),
     ]
+
     tracking_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="Takip Numarası")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='packages', verbose_name="Müşteri")
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='packages', verbose_name="Market")
@@ -304,9 +305,7 @@ class Package(models.Model):
     shipped_at = models.DateTimeField(null=True, blank=True, verbose_name="Yola Çıkış Zamanı")
     delivered_at = models.DateTimeField(null=True, blank=True, verbose_name="Teslim Edilme Zamanı")
 
-
     def save(self, *args, **kwargs):
-        """ Paket durumuna göre yola çıkış ve teslim tarihlerini otomatik atar. """
         if not self.pk and self.user:                                          
             if not self.customer_name_snapshot:
                 self.customer_name_snapshot = self.user.get_full_name() or self.user.username
@@ -321,16 +320,13 @@ class Package(models.Model):
             
         super().save(*args, **kwargs)
 
-    def get_address(self):
-        address  = Address.objects.filter(id=self.address_id)
-
 
     def pending(self):
         package_market = self.market
-        user_longitude = self.address.x
-        user_latitude = self.address.y
-
-        branch = Branch.find_nearest_branch(package_market, user_latitude, user_longitude)
+        address = Address.objects.filter(id=self.address_id).first()
+        location = Address.get_location(address)
+        
+        branch = Branch.find_nearest_branch(package_market, location[0], location[1])
 
         self.branch = branch
 

@@ -288,4 +288,51 @@
 
 {% block js_code %}
     <script src="{% static 'js/user-account.js' %}?v={{ random_number }}"></script>
+    
+    {% if no_address %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const addressModal = document.getElementById("address-modal");
+                
+                if (addressModal) {
+                    // 1. Arka planda adresler sekmesini aktif et
+                    const addressBtn = document.querySelector('[data-target="addresses"]');
+                    if (addressBtn) addressBtn.click();
+                    
+                    // 2. Modalı zorla aç
+                    addressModal.classList.add("modal-active");
+
+                    // 3. Sağ üstteki çarpı (kapatma) butonunu tamamen gizle
+                    const closeBtn = addressModal.querySelector(".modal-close");
+                    if (closeBtn) closeBtn.style.display = "none";
+
+                    // 4. Kullanıcıya durumun zorunlu olduğunu belirt (Başlığı kırmızı yapıyoruz)
+                    const headerTitle = addressModal.querySelector(".modal-header h3");
+                    if (headerTitle) {
+                        headerTitle.innerHTML = '<i class="fa-solid fa-map-location-dot"></i> Lütfen Bir Adres Ekleyin';
+                        headerTitle.style.color = "#d9534f"; 
+                    }
+
+                    // 5. Harici JS dosyasının (user-account.js) kapatma eventlerini ez
+                    document.addEventListener("click", function(e) {
+                        // Modal açıksa dış karartıya tıklanmasını engelle
+                        if (addressModal.classList.contains("modal-active")) {
+                            if (e.target === addressModal || e.target.closest('.modal-close')) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                
+                                // Modal dışına tıklandığında hata animasyonu (zıplama efekti)
+                                const modalBox = addressModal.querySelector(".modal-box");
+                                if(modalBox) {
+                                    modalBox.style.transform = "scale(1.02)";
+                                    modalBox.style.transition = "transform 0.2s ease";
+                                    setTimeout(() => modalBox.style.transform = "scale(1)", 200);
+                                }
+                            }
+                        }
+                    }, true); // "true" parametresi event'i en üst seviyede yakalar ve ana JS dosyasından önce durdurur.
+                }
+            });
+        </script>
+    {% endif %}
 {% endblock %}

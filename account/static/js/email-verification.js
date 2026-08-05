@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * E-POSTA DOĞRULAMA DİNAMİKLERİ - verify.js (Gelişmiş Frontend UI & Polling)
+ * E-POSTA DOĞRULAMA DİNAMİKLERİ - email-verification.js (Gelişmiş Frontend UI & Polling)
  * ==========================================================================
  */
 
@@ -23,7 +23,7 @@ function showVerifyFlash(message, type = 'error') {
     const flashCard = document.createElement('div');
     const normalizedType = type.includes('success') ? 'success' : 'error';
     flashCard.className = `inline-flash ${normalizedType}`;
-    
+
     flashCard.innerHTML = `
         <span class="flash-text">${message}</span>
         <button type="button" class="flash-close" aria-label="Kapat">&times;</button>
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (resendBtn) {
         resendBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // UI Loader Tetikleme Örneği
             if (typeof showLoader === 'function') {
                 showLoader();

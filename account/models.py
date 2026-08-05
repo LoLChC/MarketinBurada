@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
@@ -43,13 +44,21 @@ class Card(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
     title = models.CharField(max_length=100)
-    location = models.PointField(srid=4326)
+    location = models.PointField(srid=4326, null=True, blank=True)
     city = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
     address_detail = models.TextField()
+    defalut = models.BooleanField(default=False) # Add User Account Page New property
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.title} - {self.address_detail}"
+    def get_location(self):
+        x = self.location.x
+        y = self.location.y
+        locaiton = (x, y)
+        return locaiton
+
+    def add_location(self, x, y):
+        self.location = Point(float(x), float(y), srid=4326)
+        self.save(upload_fields=['location'])
